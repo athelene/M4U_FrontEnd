@@ -1,0 +1,123 @@
+// app global css in SCSS form
+
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DynaPuff&display=swap");
+
+.book1 {
+  font-family: "Bebas Neue", cursive;
+}
+
+.book2 {
+  font-family: "Pacifico", cursive;
+}
+
+.book3 {
+  font-family: "Cinzel Decorative", cursive;
+}
+
+.book4 {
+  font-family: "Oswald", sans-serif;
+}
+
+.book5 {
+  font-family: "DynaPuff", cursive;
+}
+
+.color1 {
+  background: linear-gradient(
+    to right,
+    rgb(60, 13, 20) 3px,
+    rgba(255, 255, 255, 0.5) 5px,
+    rgba(255, 255, 255, 0.25) 7px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 12px,
+    transparent 16px,
+    rgba(255, 255, 255, 0.25) 17px,
+    transparent 22px
+  );
+  background-color: #921e05;
+  color: white;
+}
+
+.color2 {
+  background: linear-gradient(
+    to right,
+    rgb(60, 13, 20) 3px,
+    rgba(255, 255, 255, 0.5) 5px,
+    rgba(255, 255, 255, 0.25) 7px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 12px,
+    transparent 16px,
+    rgba(255, 255, 255, 0.25) 17px,
+    transparent 22px
+  );
+  background-color: #2e978c;
+  color: white;
+}
+
+.color3 {
+  background: linear-gradient(
+    to right,
+    rgb(60, 13, 20) 3px,
+    rgba(255, 255, 255, 0.5) 5px,
+    rgba(255, 255, 255, 0.25) 7px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 12px,
+    transparent 16px,
+    rgba(255, 255, 255, 0.25) 17px,
+    transparent 22px
+  );
+  background-color: #aec0fa;
+  color: #3c037c;
+}
+
+.color4 {
+  background: linear-gradient(
+    to right,
+    rgb(60, 13, 20) 3px,
+    rgba(255, 255, 255, 0.5) 5px,
+    rgba(255, 255, 255, 0.25) 7px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 12px,
+    transparent 16px,
+    rgba(255, 255, 255, 0.25) 17px,
+    transparent 22px
+  );
+  background-color: #ffc300;
+  color: white;
+}
+
+.color5 {
+  background: linear-gradient(
+    to right,
+    rgb(60, 13, 20) 3px,
+    rgba(255, 255, 255, 0.5) 5px,
+    rgba(255, 255, 255, 0.25) 7px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 12px,
+    transparent 16px,
+    rgba(255, 255, 255, 0.25) 17px,
+    transparent 22px
+  );
+  background-color: #e3d2b8;
+  color: #3c037c;
+}
+
+.color6 {
+  background: linear-gradient(
+    to right,
+    rgb(60, 13, 20) 3px,
+    rgba(255, 255, 255, 0.5) 5px,
+    rgba(255, 255, 255, 0.25) 7px,
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 12px,
+    transparent 16px,
+    rgba(255, 255, 255, 0.25) 17px,
+    transparent 22px
+  );
+  background-color: #d3fbed;
+  color: #3c037c;
+}
