@@ -24,7 +24,7 @@ if (servername === "https://localhost") {
   servername = "http://localhost:8700";
 } else {
   //servername = "https://login.memoriesforus.com";
-  servername = process.env.VUE_APP_SERVERNAME;
+  servername = "https://memoriesforusbe.azurewebsites.net";
 }
 
 export default {
