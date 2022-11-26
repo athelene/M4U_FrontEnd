@@ -51,7 +51,7 @@
       >
         <div class="text-h4 text-center">Save and Share Your Memories</div>
         <div class="text-h6 text-info text-center">
-          Get your first 30 days free.
+          Get your first 30 days free!
         </div>
         <div class="text-h6 text-info text-center">
           Just $3.50 per month after 30 days.
