@@ -1000,7 +1000,7 @@ export default defineComponent({
       draftCount(user.UserID.value);
       getMessage();
       getCircleList();
-      cancelNewMemory();
+      // cancelNewMemory();
       setDate();
     });
 
@@ -1480,7 +1480,18 @@ export default defineComponent({
           setFilter(filter.value);
         })
         .then(() => {
-          cancelNewMemory();
+          storyTypeID.value = 1;
+          storyTitle.value = "";
+          storyText.value = "";
+          interviewee.value = "";
+          storyIngredients.value = "";
+          circleID.value = null;
+          hidden.value = false;
+          newMemoryOpen.value = false;
+          newSlideCount.value = 0;
+
+          Object.assign(newSlideList, emptySlideList);
+          newStartSlide.value = 0;
         });
     };
 

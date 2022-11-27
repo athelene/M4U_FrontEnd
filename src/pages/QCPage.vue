@@ -14,7 +14,7 @@
         <q-dialog v-model="getInfo">
           <q-card>
             <q-card-section>
-              <div class="text-h6">Quick Connect</div>
+              <!-- <div class="text-h6">Quick Connect</div> -->
             </q-card-section>
 
             <q-card-section class="q-pt-none">

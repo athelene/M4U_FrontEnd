@@ -72,9 +72,9 @@
             animated
             control-color="accent"
             padding
-            arrows
             class="rounded-borders feedCard"
             height="85%"
+            ref="carousel"
             infinite
           >
             <q-carousel-slide name="toc" class="column no-wrap flex-center">
@@ -125,16 +125,19 @@
                   @getToc="bookSlide = 'toc'"
                   class="feedCard"
                 ></BookStoryCard>
-                <q-btn
-                  flat
-                  label="Table of Memories"
-                  @click="bookSlide = 'toc'"
-                ></q-btn>
+                <div class="flex-center">
+                  <q-btn
+                    class="q-ml-lg"
+                    label="Table of Memories"
+                    @click="bookSlide = 'toc'"
+                  ></q-btn>
+                </div>
               </div>
             </q-carousel-slide>
             <template v-slot:control>
+              <!--controls for book carousel-->
               <q-carousel-control
-                position="top-left"
+                position="left"
                 :offset="[18, 18]"
                 class="q-gutter-xs"
               >
@@ -142,14 +145,14 @@
                   push
                   round
                   dense
-                  color="dark"
-                  text-color="black"
+                  color="accent"
+                  text-color="primary"
                   icon="arrow_left"
                   @click="$refs.carousel.previous()"
                 />
               </q-carousel-control>
               <q-carousel-control
-                position="top-right"
+                position="right"
                 :offset="[18, 18]"
                 class="q-gutter-xs"
               >
@@ -157,8 +160,8 @@
                   push
                   round
                   dense
-                  color="dark"
-                  text-color="black"
+                  color="accent"
+                  text-color="primary"
                   icon="arrow_right"
                   @click="$refs.carousel.next()"
                 />
