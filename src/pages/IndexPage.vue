@@ -1000,7 +1000,6 @@ export default defineComponent({
       draftCount(user.UserID.value);
       getMessage();
       getCircleList();
-      // cancelNewMemory();
       setDate();
     });
 
@@ -1317,22 +1316,24 @@ export default defineComponent({
     };
 
     const cancelNewMemory = async () => {
-      storyTypeID.value = 1;
-      storyTitle.value = "";
-      storyText.value = "";
-      interviewee.value = "";
-      storyIngredients.value = "";
-      circleID.value = null;
-      hidden.value = false;
-      newMemoryOpen.value = false;
-      newSlideCount.value = 0;
+      await actions.deleteMemory(storyID.value).then(() => {
+        storyTypeID.value = 1;
+        storyTitle.value = "";
+        storyText.value = "";
+        interviewee.value = "";
+        storyIngredients.value = "";
+        circleID.value = null;
+        hidden.value = false;
+        newMemoryOpen.value = false;
+        newSlideCount.value = 0;
 
-      Object.assign(newSlideList, emptySlideList);
-      newStartSlide.value = 0;
-      await actions.deleteMemory(storyID.value);
+        Object.assign(newSlideList, emptySlideList);
+        newStartSlide.value = 0;
+      });
     };
 
     const draftCheck = async () => {
+      console.log("starting draftcheck");
       if (storyText.value !== null) {
         if (
           storyText.value.includes("<script") ||
@@ -1410,10 +1411,8 @@ export default defineComponent({
       if (circleID.value === "" || circleID.value === null) {
         saveDraft.value = true;
       }
-      //       return;
-      //     } else {
-      updateMemory();
-      //     }
+      console.log("about to run updateMemory");
+      await updateMemory();
     };
 
     const addMemory = async () => {
@@ -1436,6 +1435,7 @@ export default defineComponent({
         .newMemory(user.UserID, storyData, newCircleID)
         .then((newID) => {
           storyID.value = newID[0].InsertedId;
+          console.log("storyID.value is set to: ", storyID.value);
         });
     };
 
@@ -1458,6 +1458,7 @@ export default defineComponent({
     };
 
     const updateMemory = async () => {
+      console.log("starting updateMemory");
       saveDraft.value = false;
       if (circleID.value === "" || circleID.value === null) {
         circleID.value = null;
@@ -1473,13 +1474,14 @@ export default defineComponent({
         StoryIngredients: storyIngredients.value,
         Hidden: hidden.value,
       };
-
       await actions
         .updateMemory(storyData, circleID.value, storyTypeID.value)
         .then(() => {
           setFilter(filter.value);
         })
         .then(() => {
+          console.log("resetting form values");
+          newMemoryOpen.value = false;
           storyTypeID.value = 1;
           storyTitle.value = "";
           storyText.value = "";
