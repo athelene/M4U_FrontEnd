@@ -522,6 +522,8 @@
               <!--small editor for ingredients-->
               <q-editor
                 v-if="ingEditorType === 'small'"
+                ref="ingredientsRef"
+                @paste="onPasteIng"
                 v-model="storyIngredients"
                 content-class="bg-primary"
                 toolbar-text-color="white"
@@ -543,6 +545,8 @@
               <!--full editor for ingredients-->
               <q-editor
                 v-model="storyIngredients"
+                ref="ingredientsRef"
+                @paste="onPasteIng"
                 v-if="ingEditorType === 'full'"
                 content-class="bg-primary"
                 toolbar-text-color="white"
@@ -640,6 +644,8 @@
             <div>
               <q-editor
                 v-if="memEditorType === 'full'"
+                ref="textRef"
+                @paste="onPasteText"
                 v-model="storyText"
                 content-class="bg-primary"
                 toolbar-text-color="white"
@@ -706,6 +712,8 @@
               <div v-if="memEditorType === 'small'">
                 <q-editor
                   v-if="memEditorType === 'small'"
+                  ref="textRef"
+                  @paste="onPasteText"
                   v-model="storyText"
                   content-class="bg-primary"
                   toolbar-text-color="white"
@@ -961,6 +969,9 @@ export default defineComponent({
         value: 4,
       },
     ]);
+
+    const ingredientsRef = ref(null);
+    const textRef = ref(null);
     const message = ref("");
     const memoryTypeOn = ref(false);
     const newBookDialog = ref(false);
@@ -981,7 +992,9 @@ export default defineComponent({
     const selectedMemoryType = ref(0);
     const stories = ref(null);
     const story = ref(null);
+    const newStoryID = ref(null);
     const storyID = ref(0);
+    const storyData = ref(null);
     const storyIngredients = ref("");
     const storyText = ref("");
     const storyTitle = ref(null);
@@ -1303,6 +1316,48 @@ export default defineComponent({
       }
     };
 
+    const onPasteIng = async (evt) => {
+      // Let inputs do their thing, so we don't break pasting of links.
+      if (evt.target.nodeName === "INPUT") return;
+      let text, onPasteStripFormattingIEPaste;
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (evt.originalEvent && evt.originalEvent.clipboardData.getData) {
+        text = evt.originalEvent.clipboardData.getData("text/plain");
+        ingredients.value.runCmd("insertText", text);
+      } else if (evt.clipboardData && evt.clipboardData.getData) {
+        text = evt.clipboardData.getData("text/plain");
+        ingredientsRef.value.runCmd("insertText", text);
+      } else if (window.clipboardData && window.clipboardData.getData) {
+        if (!onPasteStripFormattingIEPaste) {
+          onPasteStripFormattingIEPaste = true;
+          ingredients.value.runCmd("ms-pasteTextOnly", text);
+        }
+        onPasteStripFormattingIEPaste = false;
+      }
+    };
+
+    const onPasteText = async (evt) => {
+      // Let inputs do their thing, so we don't break pasting of links.
+      if (evt.target.nodeName === "INPUT") return;
+      let text, onPasteStripFormattingIEPaste;
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (evt.originalEvent && evt.originalEvent.clipboardData.getData) {
+        text = evt.originalEvent.clipboardData.getData("text/plain");
+        textRef.value.runCmd("insertText", text);
+      } else if (evt.clipboardData && evt.clipboardData.getData) {
+        text = evt.clipboardData.getData("text/plain");
+        textRef.value.runCmd("insertText", text);
+      } else if (window.clipboardData && window.clipboardData.getData) {
+        if (!onPasteStripFormattingIEPaste) {
+          onPasteStripFormattingIEPaste = true;
+          textRef.value.runCmd("ms-pasteTextOnly", text);
+        }
+        onPasteStripFormattingIEPaste = false;
+      }
+    };
+
     const addMemoryDialog = async () => {
       await cancelNewMemory()
         .then(async () => {
@@ -1412,7 +1467,11 @@ export default defineComponent({
         saveDraft.value = true;
       }
       console.log("about to run updateMemory");
-      await updateMemory();
+      if (newMemoryOpen.value === true) {
+        await updateNewMemory();
+      } else {
+        await updateMemory();
+      }
     };
 
     const addMemory = async () => {
@@ -1423,19 +1482,20 @@ export default defineComponent({
       } else {
         newCircleID = circleID.value;
       }
-      let storyData = {
-        StoryTypeID: storyTypeID.value,
-        StoryTitle: storyTitle.value,
-        StoryText: storyText.value,
-        Interviewee: interviewee.value,
-        StoryIngredients: storyIngredients.value,
-        Hidden: hidden.value,
+      storyData.value = {
+        StoryTypeID: 1,
+        StoryTitle: "",
+        StoryText: "",
+        Interviewee: "",
+        StoryIngredients: "",
+        Hidden: 0,
       };
       await actions
-        .newMemory(user.UserID, storyData, newCircleID)
+        .newMemory(user.UserID, storyData.value, newCircleID)
         .then((newID) => {
-          storyID.value = newID[0].InsertedId;
-          console.log("storyID.value is set to: ", storyID.value);
+          console.log("returned value for new story is: ", newID[0].InsertedId);
+          newStoryID.value = newID[0].InsertedId;
+          console.log("storyID.value just set to: ", newStoryID.value);
         });
     };
 
@@ -1458,24 +1518,38 @@ export default defineComponent({
     };
 
     const updateMemory = async () => {
-      console.log("starting updateMemory");
+      console.log("starting updateMemory, storyID.value is: ", storyID.value);
       saveDraft.value = false;
       if (circleID.value === "" || circleID.value === null) {
         circleID.value = null;
       } else {
         circleID.value = Number(circleID.value);
       }
-      let storyData = {
-        StoryID: storyID.value,
-        StoryTypeID: storyTypeID.value,
-        StoryTitle: storyTitle.value,
-        StoryText: storyText.value,
-        Interviewee: interviewee.value,
-        StoryIngredients: storyIngredients.value,
-        Hidden: hidden.value,
-      };
+      console.log("newMemoryOpen is: ", newMemoryOpen.value);
+      if (newMemoryOpen.value === true) {
+        storyData.value = {
+          StoryID: storyID.value,
+          StoryTypeID: storyTypeID.value,
+          StoryTitle: storyTitle.value,
+          StoryText: storyText.value,
+          Interviewee: interviewee.value,
+          StoryIngredients: storyIngredients.value,
+          Hidden: hidden.value,
+        };
+      } else {
+        storyData.value = {
+          StoryID: newStoryID.value,
+          StoryTypeID: storyTypeID.value,
+          StoryTitle: storyTitle.value,
+          StoryText: storyText.value,
+          Interviewee: interviewee.value,
+          StoryIngredients: storyIngredients.value,
+          Hidden: hidden.value,
+        };
+      }
+
       await actions
-        .updateMemory(storyData, circleID.value, storyTypeID.value)
+        .updateMemory(storyData.value, circleID.value, storyTypeID.value)
         .then(() => {
           setFilter(filter.value);
         })
@@ -1497,6 +1571,52 @@ export default defineComponent({
         });
     };
 
+    const updateNewMemory = async () => {
+      console.log(
+        "starting updateNewMemory, newStoryID.value is: ",
+        newStoryID.value
+      );
+      saveDraft.value = false;
+      if (circleID.value === "" || circleID.value === null) {
+        circleID.value = null;
+      } else {
+        circleID.value = Number(circleID.value);
+      }
+      console.log("newMemoryOpen is: ", newMemoryOpen.value);
+      if (newMemoryOpen.value === true) {
+        storyData.value = {
+          StoryID: newStoryID.value,
+          StoryTypeID: storyTypeID.value,
+          StoryTitle: storyTitle.value,
+          StoryText: storyText.value,
+          Interviewee: interviewee.value,
+          StoryIngredients: storyIngredients.value,
+          Hidden: hidden.value,
+        };
+      }
+
+      await actions
+        .updateMemory(storyData.value, circleID.value, storyTypeID.value)
+        .then(() => {
+          setFilter(filter.value);
+        })
+        .then(() => {
+          console.log("resetting form values");
+          newMemoryOpen.value = false;
+          storyTypeID.value = 1;
+          storyTitle.value = "";
+          storyText.value = "";
+          interviewee.value = "";
+          storyIngredients.value = "";
+          circleID.value = null;
+          hidden.value = false;
+          newMemoryOpen.value = false;
+          newSlideCount.value = 0;
+
+          Object.assign(newSlideList, emptySlideList);
+          newStartSlide.value = 0;
+        });
+    };
     const startCameraDialog = async () => {
       openCameraDialog.value = !openCameraDialog.value;
     };
@@ -1642,6 +1762,7 @@ export default defineComponent({
       circleList,
       draftCheck,
       draftLabel,
+      ingredientsRef,
       filter,
       filterIcon,
       filterType,
@@ -1669,6 +1790,8 @@ export default defineComponent({
       newSlideList,
       newSlideCount,
       noBookMsg,
+      onPasteIng,
+      onPasteText,
       openBookDialog,
       openBookDispDialog,
       openCameraDialog,
@@ -1694,6 +1817,7 @@ export default defineComponent({
       storyTitle,
       storyTypeID,
       tcDate,
+      textRef,
       traditionsFlag,
       traditionList,
       updateBookTitle,

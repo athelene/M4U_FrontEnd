@@ -37,8 +37,14 @@
                 flat
                 icon="mdi-pencil"
                 @click="openEditBookTitleDialog()"
-              ></q-btn
-            ></span>
+              ></q-btn>
+              <q-btn
+                v-if="bookDetails.BookOwner === user.UserID"
+                flat
+                icon="delete"
+                @click="bookDeleteConfirmOpen = true"
+              ></q-btn>
+            </span>
           </q-toolbar-title>
 
           <q-btn flat round dense icon="close" @click="closeBookDialog()" />
@@ -187,7 +193,7 @@
             <q-card-actions align="right">
               <q-btn flat label="Cancel" color="primary" v-close-popup />
               <q-btn
-                @click="deleteBook(book.BookID)"
+                @click="deleteBook(bookDetails.BookID)"
                 flat
                 label="Delete"
                 color="primary"
@@ -263,11 +269,15 @@ export default defineComponent({
     };
 
     const deleteBook = async (bookID) => {
-      await bookActions.deleteBook(bookID, user.UserID).then(() => {
-        bookDeleteConfirmOpen.value = false;
-        bookDialog.value = false;
-        setFilter(filter.value);
-      });
+      await bookActions
+        .deleteBook(bookID, user.UserID)
+        .then(() => {
+          bookDeleteConfirmOpen.value = false;
+          bookDialog.value = false;
+        })
+        .then(() => {
+          closeBookDialog();
+        });
     };
 
     const getBookContent = async () => {

@@ -185,6 +185,7 @@ export default defineComponent({
 
   setup() {
     const route = useRoute();
+    const path = computed(() => route.path);
     const userState = useUserStore();
     const { user, isLoggedIn, token } = storeToRefs(userState);
     const router = useRouter();
@@ -201,6 +202,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      console.log("current path is: ", path);
       if (isLoggedIn.value === true) {
         getMessages();
       }
@@ -260,7 +262,11 @@ export default defineComponent({
 
     const resetPage = () => {
       if (isLoggedIn.value === true) {
-        router.push({ path: "/home" });
+        if (path.value === "/home") {
+          window.location.reload();
+        } else {
+          router.push({ path: "/home" });
+        }
       } else {
         router.push({ path: "/" });
       }
