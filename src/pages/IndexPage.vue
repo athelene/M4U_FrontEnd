@@ -777,9 +777,16 @@
               flat
               label="Cancel"
               color="primary"
+              class="q-mb-xl"
               @click="cancelNewMemory()"
             />
-            <q-btn flat label="Save" color="primary" @click="draftCheck()" />
+            <q-btn
+              flat
+              label="Save"
+              color="primary"
+              class="q-mb-xl"
+              @click="draftCheck()"
+            />
           </q-card-actions>
         </q-card>
 
