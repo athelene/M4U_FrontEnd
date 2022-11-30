@@ -104,19 +104,13 @@
         </q-dialog>
       </q-card-section>
       <!--STARTING THE DETAILS SECTION OF THE STORY CARD-->
-      <q-card-section class="col-4 text-h3">
+      <q-card-section class="col-4 text-h3" @click="fullScreenDialog = true">
         <div class="text-h6 text-accent q-mb-sm">
           <div class="text-h6" v-if="story.StoryTypeID === 2">
             Interview of {{ story.Interviewee }}
           </div>
           <div class="text-h5" v-if="story.StoryTypeID === 4">Tradition</div>
           {{ story.StoryTitle }}
-          <q-btn
-            icon="mdi-fullscreen"
-            flat
-            size="sm"
-            @click="fullScreenDialog = true"
-          ></q-btn>
 
           <q-scroll-area
             class="scrollArea text-body1"
