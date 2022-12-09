@@ -322,7 +322,6 @@ export default defineComponent({
         .getSasKey(bookDetails.UserMediaLoc)
         .then((incomingSas) => {
           bookSasKey.value = incomingSas;
-          console.log("book SasKey is: ", bookSasKey.value);
         });
     };
 
@@ -380,7 +379,7 @@ export default defineComponent({
 }
 
 .bookText {
-  font-size: 5vw;
+  font-size: 4vw;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;

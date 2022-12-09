@@ -70,7 +70,6 @@ export default defineComponent({
     const freeInvitations = ref(0);
 
     onMounted(() => {
-      console.log("Invite page started");
       setUpDate();
       getFreeInvitations();
     });
@@ -87,7 +86,6 @@ export default defineComponent({
           user.UserSubType
         )
         .then((invitationreturn) => {
-          console.log("return from api is: ", invitationreturn);
           if (invitationreturn === "Duplicate") {
             message.value = "You have already invited this person.";
           } else if (invitationreturn === "Member") {
@@ -109,7 +107,6 @@ export default defineComponent({
       await inviteActions
         .getFreeInvitations(user.UserID, user.UserSubType)
         .then((freereturn) => {
-          console.log("freereturn is: ", freereturn);
           freeInvitations.value = freereturn;
         });
     };

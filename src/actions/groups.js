@@ -44,7 +44,6 @@ export default {
 
   async getGroups(userID) {
     let myroute = servername + "/getmycircles";
-    console.log("userID to getGroups is: ", userID);
     const params = {
       userID: userID,
       token: token,

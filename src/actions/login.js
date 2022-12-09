@@ -69,7 +69,6 @@ export default {
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
-    console.log("login.js registration receives from api: ", result);
     return result;
   },
 
@@ -80,7 +79,6 @@ export default {
       userEmail: userEmail,
     };
     var result = this.callApi(myroute, params).then((res) => {
-      console.log("login.js receives url as: ", res);
       return res;
     });
     return result;
@@ -141,10 +139,8 @@ export default {
       reauthToken: reauthToken,
     };
     var result = this.callApi(myroute, params).then((res) => {
-      console.log("res is: ", res);
       return res;
     });
-    console.log("result is: ", result);
     return result;
   },
 

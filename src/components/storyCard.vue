@@ -104,13 +104,20 @@
         </q-dialog>
       </q-card-section>
       <!--STARTING THE DETAILS SECTION OF THE STORY CARD-->
-      <q-card-section class="col-4 text-h3" @click="fullScreenDialog = true">
+      <q-card-section class="col-4 text-h3">
         <div class="text-h6 text-accent q-mb-sm">
           <div class="text-h6" v-if="story.StoryTypeID === 2">
             Interview of {{ story.Interviewee }}
           </div>
           <div class="text-h5" v-if="story.StoryTypeID === 4">Tradition</div>
           {{ story.StoryTitle }}
+          <q-btn
+            flat
+            icon="mdi-arrow-expand-all"
+            @click="fullScreenDialog = true"
+          >
+            <q-tooltip>Full Screen</q-tooltip>
+          </q-btn>
 
           <q-scroll-area
             class="scrollArea text-body1"
@@ -243,6 +250,9 @@
 
             <!--START OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
             <q-card-section v-if="slideList && slideList.length > 0">
+              <q-btn dense flat icon="mdi-arrow-left" v-close-popup>
+                <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+              </q-btn>
               <q-carousel
                 v-model="startSlide"
                 transition-prev="slide-right"
@@ -462,34 +472,7 @@
                 <q-card class="bg-primary">
                   <q-bar>
                     <q-space />
-
-                    <q-btn
-                      dense
-                      flat
-                      icon="minimize"
-                      @click="maximizedToggle = false"
-                      :disable="!maximizedToggle"
-                    >
-                      <q-tooltip
-                        v-if="maximizedToggle"
-                        class="bg-white text-primary"
-                        >Minimize</q-tooltip
-                      >
-                    </q-btn>
-                    <q-btn
-                      dense
-                      flat
-                      icon="crop_square"
-                      @click="maximizedToggle = true"
-                      :disable="maximizedToggle"
-                    >
-                      <q-tooltip
-                        v-if="!maximizedToggle"
-                        class="bg-white text-primary"
-                        >Maximize</q-tooltip
-                      >
-                    </q-btn>
-                    <q-btn dense flat icon="mdi-fullscreen-exit" v-close-popup>
+                    <q-btn dense flat icon="close" v-close-popup>
                       <q-tooltip class="bg-white text-primary">Close</q-tooltip>
                     </q-btn>
                   </q-bar>

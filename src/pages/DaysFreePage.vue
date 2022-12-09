@@ -72,9 +72,7 @@ export default defineComponent({
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
     const note = ref(false);
 
-    onMounted(() => {
-      console.log("Days Free page started");
-    });
+    onMounted(() => {});
 
     return {
       note,

@@ -40,7 +40,7 @@
     <!--BEGINNING OF FOOTER-->
     <q-footer elevated>
       <q-toolbar>
-        Memories For Us, Copyright 2022
+        Memories For Us, Copyright 2023
         <q-space></q-space>
         <q-btn
           label="Get 30 days Free!"
@@ -202,11 +202,11 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      console.log("current path is: ", path);
       if (isLoggedIn.value === true) {
         getMessages();
       }
       const publicCheck = !publicPages.includes(route.name);
+
       if (publicCheck === true && isLoggedIn.value === true) {
         invitations();
       } else {
@@ -290,7 +290,6 @@ export default defineComponent({
         await connectionActions
           .unacceptedInvitations(userState.user.UserID)
           .then((open) => {
-            console.log("returned open invites are: ", open);
             invitationCount.value = open.length;
           });
       }

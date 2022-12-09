@@ -11,7 +11,7 @@
 const { configure } = require("quasar/wrappers");
 
 // This will load from `.env` if it exists, but not override existing `process.env.*` values
-require('dotenv').config()
+require("dotenv").config();
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -88,7 +88,11 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        screen: {
+          bodyClasses: true, // <<< add this
+        },
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack

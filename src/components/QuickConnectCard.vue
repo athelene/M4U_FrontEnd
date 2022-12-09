@@ -4,8 +4,7 @@
       <q-card-section class="text-h6 text-center">
         {{ todaysQuestion }}</q-card-section
       >
-
-      <q-card-section v-if="qcIsAnswered === false">
+      <q-card-section v-if="qcIsAnswered === false && todaysQuestionID > 0">
         <q-input v-model="myAnswer" label="Your answer">
           <template v-slot:append>
             <q-icon
@@ -106,8 +105,13 @@ export default defineComponent({
       const quickconnects = await qcActions
         .getTodaysQuickConnect(todayIs.value)
         .then((todaysQc) => {
-          todaysQuestion.value = todaysQc.ViewPointQ;
-          todaysQuestionID.value = todaysQc.ViewPointID;
+          if (todaysQuestionID.value === 0) {
+            todaysQuestion.value =
+              "There isn't a Quick Connect Question today. Submit a suggestion and get a free month!";
+          } else {
+            todaysQuestion.value = todaysQc.ViewPointQ;
+            todaysQuestionID.value = todaysQc.ViewPointID;
+          }
         });
     };
 
@@ -164,6 +168,7 @@ export default defineComponent({
       todayIs,
       qcTotal,
       todaysQuestion,
+      todaysQuestionID,
       myAnswer,
       saveAnswer,
       qcIsAnswered,

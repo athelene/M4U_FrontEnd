@@ -15,10 +15,8 @@ export const useUserStore = defineStore("user", {
   actions: {
     userLogin(loginReturn) {
       this.user = loginReturn;
-      console.log("in user.js, loginReturn.UserID is: ", loginReturn.UserID);
       if (loginReturn.UserID > 0) {
         this.isLoggedIn = true;
-        console.log("user.js isLogged in is: ", this.isLoggedIn);
       }
     },
     userToken(loginToken) {

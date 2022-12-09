@@ -30,8 +30,8 @@ export default route(function (/* { store, ssrContext } */) {
     // redirect to login page if not logged in and trying to access a restricted page
 
     const authRequired = !publicPages.includes(to.path);
+
     const auth = useUserStore();
-    console.log("authRequired, auth.user, to", authRequired, auth.user, to);
     if (authRequired && !auth.user) {
       console.log(
         "auth required for this route, not authenticated, return to login page"

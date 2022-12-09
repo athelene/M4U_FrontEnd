@@ -382,7 +382,6 @@ export default defineComponent({
         .then((incomingInvitations) => {
           invitations.value = incomingInvitations;
         });
-      console.log("invitations is: ", invitations.value);
     };
 
     const acceptInvitation = async (memID) => {
@@ -390,7 +389,6 @@ export default defineComponent({
         getOpenInvitations();
         getConnections();
       });
-      console.log("invitations is: ", invitations.value);
     };
 
     const searchConnection = async () => {
@@ -424,15 +422,12 @@ export default defineComponent({
             list.forEach((element) => {
               for (var i = 0; i < connections.value.length; i++) {
                 if (connections.value[i].MemberID === element.UserID) {
-                  console.log("found a match in connections");
                   dupConnection.value = true;
-                  //                  searchStarted.value = false;
                   return;
                 }
               }
             });
             list.forEach((element) => {
-              console.log("found a match in invitations");
               for (var j = 0; j < invitations.value.length; j++) {
                 if (invitations.value[j].InvitedBy === element.UserID) {
                   dupConnection.value = true;
@@ -494,7 +489,6 @@ export default defineComponent({
                   "Note: You are already connected to or have a pending invitation with " +
                   element.UserDisplayName;
               }
-              console.log("dupSuggestion is: ", dupSuggestion.value);
             });
           });
       }

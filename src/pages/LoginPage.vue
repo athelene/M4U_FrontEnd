@@ -35,7 +35,7 @@
           </q-card-actions>
           <q-card-section class="text-center q-pa-none">
             <q-btn class="text-grey-6" @click="pageType = 'register'" flat
-              >Not reigistered? Create an Account</q-btn
+              >Not registered? Create an Account</q-btn
             >
           </q-card-section>
         </q-card>
@@ -260,7 +260,7 @@ export default {
     });
 
     onMounted(() => {
-      userState.userLogout();
+      //     userState.userLogout();
       if ($q.platform.is.mobile) {
         playstoreMsg.value =
           "Due to app store restrictions, you must register for Memories For Us on our webpage at : ";
@@ -269,11 +269,9 @@ export default {
       } else {
         playstoreMsg.value = null;
       }
-      console.log("platform is: ", $q.platform.is.movile);
     });
 
     async function signup() {
-      console.log("started signup");
       confirm.value = false;
 
       if (userFirst.value.length < 2 || userLast.value.length < 2) {
@@ -305,7 +303,6 @@ export default {
     }
 
     async function saveUser() {
-      console.log("about to save user info");
       await loginAction
         .register(
           userFirst.value,
@@ -315,7 +312,6 @@ export default {
           userPassword.value
         )
         .then((regResult) => {
-          console.log("regResult is: ", regResult);
           if (regResult !== "") {
             errorMsg.value =
               "Registration failed. Please try again or contact support.";
@@ -324,7 +320,6 @@ export default {
         })
         .then(async () => {
           const sessionURL = await loginAction.checkoutPage(email.value);
-          console.log("checkoutURL is: ", sessionURL);
           openURL(sessionURL);
         });
     }
@@ -365,10 +360,7 @@ export default {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
-            // console.log(
-            //   "userState  after Login on LoginPage is: ",
-            //   userState.user
-            // );
+
             router.push({ path: "/home" });
           } else {
             errorMsg.value = "Invalid Login";

@@ -1395,7 +1395,6 @@ export default defineComponent({
     };
 
     const draftCheck = async () => {
-      console.log("starting draftcheck");
       if (storyText.value !== null) {
         if (
           storyText.value.includes("<script") ||
@@ -1473,7 +1472,6 @@ export default defineComponent({
       if (circleID.value === "" || circleID.value === null) {
         saveDraft.value = true;
       }
-      console.log("about to run updateMemory");
       if (newMemoryOpen.value === true) {
         await updateNewMemory();
       } else {
@@ -1500,9 +1498,7 @@ export default defineComponent({
       await actions
         .newMemory(user.UserID, storyData.value, newCircleID)
         .then((newID) => {
-          console.log("returned value for new story is: ", newID[0].InsertedId);
           newStoryID.value = newID[0].InsertedId;
-          console.log("storyID.value just set to: ", newStoryID.value);
         });
     };
 
@@ -1525,14 +1521,12 @@ export default defineComponent({
     };
 
     const updateMemory = async () => {
-      console.log("starting updateMemory, storyID.value is: ", storyID.value);
       saveDraft.value = false;
       if (circleID.value === "" || circleID.value === null) {
         circleID.value = null;
       } else {
         circleID.value = Number(circleID.value);
       }
-      console.log("newMemoryOpen is: ", newMemoryOpen.value);
       if (newMemoryOpen.value === true) {
         storyData.value = {
           StoryID: storyID.value,
@@ -1561,7 +1555,6 @@ export default defineComponent({
           setFilter(filter.value);
         })
         .then(() => {
-          console.log("resetting form values");
           newMemoryOpen.value = false;
           storyTypeID.value = 1;
           storyTitle.value = "";
@@ -1579,17 +1572,12 @@ export default defineComponent({
     };
 
     const updateNewMemory = async () => {
-      console.log(
-        "starting updateNewMemory, newStoryID.value is: ",
-        newStoryID.value
-      );
       saveDraft.value = false;
       if (circleID.value === "" || circleID.value === null) {
         circleID.value = null;
       } else {
         circleID.value = Number(circleID.value);
       }
-      console.log("newMemoryOpen is: ", newMemoryOpen.value);
       if (newMemoryOpen.value === true) {
         storyData.value = {
           StoryID: newStoryID.value,
@@ -1608,7 +1596,6 @@ export default defineComponent({
           setFilter(filter.value);
         })
         .then(() => {
-          console.log("resetting form values");
           newMemoryOpen.value = false;
           storyTypeID.value = 1;
           storyTitle.value = "";

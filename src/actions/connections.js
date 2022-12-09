@@ -182,7 +182,6 @@ export default {
 
   //Accept a connection request from another member
   async acceptInvitation(circleMemID, userID) {
-    console.log("circleMemID, UserID: ", circleMemID, userID);
     let myroute = servername + "/acceptinvitation";
     const params = {
       circleMemID: circleMemID,
