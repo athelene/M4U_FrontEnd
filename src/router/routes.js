@@ -16,8 +16,8 @@ const routes = [
     component: () => import("layouts/LoginLayout.vue"),
     children: [
       {
-        path: "register",
-        name: "register",
+        path: "/register",
+        name: "/register",
         component: () => import("pages/NewUser.vue"),
       },
     ],

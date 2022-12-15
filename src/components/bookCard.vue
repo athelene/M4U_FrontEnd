@@ -60,12 +60,7 @@
         <!--START EDIT BOOK TITLE DIALOG-->
         <q-dialog v-model="editBookTitleDialog" persistent>
           <q-card style="min-width: 350px">
-            <EditBook
-              :bookID="bookID"
-              @bookEdited="updateBookTitle"
-              @bookFont="updateFont"
-              @bookColor="updateFont"
-            ></EditBook>
+            <EditBook :bookID="bookID" @bookEdited="updateBookTitle"></EditBook>
           </q-card>
         </q-dialog>
         <!--END EDIT BOOK TITLE DIALOG -->
@@ -129,6 +124,7 @@
                 <BookStoryCard
                   :story="bookMemory"
                   @getToc="bookSlide = 'toc'"
+                  @updateFeed="getBookContent"
                   class="feedCard"
                 ></BookStoryCard>
                 <div class="flex-center">
@@ -359,6 +355,7 @@ export default defineComponent({
       bookContent,
       openEditBookTitleDialog,
       updateBookTitle,
+      getBookContent,
     };
   },
 });
@@ -379,10 +376,10 @@ export default defineComponent({
 }
 
 .bookText {
-  font-size: 4vw;
+  font-size: 5vw;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  hyphens: auto;
+
   white-space: normal;
 }
 .topOfBook {

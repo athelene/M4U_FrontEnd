@@ -136,6 +136,43 @@
 
                 <!--FILTER BUTTONS FOR MEMORIES END-->
                 <q-separator vertical inset />
+
+                <q-btn
+                  class="text-weight-bolder"
+                  size="md"
+                  color="accent"
+                  glossy
+                  rounded
+                  icon="search"
+                  @click="setSearch()"
+                />
+                <q-btn
+                  v-if="
+                    filterType === 'memory' &&
+                    (selectedMemoryType === null || selectedMemoryType === 0)
+                  "
+                  class="text-weight-bolder"
+                  size="md"
+                  color="accent"
+                  glossy
+                  rounded
+                  icon="mdi-filter-outline"
+                  @click="setMemoryType()"
+                />
+                <q-btn
+                  v-if="
+                    filterType === 'memory' &&
+                    selectedMemoryType !== null &&
+                    selectedMemoryType !== 0
+                  "
+                  class="text-weight-bolder"
+                  size="md"
+                  color="accent"
+                  glossy
+                  rounded
+                  icon="mdi-filter-outline"
+                  @click="setMemoryType()"
+                />
                 <!--FILTER BUTTONS FOR BOOKS START-->
                 <q-btn-dropdown
                   color="accent"
@@ -179,57 +216,7 @@
             </q-item>
             <!--START SEARCH-->
             <q-item>
-              <div class="absolute-center">
-                <q-btn
-                  v-if="searchTerm.length <= 0"
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  flat
-                  rounded
-                  icon="search"
-                  @click="setSearch()"
-                />
-                <q-btn
-                  v-if="searchTerm.length > 0"
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  rounded
-                  icon="search"
-                  @click="setSearch()"
-                />
-                <q-btn
-                  v-if="
-                    filterType === 'memory' &&
-                    (selectedMemoryType === null || selectedMemoryType === 0)
-                  "
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  rounded
-                  flat
-                  icon="mdi-filter-outline"
-                  @click="setMemoryType()"
-                />
-                <q-btn
-                  v-if="
-                    filterType === 'memory' &&
-                    selectedMemoryType !== null &&
-                    selectedMemoryType !== 0
-                  "
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  rounded
-                  icon="mdi-filter-outline"
-                  @click="setMemoryType()"
-                />
-              </div>
+              <div class="absolute-center"></div>
             </q-item>
 
             <!--END SEARCH-->
@@ -1048,6 +1035,8 @@ export default defineComponent({
     };
 
     const setFilter = async (newfilter) => {
+      searchOn.value = false;
+      console.log("running setFilter and filter is: ", newfilter);
       if (newfilter !== filter.value) {
         filter.value = newfilter;
       }
@@ -1235,6 +1224,7 @@ export default defineComponent({
 
     const searchMemories = async () => {
       filter.value = "all";
+      filterType.value = "memory";
       searchOn.value = false;
       stories.value = [];
       recordStart.value = 0;
@@ -1254,6 +1244,7 @@ export default defineComponent({
 
     const searchMoreMemories = async () => {
       filter.value = "search";
+      filterType.value = "memory";
       if (recordStart.value < recordLast.value || !recordLast.value) {
         recordStart.value = recordStart.value + pageLength.value;
         await actions
@@ -1499,6 +1490,7 @@ export default defineComponent({
         .newMemory(user.UserID, storyData.value, newCircleID)
         .then((newID) => {
           newStoryID.value = newID[0].InsertedId;
+          storyID.value = newID[0].InsertedId;
         });
     };
 
@@ -1646,6 +1638,7 @@ export default defineComponent({
     };
 
     const getMyBooksToAdd = async () => {
+      console.log("storyID.value is: ", storyID.value);
       await bookActions
         .getBooksToAddStory(user.UserID, storyID.value)
         .then((books) => {

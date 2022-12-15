@@ -55,6 +55,10 @@ module.exports = configure(function (/* ctx */) {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
         node: "node16",
       },
+      env: {
+        STRIPEPUBKEY:
+          "pk_live_51LO2QAHFAFg3qnZACsdYjcsH3SkopVZ58PyCEyVe4gWPAUd47fCwP28IJwlEvRbwuUbId2qwtJNtyG0pka0BCmPP00XAA5OXp8",
+      },
 
       vueRouterMode: "hash", // available values: 'hash', 'history'
       // vueRouterBase,

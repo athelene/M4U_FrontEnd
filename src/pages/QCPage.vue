@@ -54,7 +54,31 @@
             id="expansionItem"
           >
             <q-card-section id="cardsection">
-              <q-list bordered separator style="width: 100%">
+              <q-list bordered style="width: 100%">
+                <q-item>
+                  <span id="theSpanForMe" style="width: 100%">
+                    <q-item>
+                      <q-input
+                        type="textarea"
+                        dense
+                        hint="Answer"
+                        v-model="editAnswerInput"
+                        autofocus
+                        autogrow
+                        prefix="Me:"
+                        style="width: 100%"
+                      >
+                        <template v-slot:append>
+                          <q-btn
+                            flat
+                            icon="mdi-check"
+                            @click="saveMyAnswer('s', q.ViewPointID)"
+                          ></q-btn>
+                        </template>
+                      </q-input>
+                    </q-item>
+                  </span>
+                </q-item>
                 <q-item
                   v-for="a in answerList"
                   :key="a.VPAnswerID"
@@ -74,32 +98,6 @@
                           <span class="text-black"> {{ a.VPAnswer }}</span>
                         </q-item-label>
                       </q-item-section>
-                    </q-item>
-                  </span>
-                  <span
-                    v-if="a.UserID === user.UserID"
-                    id="theSpanForMe"
-                    style="width: 100%"
-                  >
-                    <q-item>
-                      <q-input
-                        type="textarea"
-                        dense
-                        hint="Answer"
-                        v-model="editAnswerInput"
-                        autofocus
-                        autogrow
-                        prefix="Me:"
-                        style="width: 100%"
-                      >
-                        <template v-slot:append>
-                          <q-btn
-                            flat
-                            icon="mdi-check"
-                            @click="saveMyAnswer(a.VPAnswerID, a.VPAnswer)"
-                          ></q-btn>
-                        </template>
-                      </q-input>
                     </q-item>
                   </span>
                 </q-item>
@@ -183,17 +181,24 @@ export default defineComponent({
     };
 
     const getAnswers = async (questionID) => {
+      editAnswerInput.value = null;
+      answerList.value = null;
       await qcActions
         .getAnswers(user.UserID, questionID)
         .then((answers) => {
           answerList.value = answers;
         })
         .then(() => {
+          console.log("answerLIst is: ", answerList.value);
           qcActions.getMyAnswer(user.UserID, questionID).then((myanswer) => {
             myanswer.forEach((element) => {
               if (element.UserID === user.UserID) {
                 editAnswerInput.value = myanswer[0].VPAnswer;
                 editAnswerID.value = myanswer[0].VPAnswerID;
+                console.log("editAnswerID is: ", editAnswerID.value);
+              } else {
+                editAnswerInput.value = null;
+                editAnswerID.value = null;
               }
             });
           });
@@ -206,12 +211,23 @@ export default defineComponent({
       });
     };
 
-    const saveMyAnswer = async (answerID) => {
-      await qcActions.updateMyAnswer(
-        answerID,
-        editAnswerInput.value,
-        user.UserID
-      );
+    const saveMyAnswer = async (type, answerID) => {
+      if (editAnswerID.value) {
+        console.log("answerID is: ", answerID);
+        await qcActions.updateMyAnswer(
+          editAnswerID.value,
+          editAnswerInput.value,
+          user.UserID
+        );
+      }
+      if (!editAnswerID.value) {
+        console.log("answerID is: ", answerID);
+        await qcActions.saveMyAnswer(
+          answerID,
+          editAnswerInput.value,
+          user.UserID
+        );
+      }
     };
 
     const editAnswerOpen = async (viewPointID) => {

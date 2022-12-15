@@ -188,7 +188,7 @@ export default {
 
   async getBookDetails(bookID) {
     let myroute = servername + "/getbookdetails";
-    console.log("event page sees: ", bookID);
+    console.log("getting book details for: ", bookID);
     const params = {
       bookID: bookID,
       token: token,

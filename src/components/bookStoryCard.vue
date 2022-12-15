@@ -66,7 +66,6 @@
         <q-btn
           class="text-accent"
           flat
-          round
           icon="mdi-pencil-outline"
           @click="openEditMemory()"
           v-if="story.Userid === user.UserID"
@@ -74,7 +73,6 @@
         <q-btn
           class="text-accent"
           flat
-          round
           icon="mdi-delete-forever-outline"
           v-if="story.Userid === user.UserID"
           @click="verifyDelete()"
