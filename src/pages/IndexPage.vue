@@ -100,6 +100,18 @@
                   glossy
                 >
                   <q-list>
+                    <q-item clickable v-close-popup @click="setSearch()">
+                      <q-item-section>
+                        <q-btn flat icon="mdi-magnify">Search Memories</q-btn>
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="startFilter()">
+                      <q-item-section>
+                        <q-btn flat icon="mdi-filter-outline"
+                          >Filter Memories</q-btn
+                        >
+                      </q-item-section>
+                    </q-item>
                     <q-item clickable v-close-popup @click="setFilter('all')">
                       <q-item-section>
                         <q-item-label>All Memories</q-item-label>
@@ -135,44 +147,7 @@
                 </q-btn-dropdown>
 
                 <!--FILTER BUTTONS FOR MEMORIES END-->
-                <q-separator vertical inset />
 
-                <q-btn
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  rounded
-                  icon="search"
-                  @click="setSearch()"
-                />
-                <q-btn
-                  v-if="
-                    filterType === 'memory' &&
-                    (selectedMemoryType === null || selectedMemoryType === 0)
-                  "
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  rounded
-                  icon="mdi-filter-outline"
-                  @click="setMemoryType()"
-                />
-                <q-btn
-                  v-if="
-                    filterType === 'memory' &&
-                    selectedMemoryType !== null &&
-                    selectedMemoryType !== 0
-                  "
-                  class="text-weight-bolder"
-                  size="md"
-                  color="accent"
-                  glossy
-                  rounded
-                  icon="mdi-filter-outline"
-                  @click="setMemoryType()"
-                />
                 <!--FILTER BUTTONS FOR BOOKS START-->
                 <q-btn-dropdown
                   color="accent"
@@ -263,7 +238,7 @@
                     :options="memoryTypeOptions"
                     emit-value
                     map-options
-                    @click="memoryTypeOn = false"
+                    @click="selectMemoryType()"
                   />
                 </div>
               </q-card-section>
@@ -1034,6 +1009,17 @@ export default defineComponent({
       storyTypeID.value = newType;
     };
 
+    const startFilter = async () => {
+      filterType.value = "memory";
+      memoryTypeOn.value = !memoryTypeOn.value;
+      console.log(
+        "filterTypeValue and memoryTypeOn",
+        filterType.value,
+        memoryTypeOn.value
+      );
+      setFilter("all");
+    };
+
     const setFilter = async (newfilter) => {
       searchOn.value = false;
       console.log("running setFilter and filter is: ", newfilter);
@@ -1789,6 +1775,7 @@ export default defineComponent({
       searchOn,
       searchMemories,
       searchTerm,
+      startFilter,
       selectedMemoryType,
       setFilter,
       setInterviews,
