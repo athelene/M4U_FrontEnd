@@ -106,6 +106,23 @@ export default {
     return result;
   },
 
+  async getGroupMemories(userID, recordStart, pageLength, circleID) {
+    let myroute = servername + "/getgroupmemories";
+    const params = {
+      userID: userID,
+      recordStart: recordStart,
+      pageLength: pageLength,
+      recordCount: 0,
+      circleID: circleID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async searchMemories(userID, recordStart, pageLength, searchTerm) {
     let myroute = servername + "/searchMemories";
     const params = {

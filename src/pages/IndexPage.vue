@@ -3,7 +3,10 @@
     <q-pull-to-refresh @refresh="refresh">
       <!--STARTING QUICK CONNECT-->
       <div>
-        <qcCard class="qcCard" v-if="filterType === 'memory'"></qcCard>
+        <qcCard
+          class="qcCard"
+          v-if="filterType === 'memory' || filterType === 'group'"
+        ></qcCard>
       </div>
       <!--ERROR MSG, BUTTON GROUP SEARCH-->
       <div class="q-pa-md items-start flex-center">
@@ -21,6 +24,12 @@
             </p>
             <p class="text-h5 text-center text-info" v-if="filter === 'drafts'">
               Draft Memories
+            </p>
+            <p
+              class="text-h5 text-center text-info"
+              v-if="filterType === 'group'"
+            >
+              {{ circleTitle }} Memories
             </p>
             <p
               class="text-h5 text-center text-info"
@@ -148,6 +157,30 @@
 
                 <!--FILTER BUTTONS FOR MEMORIES END-->
 
+                <!--FILTER BUTTONS FOR Share Group START-->
+                <q-btn-dropdown
+                  color="accent"
+                  icon="mdi-account-multiple-outline"
+                  rounded
+                  glossy
+                >
+                  <q-list>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="setGroup(circle.CircleID, circle.CircleName)"
+                      v-for="circle in buttonList"
+                      :key="circle.CircleID"
+                    >
+                      <q-item-section>
+                        {{ circle.CircleName }} Memories</q-item-section
+                      >
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+
+                <!--FILTER BUTTONS FOR Share Group END-->
+
                 <!--FILTER BUTTONS FOR BOOKS START-->
                 <q-btn-dropdown
                   color="accent"
@@ -254,7 +287,10 @@
         <!--START OF MEMORY FEED-->
 
         <!--START OF MEMORY CARDS-->
-        <q-infinite-scroll @load="getMore" v-if="filterType === 'memory'">
+        <q-infinite-scroll
+          @load="getMore"
+          v-if="filterType === 'memory' || filterType === 'group'"
+        >
           <div v-for="story in stories" :key="story.StoryID">
             <StoryCard
               v-if="
@@ -901,7 +937,9 @@ export default defineComponent({
     const allBookList = ref(null);
     const badDataMessage = ref("");
     const bookList = reactive([]);
+    const buttonList = reactive([]);
     const circleID = ref(null);
+    const circleTitle = ref(null);
     const circleList = reactive([]);
     const draftLabel = ref(0);
     const drafts = ref(false);
@@ -1027,6 +1065,11 @@ export default defineComponent({
         filter.value = newfilter;
       }
 
+      if (filterType.value === "group") {
+        filter.value = "all";
+        getGroupMemories(newfilter);
+      }
+
       //Start memory filters
       if (filter.value === "all") {
         filterType.value = "memory";
@@ -1124,11 +1167,26 @@ export default defineComponent({
     };
 
     const getCircleList = async () => {
-      await actions.getMyCircles(user.UserID).then((circles) => {
-        circles.forEach((circle) => {
-          circleList.push(circle);
+      await actions
+        .getMyCircles(user.UserID)
+        .then((circles) => {
+          circles.forEach((circle) => {
+            circleList.push(circle);
+            console.log("circle.CircleName is: ", circle.CircleName);
+
+            if (
+              circle.CircleName !== "Everyone" &&
+              circle.CircleName !== "Journal"
+            ) {
+              console.log("meets criteria", circle.CircleName);
+              buttonList.push(circle);
+              console.log("buttonList after push is: ", buttonList.value);
+            }
+          });
+        })
+        .then(() => {
+          console.log("buttonList is: ", buttonList.value);
         });
-      });
     };
 
     const setSearch = () => {
@@ -1202,6 +1260,45 @@ export default defineComponent({
         recordStart.value = recordStart.value + pageLength.value;
         await actions
           .getAllStories(user.UserID, recordStart.value, pageLength.value)
+          .then((newStories) => {
+            stories.value.push(...newStories.recordset);
+          });
+      }
+    };
+
+    const getGroupMemories = async (circleID) => {
+      console.log("in getGroupMemories circle ID is: ", circleID);
+      filter.value = circleID;
+      searchOn.value = false;
+      searchTerm.value = "";
+      stories.value = [];
+      recordStart.value = 0;
+      recordLast.value = "";
+      await actions
+        .getGroupMemories(
+          user.UserID,
+          recordStart.value,
+          pageLength.value,
+          circleID
+        )
+        .then((newStories) => {
+          recordLast.value = newStories.output.recordCount;
+          stories.value = newStories.recordsets[0];
+        });
+    };
+
+    const getMoreGroupMemories = async (circleID, index, done) => {
+      console.log("in getMoreGroupMemories circle ID is: ", circleID);
+      filter.value = "all";
+      if (recordStart.value < recordLast.value || !recordLast.value) {
+        recordStart.value = recordStart.value + pageLength.value;
+        await actions
+          .getGroupMemories(
+            user.UserID,
+            recordStart.value,
+            pageLength.value,
+            circleID
+          )
           .then((newStories) => {
             stories.value.push(...newStories.recordset);
           });
@@ -1298,6 +1395,13 @@ export default defineComponent({
             stories.value.push(...newStories.recordset);
           });
       }
+    };
+
+    const setGroup = async (circleID, circleName) => {
+      console.log("line 1370 circleID is: ", circleID);
+      filterType.value = "group";
+      circleTitle.value = circleName;
+      setFilter(circleID);
     };
 
     const onPasteIng = async (evt) => {
@@ -1730,15 +1834,19 @@ export default defineComponent({
       badDataMessage,
       bookList,
       booksDialogFlag,
+      buttonList,
       cancelNewMemory,
       circleID,
       circleList,
+      circleTitle,
       draftCheck,
       draftLabel,
       ingredientsRef,
       filter,
       filterIcon,
       filterType,
+      getGroupMemories,
+      getMoreGroupMemories,
       getInterviews,
       getMore,
       getMoreAllStories,
@@ -1778,6 +1886,7 @@ export default defineComponent({
       startFilter,
       selectedMemoryType,
       setFilter,
+      setGroup,
       setInterviews,
       setMemoryType,
       setSearch,
