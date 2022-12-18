@@ -18,13 +18,9 @@ export default defineComponent({
     const tandc = ref(false);
     const privacy = ref(false);
 
-    onMounted(() => {
-      console.log("new subscriber cancel started");
-    });
+    onMounted(() => {});
 
-    const exampleFunction = async () => {
-      console.log("running exampleFunction");
-    };
+    const exampleFunction = async () => {};
 
     return {
       rules,

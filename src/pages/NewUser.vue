@@ -78,25 +78,16 @@ export default {
     const router = useRouter();
     const userState = useUserStore();
 
-    onMounted(() => {
-      console.log("mounted userState is: ", userState);
-    });
+    onMounted(() => {});
 
     async function login() {
       if (user.value === null || userPassword.value === null) {
         errorMsg.value = "You must include a user name and password.";
         return;
       }
-      console.log("we are ready to login");
-      console.log(
-        "LoginPage is sending user and userPassword: ",
-        user.value,
-        userPassword.value
-      );
       await loginAction
         .login(user.value, userPassword.value)
         .then((loginResult) => {
-          console.log("result from login is: ", loginResult);
           if (loginResult === false) {
             errorMsg.value = "Invalid email or password";
             return;
@@ -120,10 +111,6 @@ export default {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
-            console.log(
-              "userState  after Login on LoginPage is: ",
-              userState.user
-            );
             router.push({ path: "/home" });
           } else {
             errorMsg.value = "Invalid Login";

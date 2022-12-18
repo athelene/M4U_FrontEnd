@@ -144,7 +144,6 @@ export default {
 
   async getMyAnswer(userID, viewPointID) {
     let myroute = servername + "/getmyanswer";
-    console.log("running getMyAnswer in quickConnect.js", userID, viewPointID);
     const params = {
       userID: userID,
       viewPointID: viewPointID,
@@ -159,7 +158,6 @@ export default {
 
   async getAnswers(userID, viewPointID) {
     let myroute = servername + "/getanswers";
-    console.log("running getAnswers in quickConnect.js", userID, viewPointID);
     const params = {
       userID: userID,
       viewPointID: viewPointID,
@@ -173,7 +171,6 @@ export default {
   },
 
   async editMyAnswer(qcID, myanswer, userID) {
-    console.log("sent to action: ", qcID, myanswer, userID);
     let myroute = servername + "/editthisqcquestion";
     const params = {
       qcID: qcID,

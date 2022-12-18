@@ -69,7 +69,6 @@ export default defineComponent({
 
     onMounted(() => {
       getSasKey();
-      console.log("props are: ", props);
     });
 
     const getSasKey = async () => {
@@ -79,17 +78,13 @@ export default defineComponent({
     };
 
     const deleteMedia = async (mediaLoc) => {
-      console.log("medialoc to delete: ", mediaLoc);
       await mediaActions.deleteMedia(mediaLoc).then(() => {
-        console.log("media has been deleted");
         emit("updateMedia");
       });
     };
 
     const featureMedia = async (mediaLoc) => {
-      console.log("medialoc to delete: ", mediaLoc);
       await mediaActions.makeFeature(mediaLoc).then(() => {
-        console.log("media has been deleted");
         emit("updateMedia");
       });
     };

@@ -81,42 +81,27 @@ export default defineComponent({
     watch(
       () => props.slideCount,
       (newValue) => {
-        console.log("ready to update newMediaSlides");
         refreshMedia();
       }
     );
 
     onMounted(() => {
-      console.log("incoming props to NewMediaSlides is: ", props);
       updateMedia();
     });
 
     const refreshMedia = async () => {
-      console.log("refreshing media");
       updateMedia();
     };
 
     const deleteMedia = async (mediaLoc) => {
-      console.log("mediaID, medialoc to delete: ", mediaLoc);
-      await mediaActions.deleteMedia(mediaLoc).then(() => {
-        console.log("media has been deleted");
-        updateMedia();
-        emit("updateMedia");
-      });
+      await mediaActions.deleteMedia(mediaLoc);
     };
 
     const updateMedia = async () => {
       Object.assign(newSlides, emptySlides);
-      console.log(
-        "props.media.StoryID is: ",
-        props.storyID,
-        props.feature,
-        newSlides.value
-      );
       await actions
         .getMedia(props.storyID)
         .then((newMedia) => {
-          console.log("returned media is: ", newMedia);
           Object.assign(newSlides, newMedia);
           newSlideCount.value = newSlides.length;
           newStartSlide.value = newSlides[0].MediaID;

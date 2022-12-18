@@ -2,8 +2,8 @@
   <div class="q-mb-md text-accent">
     <q-card vertical class="cardColor flat q-ma-md feed-card">
       <q-card-section class="text-h6 text-center"
-        >{{ todaysQuestion }} {{ todaysQuestionID }}</q-card-section
-      >
+        >{{ todaysQuestion }}
+      </q-card-section>
       <q-card-section v-if="qcIsAnswered === false && todaysQuestionID > 0">
         <q-input v-model="myAnswer" label="Your answer">
           <template v-slot:append>

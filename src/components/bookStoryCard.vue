@@ -1470,22 +1470,14 @@ export default defineComponent({
     const openTraditions = async () => {
       traditionsFlag.value = true;
       getTraditions();
-      console.log("traditions should be open, traditionList: ", traditionList);
     };
 
     const openInterviews = async () => {
       interviewsFlag.value = true;
       getInterviews();
-      console.log("interviews should be open, interviewList: ", interviewList);
     };
 
     const updateBooks = async (bookID, bookStatus) => {
-      console.log(
-        "bookID, bookStatus, storyID are: ",
-        bookID,
-        bookStatus,
-        props.story.StoryID
-      );
       if (bookStatus === true) {
         await bookActions
           .addToBooks(bookID, props.story.StoryID)

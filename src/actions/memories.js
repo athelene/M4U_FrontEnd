@@ -189,7 +189,6 @@ export default {
       token: token,
       reauthToken: reauthToken,
     };
-    //  console.log("api params are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
@@ -205,7 +204,6 @@ export default {
       token: token,
       reauthToken: reauthToken,
     };
-    //  console.log("api params are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
@@ -219,7 +217,6 @@ export default {
       token: token,
       reauthToken: reauthToken,
     };
-    //   console.log("api params are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
@@ -233,7 +230,6 @@ export default {
       token: token,
       reauthToken: reauthToken,
     };
-    // console.log("api params are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
@@ -247,7 +243,6 @@ export default {
       token: token,
       reauthToken: reauthToken,
     };
-    // console.log("api params are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
@@ -256,7 +251,6 @@ export default {
 
   async newMemory(userID, storyData, circleID) {
     var params = {};
-    //    console.log("incoming storyData is: ", storyData.StoryTypeID);
     let myroute = servername + "/addmemory";
     if (storyData.Hidden === true) {
       var hidden = 1;
@@ -265,7 +259,6 @@ export default {
     }
 
     if (storyData.StoryTypeID === 1) {
-      //      console.log("set params for type 1: ");
       params = {
         userID: userID,
         StoryTitle: storyData.StoryTitle,
@@ -276,7 +269,6 @@ export default {
         token: token,
         reauthToken: reauthToken,
       };
-      //      console.log("params are now: ", params);
     }
 
     if (storyData.StoryTypeID === 2) {
@@ -291,7 +283,6 @@ export default {
         token: token,
         reauthToken: reauthToken,
       };
-      //      console.log("params for type 2 ");
     }
 
     if (storyData.StoryTypeID === 3) {
@@ -323,11 +314,9 @@ export default {
       };
     }
 
-    //    console.log("params prior to api call are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
-    //   console.log("memories.js returns new story id as: ", result);
     return result;
   },
 
@@ -338,7 +327,6 @@ export default {
     } else {
       var hidden = 0;
     }
-    //    console.log("newCircle is: ", newCircle);
     var params = {};
     if (storyData.StoryTypeID === 1) {
       params = {
@@ -395,7 +383,6 @@ export default {
         reauthToken: reauthToken,
       };
     }
-    //   console.log("params prior to api call are: ", params);
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });

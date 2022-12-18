@@ -887,7 +887,7 @@
         </q-card>
       </q-dialog>
     </q-pull-to-refresh>
-    <q-page-sticky position="bottom-right" :offset="[8, 8]">
+    <q-page-sticky position="top" :offset="[8, 8]">
       <q-btn
         fab
         icon="add"
@@ -897,6 +897,16 @@
         style="z-index: 3"
       >
       </q-btn>
+    </q-page-sticky>
+    <q-page-sticky position="bottom-right" :offset="[8, 8]">
+      <q-btn
+        fab
+        icon="mdi-arrow-up"
+        color="accent"
+        size="lg"
+        @click="goToTop()"
+        style="z-index: 3"
+      ></q-btn>
     </q-page-sticky>
   </q-page>
 </template>
@@ -1030,6 +1040,10 @@ export default defineComponent({
       done();
     };
 
+    const goToTop = () => {
+      window.scrollTo(0, 0);
+    };
+
     const setDate = () => {
       var dateObj = new Date();
       var tcMonth = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -1050,17 +1064,11 @@ export default defineComponent({
     const startFilter = async () => {
       filterType.value = "memory";
       memoryTypeOn.value = !memoryTypeOn.value;
-      console.log(
-        "filterTypeValue and memoryTypeOn",
-        filterType.value,
-        memoryTypeOn.value
-      );
       setFilter("all");
     };
 
     const setFilter = async (newfilter) => {
       searchOn.value = false;
-      console.log("running setFilter and filter is: ", newfilter);
       if (newfilter !== filter.value) {
         filter.value = newfilter;
       }
@@ -1167,26 +1175,18 @@ export default defineComponent({
     };
 
     const getCircleList = async () => {
-      await actions
-        .getMyCircles(user.UserID)
-        .then((circles) => {
-          circles.forEach((circle) => {
-            circleList.push(circle);
-            console.log("circle.CircleName is: ", circle.CircleName);
+      await actions.getMyCircles(user.UserID).then((circles) => {
+        circles.forEach((circle) => {
+          circleList.push(circle);
 
-            if (
-              circle.CircleName !== "Everyone" &&
-              circle.CircleName !== "Journal"
-            ) {
-              console.log("meets criteria", circle.CircleName);
-              buttonList.push(circle);
-              console.log("buttonList after push is: ", buttonList.value);
-            }
-          });
-        })
-        .then(() => {
-          console.log("buttonList is: ", buttonList.value);
+          if (
+            circle.CircleName !== "Everyone" &&
+            circle.CircleName !== "Journal"
+          ) {
+            buttonList.push(circle);
+          }
         });
+      });
     };
 
     const setSearch = () => {
@@ -1267,7 +1267,6 @@ export default defineComponent({
     };
 
     const getGroupMemories = async (circleID) => {
-      console.log("in getGroupMemories circle ID is: ", circleID);
       filter.value = circleID;
       searchOn.value = false;
       searchTerm.value = "";
@@ -1282,13 +1281,14 @@ export default defineComponent({
           circleID
         )
         .then((newStories) => {
-          recordLast.value = newStories.output.recordCount;
-          stories.value = newStories.recordsets[0];
+          if (typeof newStories === "undefined") {
+            recordLast.value = newStories.output.recordCount;
+            stories.value = newStories.recordsets[0];
+          }
         });
     };
 
     const getMoreGroupMemories = async (circleID, index, done) => {
-      console.log("in getMoreGroupMemories circle ID is: ", circleID);
       filter.value = "all";
       if (recordStart.value < recordLast.value || !recordLast.value) {
         recordStart.value = recordStart.value + pageLength.value;
@@ -1398,7 +1398,6 @@ export default defineComponent({
     };
 
     const setGroup = async (circleID, circleName) => {
-      console.log("line 1370 circleID is: ", circleID);
       filterType.value = "group";
       circleTitle.value = circleName;
       setFilter(circleID);
@@ -1728,7 +1727,6 @@ export default defineComponent({
     };
 
     const getMyBooksToAdd = async () => {
-      console.log("storyID.value is: ", storyID.value);
       await bookActions
         .getBooksToAddStory(user.UserID, storyID.value)
         .then((books) => {
@@ -1852,6 +1850,7 @@ export default defineComponent({
       getMoreAllStories,
       getNewMedia,
       getTraditions,
+      goToTop,
       handleFileUpload,
       hidden,
       imageFullScreen,

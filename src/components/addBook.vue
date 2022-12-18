@@ -274,7 +274,6 @@ export default defineComponent({
     };
 
     const toggleTc = async () => {
-      console.log("makeTc is: ", makeTc.value);
       if (makeTc.value === true) {
         tcStartDate();
         return;

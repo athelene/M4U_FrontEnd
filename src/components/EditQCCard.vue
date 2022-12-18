@@ -258,7 +258,6 @@ export default defineComponent({
           userState.user.UserID
         )
         .then((result) => {
-          console.log("done running edit quetions: ", result);
           editQuestionDialog.value = false;
           emit("updateQuestions");
         });

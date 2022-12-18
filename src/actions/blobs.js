@@ -98,13 +98,6 @@ export default {
         "Content-Type": "multipart/form-data",
       },
     });
-    //     .then((profileSas) => {
-    // console.log(
-    //   "eventservice addnewProfileblob then, profileSas.data is: ",
-    //   profileSas.data
-    // );
-    //        return profileSas.data;
-    //      });
     return profileReturn;
   },
 
@@ -138,13 +131,11 @@ export default {
   async callApi(myroute, params) {
     try {
       let res = await axios.get(myroute, { params });
-      //     console.log("memories.js route and res.data is: ", myroute, res.data);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
         unAuthRedirect();
       }
-      console.log("send the user to the login page", error);
     }
   },
 };

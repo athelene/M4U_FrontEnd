@@ -259,7 +259,6 @@ export default defineComponent({
       if (!editUserSubExpiration.value) {
         noUserMsg.value = "You must enter a subscription type.";
       }
-      console.log("editUserID.value is: ", editUserID.value);
       await adminActions
         .editUser(
           editUserSubExpiration.value,

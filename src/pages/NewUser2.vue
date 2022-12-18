@@ -50,9 +50,7 @@ export default {
     const successURL = "www.memoriesforus.com/#/newsubscribersuccess";
     const cancelURL = "www.memoriesforus.com/#/newsubscribercancel";
 
-    onMounted(() => {
-      console.log("process.env : ", process.env.STRIPEPUBKEY);
-    });
+    onMounted(() => {});
 
     async function submitPayment() {
       ref(checkoutRef.redirectToCheckout());
@@ -63,16 +61,9 @@ export default {
         errorMsg.value = "You must include a user name and password.";
         return;
       }
-      console.log("we are ready to login");
-      console.log(
-        "LoginPage is sending user and userPassword: ",
-        user.value,
-        userPassword.value
-      );
       await loginAction
         .login(user.value, userPassword.value)
         .then((loginResult) => {
-          console.log("result from login is: ", loginResult);
           if (loginResult === false) {
             errorMsg.value = "Invalid email or password";
             return;
@@ -96,10 +87,6 @@ export default {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
-            console.log(
-              "userState  after Login on LoginPage is: ",
-              userState.user
-            );
             router.push({ path: "/home" });
           } else {
             errorMsg.value = "Invalid Login";

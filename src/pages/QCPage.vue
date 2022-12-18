@@ -189,13 +189,11 @@ export default defineComponent({
           answerList.value = answers;
         })
         .then(() => {
-          console.log("answerLIst is: ", answerList.value);
           qcActions.getMyAnswer(user.UserID, questionID).then((myanswer) => {
             myanswer.forEach((element) => {
               if (element.UserID === user.UserID) {
                 editAnswerInput.value = myanswer[0].VPAnswer;
                 editAnswerID.value = myanswer[0].VPAnswerID;
-                console.log("editAnswerID is: ", editAnswerID.value);
               } else {
                 editAnswerInput.value = null;
                 editAnswerID.value = null;
@@ -213,7 +211,6 @@ export default defineComponent({
 
     const saveMyAnswer = async (type, answerID) => {
       if (editAnswerID.value) {
-        console.log("answerID is: ", answerID);
         await qcActions.updateMyAnswer(
           editAnswerID.value,
           editAnswerInput.value,
@@ -221,7 +218,6 @@ export default defineComponent({
         );
       }
       if (!editAnswerID.value) {
-        console.log("answerID is: ", answerID);
         await qcActions.saveMyAnswer(
           answerID,
           editAnswerInput.value,

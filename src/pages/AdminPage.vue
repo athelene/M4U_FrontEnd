@@ -292,7 +292,6 @@ export default defineComponent({
     const userDialogOpen = async () => {
       await adminActions.getUserList().then((users) => {
         userList.value = users;
-        console.log("users, userList: ", users, userList.value);
       });
       userDialog.value = true;
     };

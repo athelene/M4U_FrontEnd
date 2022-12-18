@@ -89,7 +89,6 @@ export default {
     });
 
     onMounted(() => {
-      console.log("starting login/registration page", $q.platform);
       if ($q.platform.is.mobile) {
         errorMsg.value =
           "Due to app store restrictions, you must register for Memories For Us on our webpage at memoriesforus.com/register.";
@@ -98,8 +97,6 @@ export default {
     });
 
     async function signup() {
-      console.log("started signup");
-
       if (userFirst.value.length < 2 || userLast.value.length < 2) {
         errorMsg.value =
           "First and last name must be at least 2 characters each.";
@@ -127,7 +124,6 @@ export default {
           }
         })
         .then(() => {
-          console.log("about to save user info");
           loginAction
             .register(
               userFirst.value,
@@ -137,7 +133,6 @@ export default {
               userPassword.value
             )
             .then((regResult) => {
-              console.log("regResult is: ", regResult);
               if (regResult !== "") {
                 errorMsg.value =
                   "Registration failed. Please try again or contact support.";
@@ -155,7 +150,6 @@ export default {
       await loginAction
         .login(email.value, userPassword.value)
         .then((loginResult) => {
-          console.log("result from login is: ", loginResult);
           if (loginResult === false) {
             errorMsg.value = "Invalid email or password";
             window.scrollTo(0, 0);
@@ -183,10 +177,6 @@ export default {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
-            console.log(
-              "userState  after Login on LoginPage is: ",
-              userState.user
-            );
             router.push({ path: "/home" });
           } else {
             errorMsg.value = "Invalid Login";

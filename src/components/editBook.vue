@@ -215,7 +215,6 @@ export default defineComponent({
 
     onMounted(() => {
       getCircleList();
-      console.log("bookID in editBooks is: ", props.bookID);
       getBookDetails();
     });
 
@@ -259,13 +258,11 @@ export default defineComponent({
           openTcFields.value = true;
           makeTc.value = true;
           selectedDate.value = bookDetails[0].TimeCapsuleDate.substring(0, 10);
-          console.log("tcDate is: ", selectedDate.value);
         }
       });
     };
 
     const toggleTc = async () => {
-      console.log("makeTc is: ", makeTc.value);
       if (makeTc.value === true) {
         tcStartDate();
         return;

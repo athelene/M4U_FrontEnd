@@ -167,7 +167,6 @@ export default defineComponent({
     });
 
     watch(newViewPointDate, (val, oldval) => {
-      console.log("add watch val is: ", val);
       var dd = Number(val.slice(8, 10));
       var mm = Number(val.slice(5, 7)) - 1;
       var yyyy = Number(val.slice(0, 4));

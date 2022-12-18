@@ -30,7 +30,6 @@ if (servername === "https://localhost") {
 export default {
   //used to get the user's books that do not already contain a specific story
   async getBooksToAddStory(userID, storyID) {
-    console.log("ES sees book info as: ", userID, storyID);
     let myroute = servername + "/getbookstoaddtostory";
     const params = {
       userID: userID,
@@ -45,7 +44,6 @@ export default {
   },
 
   async addToBooks(bookID, storyID) {
-    console.log("ES addToBooks receives: ", bookID, storyID);
     let myroute = servername + "/addtobooks";
     const params = {
       bookID: bookID,
@@ -167,7 +165,6 @@ export default {
     coverColor,
     coverFont
   ) {
-    console.log("starting bookactions.editbook");
     let myroute = servername + "/editbook";
     const params = {
       userID: userID,
@@ -188,7 +185,6 @@ export default {
 
   async getBookDetails(bookID) {
     let myroute = servername + "/getbookdetails";
-    console.log("getting book details for: ", bookID);
     const params = {
       bookID: bookID,
       token: token,

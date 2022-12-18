@@ -73,7 +73,6 @@ export default {
   },
 
   async checkoutPage(userEmail) {
-    console.log("starting loginAction checkoutpage", userEmail);
     let myroute = servername + "/create-checkout-session";
     const params = {
       userEmail: userEmail,

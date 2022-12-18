@@ -114,7 +114,6 @@ export default defineComponent({
           user.UserSubType
         )
         .then((invitationreturn) => {
-          console.log("return from api is: ", invitationreturn);
           if (invitationreturn === "Duplicate") {
             message.value = "You have already invited this person.";
           } else if (invitationreturn === "Member") {
