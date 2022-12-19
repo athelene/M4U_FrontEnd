@@ -1,8 +1,7 @@
 <template>
-  <div class="q-mt-md text-center">
-    {{ media }} in mediaCard
+  <div class="text-center" style="width: 100%">
     <div
-      class="row justify-center cardColor q-pa-lg"
+      class="row justify-center cardColor q-pa-lg q-mt-md"
       v-if="media.MediaType === 2"
     >
       <q-img :src="mediaURL" style="height: 300px" fit="contain">

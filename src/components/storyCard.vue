@@ -13,7 +13,7 @@
           navigation
           padding
           arrows
-          height="250px"
+          height="350px"
           class="mediaBackground flat shadow-1 rounded-borders"
         >
           <q-carousel-slide
@@ -104,36 +104,19 @@
         </q-dialog>
       </q-card-section>
       <!--STARTING THE DETAILS SECTION OF THE STORY CARD-->
-      <q-card-section class="col-4 text-h3">
+      <q-card-section class="col-4 text-h3" @click="fullScreenDialog = true">
         <div class="text-h6 text-accent q-mb-sm">
           <div class="text-h6" v-if="story.StoryTypeID === 2">
             Interview of {{ story.Interviewee }}
           </div>
           <div class="text-h5" v-if="story.StoryTypeID === 4">Tradition</div>
           {{ story.StoryTitle }}
-          <q-btn
-            flat
-            icon="mdi-arrow-expand-all"
-            @click="fullScreenDialog = true"
-          >
-            <q-tooltip>Full Screen</q-tooltip>
-          </q-btn>
 
-          <q-scroll-area
-            class="scrollArea text-body1"
-            :visible="scrollVisible"
-            v-if="story.StoryText && story.StoryTypeID !== 3"
-          >
-            <div v-html="story.StoryText"></div>
-          </q-scroll-area>
+          <div v-html="story.StoryText" class="preview-text text-body1"></div>
         </div>
-        <div class="text-body1" v-if="story.StoryTypeID === 3">
-          <div class="text-body1"></div>
-          <q-scroll-area
-            class="scrollArea text-body1"
-            :visible="scrollVisible"
-            v-if="story.StoryText"
-          >
+        <div class="preview-text">
+          <div class="text-body1" v-if="story.StoryTypeID === 3">
+            <div class="text-body1 preview-text"></div>
             <span
               class="text-subtitle1 text-weight-bold text-accent"
               v-if="story.StoryTypeID === 3"
@@ -152,7 +135,7 @@
               <div>Directions:</div></span
             >
             <div v-html="story.StoryText" class="text-body1 text-accent"></div>
-          </q-scroll-area>
+          </div>
         </div>
         <!--END MEMORY DETAILS SECTION-->
       </q-card-section>
@@ -1791,6 +1774,13 @@ export default defineComponent({
 
 .commentHeader {
   font-weight: bold;
+}
+
+.preview-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .titleInput {
