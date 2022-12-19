@@ -1281,7 +1281,7 @@ export default defineComponent({
           circleID
         )
         .then((newStories) => {
-          if (typeof newStories === "undefined") {
+          if (typeof newStories !== "undefined") {
             recordLast.value = newStories.output.recordCount;
             stories.value = newStories.recordsets[0];
           }
