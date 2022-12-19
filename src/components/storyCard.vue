@@ -111,8 +111,9 @@
           </div>
           <div class="text-h5" v-if="story.StoryTypeID === 4">Tradition</div>
           {{ story.StoryTitle }}
-
-          <div v-html="story.StoryText" class="preview-text text-body1"></div>
+          <sapn v-if="story.StoryTypeID !== 3">
+            <div v-html="story.StoryText" class="preview-text text-body1"></div>
+          </sapn>
         </div>
         <div class="preview-text">
           <div class="text-body1" v-if="story.StoryTypeID === 3">
