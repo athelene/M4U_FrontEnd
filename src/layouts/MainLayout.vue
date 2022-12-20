@@ -88,6 +88,15 @@
         <q-item clickable v-ripple @click="goToPage('/share')">
           <q-item-section> Share Groups </q-item-section>
         </q-item>
+        <q-item clickable v-ripple @click="goToPage('/quickconnect')">
+          <q-item-section> See All Quick Connect Questions</q-item-section>
+        </q-item>
+        <q-item clickable v-ripple @click="goToPage('/suggestqc')">
+          <q-item-section> Suggest A Quick Connect Question </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple @click="goToPage('/suggestinterview')">
+          <q-item-section> Suggest an Interview Question </q-item-section>
+        </q-item>
         <q-item clickable v-ripple @click="moreBtn = !moreBtn">
           <q-item-section>
             <q-icon

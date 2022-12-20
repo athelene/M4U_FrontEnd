@@ -2,7 +2,7 @@
   <div class="q-mb-md">
     <q-card vertical class="cardColor flat q-ma-md feed-card">
       <!--NEW MEDIA SECTION-->
-      <q-card-section v-if="slideList && slideList.length > 0">
+      <q-card-section v-if="slideList && slideList.length > 0" class="q-pt-md">
         <q-carousel
           v-model="startSlide"
           transition-prev="slide-right"
@@ -11,9 +11,7 @@
           animated
           control-color="accent"
           navigation
-          padding
           arrows
-          height="350px"
           class="mediaBackground flat shadow-1 rounded-borders"
         >
           <q-carousel-slide
@@ -111,9 +109,9 @@
           </div>
           <div class="text-h5" v-if="story.StoryTypeID === 4">Tradition</div>
           {{ story.StoryTitle }}
-          <sapn v-if="story.StoryTypeID !== 3">
+          <span v-if="story.StoryTypeID !== 3">
             <div v-html="story.StoryText" class="preview-text text-body1"></div>
-          </sapn>
+          </span>
         </div>
         <div class="preview-text">
           <div class="text-body1" v-if="story.StoryTypeID === 3">
@@ -145,7 +143,7 @@
       <!--STARTING THE COMMENTS SECTION-->
       <q-card-section>
         <div v-if="commentsOpen">
-          <q-card style="max-width: 85%">
+          <q-card style="max-width: 90%">
             <q-card-section class="row items-center q-pb-none">
               <div class="text-h6">Add a comment</div>
               <q-space />
@@ -558,7 +556,7 @@
           transition-show="rotate"
           transition-hide="rotate"
         >
-          <q-card width="80%">
+          <q-card width="100%">
             <q-card-section>
               <q-btn
                 icon="mdi-camera-plus"
@@ -1727,11 +1725,11 @@ export default defineComponent({
 </script>
 <style scoped>
 .feed-card {
-  width: 85%;
+  width: 90%;
   margin: auto;
 }
 .qc-card {
-  width: 85%;
+  width: 90%;
   margin: auto;
 }
 

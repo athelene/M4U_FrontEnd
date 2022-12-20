@@ -10,6 +10,7 @@
             @click="getInfo = true"
           ></q-icon>
         </p>
+        <q-btn label="Suggest a Question" flat to="suggestqc"></q-btn>
 
         <q-dialog v-model="getInfo">
           <q-card>

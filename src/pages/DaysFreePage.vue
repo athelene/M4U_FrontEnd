@@ -9,16 +9,20 @@
     <div class="text-center text-h6 flex-center">
       <div class="col cardSection rounded-borders q-mb-md text-center">
         <div>
-          <q-avatar icon="mdi-send" class="text-info"></q-avatar> Send a friend
-          an invitation to join Memories for Us. When they sign up, you will
-          receive 30 days free!
+          <q-avatar icon="mdi-send" class="text-info"></q-avatar>
+          <q-btn color="accent" @click="goToInvitePage()"
+            >Click here to send a friend an invitation to join Memories for Us.
+            When they sign up, you will receive 30 days free!</q-btn
+          >
         </div>
       </div>
       <div class="col cardSection rounded-borders q-mb-md">
         <div>
-          <q-avatar icon="mdi-connection" class="text-info"></q-avatar> Submit a
-          question we can use for the daily QuickConnect feature.
-          <q-btn flat class="alert" @click="note = !note">(Details)</q-btn>
+          <q-avatar icon="mdi-connection" class="text-info"></q-avatar>
+          <q-btn color="accent" @click="goToQCPage()"
+            >Click here to submit a question we can use for the Quick Connect
+            feature.</q-btn
+          >
         </div>
       </div>
       <div class="col cardEnd rounded-borders">
@@ -27,8 +31,10 @@
             icon="mdi-head-question-outline"
             class="text-info"
           ></q-avatar>
-          Submit a question we can use for the daily QuickConnect feature.
-          <q-btn flat class="alert" @click="note = !note">(Details)</q-btn>
+          <q-btn color="accent" @click="goToInterviewPage()"
+            >Click here to submit a question we can use for the Interview
+            feature.</q-btn
+          >
         </div>
       </div>
     </div>
@@ -36,14 +42,6 @@
       <q-card>
         <q-card-section>
           <div class="text-h6">Promotion Details</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          Suggestions for QuickConnect and Interview questions will be rewarded
-          to the first user to submit a question we use. Suggestions that are
-          substantially similar will not count as a new question. Memories For
-          Us reserves the right to determine which questions are alike and which
-          questions will be used.
         </q-card-section>
 
         <q-card-actions align="right">
@@ -70,12 +68,28 @@ export default defineComponent({
     const userState = useUserStore();
     const user = reactive(userState.user);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
+    const router = useRouter();
     const note = ref(false);
 
     onMounted(() => {});
 
+    const goToQCPage = () => {
+      router.push("/suggestqc");
+    };
+
+    const goToInterviewPage = () => {
+      router.push("/suggestinterview");
+    };
+
+    const goToInvitePage = () => {
+      router.push("/invite");
+    };
+
     return {
       note,
+      goToInterviewPage,
+      goToInvitePage,
+      goToQCPage,
     };
   },
 });

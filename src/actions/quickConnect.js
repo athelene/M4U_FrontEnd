@@ -229,6 +229,20 @@ export default {
     return result;
   },
 
+  async saveQCSuggestion(userID, qcSuggestion) {
+    let myroute = servername + "/saveQCSuggestion";
+    const params = {
+      userID: userID,
+      qcSuggestion: qcSuggestion,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   //USED TO CALL EVERY API IN THIS FILE
   async callApi(myroute, params) {
     try {

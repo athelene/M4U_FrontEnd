@@ -4,7 +4,7 @@
       <!--STARTING QUICK CONNECT-->
       <div>
         <qcCard
-          class="qcCard"
+          class="qcCard q-mt-xl"
           v-if="filterType === 'memory' || filterType === 'group'"
         ></qcCard>
       </div>
@@ -337,11 +337,11 @@
         transition-show="rotate"
         transition-hide="rotate"
       >
-        <q-card width="80%">
+        <q-card tyle="min-width: 400px">
           <q-card-section>
             <q-btn icon="mdi-camera-plus" @click="startCameraDialog()"></q-btn>
             <q-dialog v-model="openCameraDialog" persistent>
-              <q-card style="min-width: 350px">
+              <q-card style="min-width: 400px">
                 <q-card-section class="q-pt-md">
                   <q-file
                     rounded
@@ -371,7 +371,7 @@
 
             <!--END CAMERA DIALOG-->
           </q-card-section>
-          <q-card-section>
+          <q-card-section width="100%">
             <div class="text-h6">New Memory</div>
             <div>
               <q-btn-group spread>
@@ -518,28 +518,14 @@
               <!--small editor for ingredients-->
 
               <!--small editor for ingredients-->
-              <q-editor
-                v-if="ingEditorType === 'small'"
-                ref="ingredientsRef"
-                @paste="onPasteIng"
-                v-model="storyIngredients"
-                content-class="bg-primary"
-                toolbar-text-color="white"
-                toolbar-bg="accent"
-                :toolbar="[
-                  ['bold'],
-                  [
-                    {
-                      label: $q.lang.editor.align,
-                      icon: $q.iconSet.editor.align,
-                      fixedLabel: true,
-                      list: 'only-icons',
-                      options: ['left', 'center', 'right', 'justify'],
-                    },
-                  ],
-                  ['unordered', 'ordered', 'outdent', 'indent'],
-                ]"
-              />
+              <q-editor width: 50vw v-if="ingEditorType === 'small'"
+              ref="ingredientsRef" @paste="onPasteIng"
+              v-model="storyIngredients" content-class="bg-primary"
+              toolbar-text-color="white" toolbar-bg="accent" :toolbar="[
+              ['bold'], [ { label: $q.lang.editor.align, icon:
+              $q.iconSet.editor.align, fixedLabel: true, list: 'only-icons',
+              options: ['left', 'center', 'right', 'justify'], }, ],
+              ['unordered', 'ordered', 'outdent', 'indent'], ]" />
               <!--full editor for ingredients-->
               <q-editor
                 v-model="storyIngredients"

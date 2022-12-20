@@ -189,6 +189,30 @@ const routes = [
   },
 
   {
+    path: "/SuggestQCPage",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/suggestqc",
+        name: "suggestqc",
+        component: () => import("pages/SuggestQCPage.vue"),
+      },
+    ],
+  },
+
+  {
+    path: "/SuggestInterviewPage",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/suggestinterview",
+        name: "suggestinterview",
+        component: () => import("pages/SuggestInterviewPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/profile",
     name: "/profile",
     component: () => import("layouts/MainLayout.vue"),

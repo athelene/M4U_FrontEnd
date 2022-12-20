@@ -1,10 +1,10 @@
 <template>
   <div class="text-center" style="width: 100%">
     <div
-      class="row justify-center cardColor q-pa-lg q-mt-md"
+      class="row justify-center cardColor q-mt-xs"
       v-if="media.MediaType === 2"
     >
-      <q-img :src="mediaURL" style="height: 300px" fit="contain">
+      <q-img :src="mediaURL" fit="contain">
         <template v-slot:loading>
           <div class="accent">
             <q-spinner-ios />

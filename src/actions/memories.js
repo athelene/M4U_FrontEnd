@@ -429,6 +429,20 @@ export default {
     return result;
   },
 
+  async saveInterviewSuggestion(userID, interviewSuggestion) {
+    let myroute = servername + "/saveInterviewSuggestion";
+    const params = {
+      userID: userID,
+      interviewSuggestion: interviewSuggestion,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async callApi(myroute, params) {
     try {
       let res = await axios.get(myroute, { params });
