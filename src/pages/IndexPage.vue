@@ -518,14 +518,28 @@
               <!--small editor for ingredients-->
 
               <!--small editor for ingredients-->
-              <q-editor width: 50vw v-if="ingEditorType === 'small'"
-              ref="ingredientsRef" @paste="onPasteIng"
-              v-model="storyIngredients" content-class="bg-primary"
-              toolbar-text-color="white" toolbar-bg="accent" :toolbar="[
-              ['bold'], [ { label: $q.lang.editor.align, icon:
-              $q.iconSet.editor.align, fixedLabel: true, list: 'only-icons',
-              options: ['left', 'center', 'right', 'justify'], }, ],
-              ['unordered', 'ordered', 'outdent', 'indent'], ]" />
+              <q-editor
+                v-if="ingEditorType === 'small'"
+                ref="ingredientsRef"
+                @paste="onPasteIng"
+                v-model="storyIngredients"
+                content-class="bg-primary"
+                toolbar-text-color="white"
+                toolbar-bg="accent"
+                :toolbar="[
+                  ['bold'],
+                  [
+                    {
+                      label: $q.lang.editor.align,
+                      icon: $q.iconSet.editor.align,
+                      fixedLabel: true,
+                      list: 'only-icons',
+                      options: ['left', 'center', 'right', 'justify'],
+                    },
+                  ],
+                  ['unordered', 'ordered', 'outdent', 'indent'],
+                ]"
+              />
               <!--full editor for ingredients-->
               <q-editor
                 v-model="storyIngredients"

@@ -1,8 +1,13 @@
 <template>
   <div class="q-mb-md text-accent">
     <q-card vertical class="cardColor flat q-ma-md feed-card">
-      <q-card-section class="text-center">{{ todaysQuestion }} </q-card-section>
-      <q-card-section v-if="qcIsAnswered === false && todaysQuestionID > 0">
+      <q-card-section class="text-center q-mt-none q-mb-none"
+        >{{ todaysQuestion }}
+      </q-card-section>
+      <q-card-section
+        v-if="qcIsAnswered === false && todaysQuestionID > 0"
+        horizontalclass="q-mt-none q-mb-none"
+      >
         <q-input v-model="myAnswer" label="Your answer">
           <template v-slot:append>
             <q-icon
@@ -13,18 +18,25 @@
           </template>
         </q-input>
       </q-card-section>
-      <q-card-section v-if="qcIsAnswered === true" class="text-center">
+      <q-card-section
+        v-if="qcIsAnswered === true"
+        class="text-center q-mt-none q-mb-none"
+      >
         <span class="text-h8">Me: {{ myAnswer }} </span>
         <q-btn
           flat
+          size="xs"
           icon="mdi-pencil-outline"
           @click="qcIsAnswered = !qcIsAnswered"
         ></q-btn>
       </q-card-section>
       <q-card-section v-if="qcTotal > 0" class="text-center">
         <q-btn
+          v-if="seeAnswersBtnLabel === 'open'"
           flat
-          :label="seeAnswersBtnLabel"
+          size="sm"
+          icon="mdi-arrow-down"
+          label="Answers"
           class="accent"
           @click="seeAnswers()"
         >
@@ -36,6 +48,16 @@
             v-if="qcTotal > 0"
           ></q-badge
         ></q-btn>
+        <q-btn
+          v-if="seeAnswersBtnLabel === 'closed'"
+          flat
+          size="sm"
+          label="Close"
+          icon="mdi-arrow-up"
+          class="accent"
+          @click="seeAnswers()"
+        >
+        </q-btn>
       </q-card-section>
       <div v-if="seeAnswersFlag === true">
         <q-card-section
@@ -79,7 +101,7 @@ export default defineComponent({
     const vpAnswerID = ref(0);
     const qcIsAnswered = ref(false);
     const seeAnswersFlag = ref(false);
-    const seeAnswersBtnLabel = ref("See Answers");
+    const seeAnswersBtnLabel = ref("open");
 
     onMounted(() => {
       getTodaysDate();
@@ -141,10 +163,10 @@ export default defineComponent({
       if (seeAnswersFlag.value === false) {
         getCircleAnswersToday();
         seeAnswersFlag.value = true;
-        seeAnswersBtnLabel.value = "Close Answers";
+        seeAnswersBtnLabel.value = "closed";
       } else {
         seeAnswersFlag.value = false;
-        seeAnswersBtnLabel.value = "See Answers";
+        seeAnswersBtnLabel.value = "open";
       }
     };
 
