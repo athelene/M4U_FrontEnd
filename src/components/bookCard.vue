@@ -69,6 +69,15 @@
           <span class="text-weight-bold"
             >by {{ bookDetails.UserDisplayName }}</span
           >
+          <div class="flex-center">
+            <q-btn
+              v-if="bookSlide !== 'toc'"
+              icon="mdi-arrow-left"
+              class="q-ml-lg"
+              label="Table of Memories"
+              @click="bookSlide = 'toc'"
+            ></q-btn>
+          </div>
         </q-card-section>
         <!--START EDIT BOOK TITLE DIALOG-->
         <q-dialog v-model="editBookTitleDialog" persistent>
@@ -127,6 +136,7 @@
                 </q-list>
               </div>
             </q-carousel-slide>
+
             <q-carousel-slide
               :name="bookMemory.StoryID"
               class="no-wrap flex-center"
@@ -140,13 +150,6 @@
                   @updateFeed="getBookContent"
                   class="feedCard"
                 ></BookStoryCard>
-                <div class="flex-center">
-                  <q-btn
-                    class="q-ml-lg"
-                    label="Table of Memories"
-                    @click="bookSlide = 'toc'"
-                  ></q-btn>
-                </div>
               </div>
             </q-carousel-slide>
             <template v-slot:control>
@@ -164,7 +167,7 @@
                   text-color="primary"
                   icon="arrow_left"
                   @click="$refs.carousel.previous()"
-                />
+                ></q-btn>
               </q-carousel-control>
               <q-carousel-control
                 position="right"
@@ -179,7 +182,7 @@
                   text-color="primary"
                   icon="arrow_right"
                   @click="$refs.carousel.next()"
-                />
+                ></q-btn>
               </q-carousel-control>
             </template>
           </q-carousel>
