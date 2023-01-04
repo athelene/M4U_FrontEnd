@@ -13,7 +13,7 @@
           navigation
           padding
           arrows
-          height="250px"
+          height="auto"
           class="mediaBackground flat shadow-1 rounded-borders"
         >
           <q-carousel-slide
