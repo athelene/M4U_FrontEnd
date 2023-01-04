@@ -1,7 +1,15 @@
 <template>
   <div class="q-mb-md text-accent">
     <q-card vertical class="cardColor flat q-ma-md feed-card">
-      <q-card-section class="text-center q-mt-none q-mb-none"
+      <q-card-section
+        v-if="!todaysQuestion"
+        class="text-center q-mt-none q-mb-none"
+      >
+        <router-link to="/quickconnect">Explore QuickConnect</router-link>
+      </q-card-section>
+      <q-card-section
+        class="text-center q-mt-none q-mb-none"
+        v-if="todaysQuestion"
         >{{ todaysQuestion }}
       </q-card-section>
       <q-card-section
