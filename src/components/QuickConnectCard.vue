@@ -1,6 +1,6 @@
 <template>
   <div class="q-mb-md text-accent">
-    <q-card vertical class="cardColor flat q-ma-md feed-card">
+    <q-card vertical class="cardColor flat q-ma-md feed-card bg-secondary">
       <q-card-section
         v-if="!todaysQuestion"
         class="text-center q-mt-none q-mb-none"
@@ -213,6 +213,7 @@ export default defineComponent({
 .qc-card {
   width: 85%;
   margin: auto;
+  background-color: #e9f7f4;
 }
 
 .video-wrapper {

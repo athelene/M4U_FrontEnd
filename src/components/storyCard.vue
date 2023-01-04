@@ -1,6 +1,6 @@
 <template>
   <div class="q-mb-md">
-    <q-card vertical class="cardColor flat q-ma-md feed-card">
+    <q-card vertical class="cardColor flat q-ma-md feed-card bg-secondary">
       <!--NEW MEDIA SECTION-->
       <q-card-section v-if="slideList && slideList.length > 0" class="q-pt-md">
         <q-carousel
@@ -115,7 +115,6 @@
         </div>
         <div class="preview-text">
           <div class="text-body1" v-if="story.StoryTypeID === 3">
-            <div class="text-body1 preview-text"></div>
             <span
               class="text-subtitle1 text-weight-bold text-accent"
               v-if="story.StoryTypeID === 3"

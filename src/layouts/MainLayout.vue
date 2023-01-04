@@ -322,6 +322,11 @@ export default defineComponent({
       token,
       user,
     };
+    //   .bg-image {
+    // background-image: url(../../public/background.jpg);
+    // background-repeat: no-repeat;
+    // background-size: contain;
+    //}
   },
 });
 </script>
@@ -330,7 +335,7 @@ body {
   color: #160159;
 }
 .bg-image {
-  background-image: url(../../public/background.jpg);
+  background-image: url(../../public/istockphotob.jpeg);
   background-repeat: no-repeat;
   background-size: contain;
 }

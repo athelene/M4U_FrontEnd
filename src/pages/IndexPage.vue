@@ -10,71 +10,21 @@
       </div>
       <!--ERROR MSG, BUTTON GROUP SEARCH-->
       <div class="q-pa-md items-start flex-center">
-        <q-card class="q-mt-md feed-card transparent" flat>
+        <q-card class="q-mt-md feed-card transparent bg-secondary" flat>
           <q-card-section v-if="message">
             {{ message }}
           </q-card-section>
           <q-card-section class="q-mt-md feed-card transparent" flat>
             <!--HEADER DETERMINED BY FILTER-->
-            <p class="text-h5 text-center text-info" v-if="filter === 'all'">
-              All Memories
-            </p>
-            <p class="text-h5 text-center text-info" v-if="filter === 'mine'">
-              My Memories
-            </p>
-            <p class="text-h5 text-center text-info" v-if="filter === 'drafts'">
-              Draft Memories
-            </p>
-            <p
-              class="text-h5 text-center text-info"
-              v-if="filterType === 'group'"
-            >
-              {{ circleTitle }} Memories
-            </p>
-            <p
-              class="text-h5 text-center text-info"
-              v-if="filter === 'journal'"
-            >
-              Journal
-            </p>
-            <p
-              class="text-h5 text-center text-info"
-              v-if="filter === 'allbooks'"
-            >
-              Books
-              <q-btn
-                color="accent"
-                v-if="filterType === 'book'"
-                size="sm"
-                @click="newBookDialog = true"
-                >New Book</q-btn
-              >
-            </p>
+            <p class="text-h4 text-center text-info text-weight-bolder">
+              {{ filterText }}
 
-            <p
-              class="text-h5 text-center text-info"
-              v-if="filter === 'mybooks'"
-            >
-              My Books
               <q-btn
                 color="accent"
                 v-if="filterType === 'book'"
                 size="sm"
                 @click="newBookDialog = true"
                 >New Book</q-btn
-              >
-            </p>
-            <p
-              class="text-h5 text-center text-info"
-              v-if="filter === 'timecapsule'"
-            >
-              Time Capsules
-              <q-btn
-                color="accent"
-                v-if="filterType === 'book'"
-                size="sm"
-                @click="newBookDialog = true"
-                >New Capsule</q-btn
               >
             </p>
 
@@ -1021,6 +971,7 @@ export default defineComponent({
     const traditionList = reactive([]);
     const ingEditorType = ref("small");
     const memEditorType = ref("small");
+    const filterText = ref("Memories");
 
     const booksDialogFlag = ref(false);
 
@@ -1075,12 +1026,14 @@ export default defineComponent({
 
       if (filterType.value === "group") {
         filter.value = "all";
+        filterText.value = circleTitle.value + " Memories";
         getGroupMemories(newfilter);
       }
 
       //Start memory filters
       if (filter.value === "all") {
         filterType.value = "memory";
+        filterText.value = "All Memories";
         getAllStories();
         draftCount();
         filterIcon.value = "mdi-filter-outline";
@@ -1088,6 +1041,7 @@ export default defineComponent({
       }
       if (filter.value === "mine") {
         filterType.value = "memory";
+        filterText.value = "My Memories";
         getMyStories();
         draftCount();
         filterIcon.value = "mdi-filter";
@@ -1095,6 +1049,7 @@ export default defineComponent({
       }
       if (filter.value === "drafts") {
         filterType.value = "memory";
+        filterText.value = "Drafts";
         getDrafts();
         draftCount();
         filterIcon.value = "mdi-filter";
@@ -1102,6 +1057,7 @@ export default defineComponent({
       }
       if (filter.value === "journal") {
         filterType.value = "memory";
+        filterText.value = "My Journal";
         getMyJournal();
         draftCount();
         filterIcon.value = "mdi-filter";
@@ -1112,6 +1068,7 @@ export default defineComponent({
 
       if (filter.value === "allbooks") {
         filterType.value = "book";
+        filterText.value = "All Books";
         getAllBooks();
         draftCount();
         filterIcon.value = "mdi-filter";
@@ -1120,6 +1077,7 @@ export default defineComponent({
 
       if (filter.value === "mybooks") {
         filterType.value = "book";
+        filterText.value = "My Books";
         getAllMyBooks();
         draftCount();
         filterIcon.value = "mdi-filter";
@@ -1128,6 +1086,7 @@ export default defineComponent({
 
       if (filter.value === "timecapsule") {
         filterType.value = "book";
+        filterText.value = "Time Capsules";
         getTimeCapsules();
         draftCount();
         filterIcon.value = "mdi-filter";
@@ -1842,6 +1801,7 @@ export default defineComponent({
       ingredientsRef,
       filter,
       filterIcon,
+      filterText,
       filterType,
       getGroupMemories,
       getMoreGroupMemories,
@@ -1930,7 +1890,7 @@ export default defineComponent({
 }
 
 .cardColor {
-  background-color: #fefbee;
+  background-color: #ffffff;
 }
 .qc-card {
   width: 85%;
@@ -1951,7 +1911,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(/background.jpg);
+  background-image: url(../../public/m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }
