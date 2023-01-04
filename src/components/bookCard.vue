@@ -10,6 +10,9 @@
     <div class="shadow">
       <div class="topOfBook bookClass bookText" lang="en">
         <p class="text-center">
+          <q-avatar size="2.5rem" v-if="bookDetails.TimeCapsuleDate !== null">
+            <q-icon size="2.5rem" color="" name="mdi-timer-sand"></q-icon>
+          </q-avatar>
           {{ bookDetails.BookTitle }}
         </p>
       </div>
@@ -23,10 +26,20 @@
 
     <!--  START OF BOOK DIALOG -->
     <q-dialog v-model="bookDialog" full-width>
-      <q-card>
+      <q-card class="bookTc">
         <q-toolbar>
-          <q-avatar>
-            <q-icon name="mdi-book-open-page-variant"></q-icon>
+          <q-avatar size="2.5rem">
+            <q-icon
+              size="2.5rem"
+              v-if="bookDetails.TimeCapsuleDate === null"
+              name="mdi-book-open-page-variant"
+            ></q-icon>
+            <q-icon
+              size="2.5rem"
+              v-if="bookDetails.TimeCapsuleDate !== null"
+              color=""
+              name="mdi-timer-sand"
+            ></q-icon>
           </q-avatar>
 
           <q-toolbar-title
@@ -243,6 +256,7 @@ export default defineComponent({
     const reauthToken = window.localStorage.getItem("rt");
 
     const bookClass = ref("bookLook shadow-box  shadow-4");
+    const tcClass = ref("bookLook shadow-box  shadow-4 timeCapsule");
     const bookContent = ref(false);
     const bookDeleteConfirmOpen = ref(false);
     const bookSasKey = ref(null);
@@ -356,6 +370,7 @@ export default defineComponent({
       openEditBookTitleDialog,
       updateBookTitle,
       getBookContent,
+      tcClass,
     };
   },
 });
@@ -447,5 +462,11 @@ export default defineComponent({
 
 .titleInput {
   width: 100%;
+}
+
+.timeCapsule {
+  background-image: url(../../public/hourglass.png);
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 </style>

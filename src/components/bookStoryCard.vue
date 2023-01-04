@@ -107,36 +107,29 @@
           </div>
           <div class="text-h5" v-if="story.StoryTypeID === 4">Tradition</div>
           {{ story.StoryTitle }}
-
-          <div v-html="story.StoryText"></div>
         </div>
         <div class="text-body1" v-if="story.StoryTypeID === 3">
           <div class="text-body1"></div>
-          <q-scroll-area
-            class="scrollArea text-body1"
-            :visible="scrollVisible"
-            v-if="story.StoryText"
+          <span
+            class="text-subtitle1 text-weight-bold text-accent"
+            v-if="story.StoryTypeID === 3"
           >
-            <span
-              class="text-subtitle1 text-weight-bold text-accent"
-              v-if="story.StoryTypeID === 3"
-            >
-              <div>Ingredients</div></span
-            >
-            <div
-              v-html="story.StoryIngredients"
-              class="text-body1 text-accent"
-              v-if="story.StoryTypeID === 3"
-            ></div>
-            <span
-              class="text-subtitle1 text-weight-bold text-accent"
-              v-if="story.StoryTypeID === 3"
-            >
-              <div>Directions:</div></span
-            >
-            <div v-html="story.StoryText" class="text-body1 text-accent"></div>
-          </q-scroll-area>
+            <div>Ingredients</div></span
+          >
+          <div
+            v-html="story.StoryIngredients"
+            class="text-body1"
+            v-if="story.StoryTypeID === 3"
+          ></div>
+          <span
+            class="text-subtitle1 text-weight-bold text-accent"
+            v-if="story.StoryTypeID === 3"
+          >
+            <div>Directions:</div>
+          </span>
         </div>
+
+        <div class="text-body1" v-html="story.StoryText"></div>
         <!--END MEMORY DETAILS SECTION-->
       </q-card-section>
       <!--  ENDING THE DETAILS SECTION OF THE STORY CARD -->
@@ -1028,7 +1021,7 @@
         <!--end save draft dialog-->
       </q-card-section>
 
-      <q-card-actions class="justify-between">
+      <q-card-actions class="q-pa-lg justify-between">
         <q-btn
           class="glossy"
           round
@@ -1046,9 +1039,6 @@
           ></q-badge>
         </q-btn>
 
-        <!-- <q-btn flat text-color="info" @click="goToToc()"
-          >Table of Contents</q-btn
-        > -->
         <q-btn
           class="glossy"
           round
@@ -1065,6 +1055,7 @@
             v-if="heartTotal > 0"
           ></q-badge>
         </q-btn>
+
         <q-btn
           class="glossy"
           v-if="!commentsOpen"

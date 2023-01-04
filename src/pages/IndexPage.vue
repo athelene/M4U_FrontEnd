@@ -109,18 +109,6 @@
                   glossy
                 >
                   <q-list>
-                    <q-item clickable v-close-popup @click="setSearch()">
-                      <q-item-section>
-                        <q-btn flat icon="mdi-magnify">Search Memories</q-btn>
-                      </q-item-section>
-                    </q-item>
-                    <q-item clickable v-close-popup @click="startFilter()">
-                      <q-item-section>
-                        <q-btn flat icon="mdi-filter-outline"
-                          >Filter Memories</q-btn
-                        >
-                      </q-item-section>
-                    </q-item>
                     <q-item clickable v-close-popup @click="setFilter('all')">
                       <q-item-section>
                         <q-item-label>All Memories</q-item-label>
@@ -149,6 +137,18 @@
                       <q-item-section>
                         <span v-if="draftLabel > 0"
                           >Drafts ({{ draftLabel }})</span
+                        >
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="setSearch()">
+                      <q-item-section>
+                        <q-btn flat icon="mdi-magnify">Search Memories</q-btn>
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="startFilter()">
+                      <q-item-section>
+                        <q-btn flat icon="mdi-filter-outline"
+                          >Filter Memories</q-btn
                         >
                       </q-item-section>
                     </q-item>
