@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex-center qpage bg-image">
     <!--STARTING Policy PAGE-->
-    <q-card>
+    <q-card qc-card>
       <q-card-section class="text-h4 text-accent">
         Terms and Conditions, Policies, Rules
       </q-card-section>
@@ -559,7 +559,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.qc-card {
+.q-card {
   width: 85%;
   margin-top: 10%;
   padding-top: 15%;
@@ -577,8 +577,13 @@ export default defineComponent({
   background-color: #fefbee;
 }
 
+.feed-card {
+  width: 75%;
+  margin: auto;
+}
+
 .bg-image {
-  background-image: url(/background.jpg);
+  background-image: url(../../public/m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

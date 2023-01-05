@@ -4,7 +4,7 @@
       <!--STARTING QUICK CONNECT-->
       <div>
         <qcCard
-          class="qcCard q-mt-xl"
+          class="qcCard"
           v-if="filterType === 'memory' || filterType === 'group'"
         ></qcCard>
       </div>
@@ -837,7 +837,7 @@
         </q-card>
       </q-dialog>
     </q-pull-to-refresh>
-    <q-page-sticky position="top" :offset="[8, 8]">
+    <q-page-sticky position="top-left" :offset="[8, 8]">
       <q-btn
         fab
         icon="add"

@@ -50,7 +50,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(/background.jpg);
+  background-image: url(../../public/m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

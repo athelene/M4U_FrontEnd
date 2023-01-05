@@ -8,7 +8,7 @@
       Interview Question
     </div>
     <div class="text-center text-h6 flex-center">
-      <q-card class="col rounded-borders q-mb-md text-center">
+      <q-card class="col rounded-borders q-mb-md text-center feed-card">
         {{ submitMsg }}
         <div>
           <q-input
@@ -22,7 +22,7 @@
           <q-btn @click="submitQuestion()">Submit</q-btn>
         </q-card-actions>
       </q-card>
-      <div class="text-info bg-secondary text-subtitle1">
+      <div class="text-info bg-secondary text-subtitle1 feed-card">
         Suggestions for Interview questions will be rewarded to the first user
         to submit a question we use. Suggestions that are substantially similar
         will not count as a new question. Memories For Us reserves the right to
@@ -102,6 +102,11 @@ export default defineComponent({
   margin-bottom: 1.5em;
 }
 
+.feed-card {
+  width: 75%;
+  margin: auto;
+}
+
 .qpage {
   width: 100%;
   padding-top: 10%;
@@ -112,7 +117,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(/background.jpg);
+  background-image: url(../../public/m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }
