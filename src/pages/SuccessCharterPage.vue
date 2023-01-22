@@ -2,9 +2,8 @@
   <q-page class="flex-center qpage bg-image">
     <!--STARTING Success PAGE-->
     <div class="text-center text-h5 text-accent">
-      Your payment was successful. We sent you an email to verify your account.
-      Please click on the link in that email to start saving your memories. YOu
-      can close this window.
+      Your registration was successful. Click
+      <router-link to="/">Here</router-link> to log into your new account.
     </div>
   </q-page>
 </template>
@@ -16,17 +15,9 @@ export default defineComponent({
   name: "SuccessPage",
   components: {},
   setup() {
-    const rules = ref(false);
-    const tandc = ref(false);
-    const privacy = ref(false);
-
     onMounted(() => {});
 
-    return {
-      rules,
-      tandc,
-      privacy,
-    };
+    return {};
   },
 });
 </script>

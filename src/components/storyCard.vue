@@ -59,7 +59,7 @@
 
       <!--START MEMORY DETAILS SECTION-->
       <q-card-section class="text-overline">
-        <q-avatar rounded>
+        <q-avatar rounded v-if="story.MediaLoc">
           <img :src="storySasKey" />
         </q-avatar>
         {{ story.UserDisplayName }}, {{ story.date }}

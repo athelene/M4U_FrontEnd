@@ -23,10 +23,11 @@
         </q-card-actions>
       </q-card>
       <div class="text-info bg-secondary text-subtitle1 feed-card">
-        Suggestions for Interview questions will be rewarded to the first user
-        to submit a question we use. Suggestions that are substantially similar
-        will not count as a new question. Memories For Us reserves the right to
-        determine which questions are alike and which questions will be used.
+        Rewards for Interview question suggestions will be rewarded to the first
+        user to submit a question we use. Suggestions that are substantially
+        similar will not count as a new question. Memories For Us reserves the
+        right to determine which questions are alike and which questions will be
+        used.
       </div>
     </div>
   </q-page>

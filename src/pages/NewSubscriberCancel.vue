@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex-center qpage bg-image">
     <!--STARTING Policy PAGE-->
-    <q-card> Something went wrong. Please click here to try again.</q-card>
+    <q-card> Something went wrong. Please try again. </q-card>
   </q-page>
 </template>
 

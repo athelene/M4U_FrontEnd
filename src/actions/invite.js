@@ -43,7 +43,42 @@ export default {
   },
 
   async sendInvitation(userID, invitee, email, tcDate, invitedBy, userSubType) {
+    console.log("userSubType is: ", userSubType);
     let myroute = servername + "/sendInvitation";
+    // if (userSubType === 1) {
+    //   myroute = servername + "/sendInvitation";
+    // } else {
+    //   myroute = servername + "/sendAdminInvitation";
+    // }
+    console.log("myroute is: ", myroute);
+
+    const params = {
+      userID: userID,
+      invitee: invitee,
+      email: email,
+      tcDate: tcDate,
+      invitedBy: invitedBy,
+      userSubType: userSubType,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async sendAdminInvitation(
+    userID,
+    invitee,
+    email,
+    tcDate,
+    invitedBy,
+    userSubType
+  ) {
+    let myroute = "";
+    myroute = servername + "/sendAdminInvitation";
+
     const params = {
       userID: userID,
       invitee: invitee,

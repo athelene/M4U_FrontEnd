@@ -68,6 +68,7 @@
                         autogrow
                         prefix="Me:"
                         style="width: 100%"
+                        @input="qcSavedAlert = falseß"
                       >
                         <template v-slot:append>
                           <q-btn
@@ -77,6 +78,7 @@
                           ></q-btn>
                         </template>
                       </q-input>
+                      {{ qcSavedAlert }}
                     </q-item>
                   </span>
                 </q-item>
@@ -151,6 +153,7 @@ export default defineComponent({
     const maxPages = ref(0);
     const questionLength = ref(20);
     const editSection = ref(false);
+    const qcSavedAlert = ref(null);
 
     onMounted(() => {
       getQuestionCount();
@@ -159,6 +162,10 @@ export default defineComponent({
 
     watch(current, (val, oldval) => {
       newChunk();
+    });
+
+    watch(editAnswerInput, (val, oldval) => {
+      qcSavedAlert.value = "";
     });
 
     const getQuestionCount = async () => {
@@ -225,6 +232,7 @@ export default defineComponent({
           user.UserID
         );
       }
+      qcSavedAlert.value = "Answer Saved";
     };
 
     const editAnswerOpen = async (viewPointID) => {
@@ -247,6 +255,7 @@ export default defineComponent({
       editSection,
       errMsg,
       newChunk,
+      qcSavedAlert,
       user,
     };
   },

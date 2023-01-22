@@ -258,7 +258,13 @@ export default defineComponent({
 
       await groupActions
         .addGroup(newGroupName.value)
-        .then((newID) => {})
+        .then((newCircle) => {
+          editGroupOpen(
+            newCircle.recordset[0].CircleID,
+            newCircle.recordset[0].CircleName
+          );
+        })
+        .then((newGroup) => {})
         .then(() => {
           getGroups();
           newGroupName.value = null;

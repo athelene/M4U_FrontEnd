@@ -38,6 +38,31 @@
               >Not registered? Create an Account</q-btn
             >
           </q-card-section>
+          <q-card-section class="text-center q-pa-none">
+            <q-btn
+              class="text-grey-6"
+              @click="forgotDialog = !forgotDialog"
+              flat
+              >Forgot Password</q-btn
+            >
+          </q-card-section>
+
+          <q-dialog v-model="forgotDialog">
+            <q-card>
+              <q-card-section class="text-center" v-if="forgotSent === true">
+                Please check your email. You should receive an email with a link
+                to reset your password.
+              </q-card-section>
+              <q-card-section v-if="forgotSent === false">
+                <q-input v-model="forgotEmail" label="Your email"> </q-input>
+              </q-card-section>
+              <q-card-actions>
+                <q-btn @click="sendForgotEamil()" v-if="forgotSent === false"
+                  >Reset Password</q-btn
+                >
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
         </q-card>
       </div>
     </div>
@@ -74,8 +99,13 @@
         </q-card>
       </div>
       <div class="text-h6">{{ errorMsg }}</div>
-      <div class="row q-mt-lg" v-if="myPlatform !== true">
-        <q-card square bordered class="q-pa-lg shadow-1" width="100%">
+      <div class="q-mt-lg" v-if="myPlatform !== true">
+        <q-card square bordered class="q-pa-lg q-mb-xl shadow-1 formStyle">
+          <q-card-section class="text-center q-pa-none">
+            <q-btn class="text-grey-6 q-mb-md" @click="pageType = 'login'" flat>
+              Already registered? Go to the login page.
+            </q-btn>
+          </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
               <q-input
@@ -97,7 +127,7 @@
                 filled
                 v-model="userDisplayName"
                 type="text"
-                label="Nickname"
+                label="Display Name"
                 hint="If blank, we will use your first and last name."
               />
               <q-input
@@ -135,83 +165,83 @@
               <p v-if="passMatch === false">Passwords do not match.</p>
             </q-form>
           </q-card-section>
-          <q-card-actions class="q-px-md">
+          <q-card-actions>
             <q-btn
               label="Sign Up"
-              color="primary"
+              color="accent"
               @click="confirm = true"
-              v-if="score > 0.75 && passMatch === true"
-            />
-            <q-btn
-              label="Sign Up"
-              color="primary"
-              @click="confirm = true"
-              v-if="score <= 0.75 && passMatch === false"
-              disabled="true"
+              :disabled="score <= 0.75 || passMatch === false"
             />
           </q-card-actions>
-          <q-card-section class="text-center q-pa-none">
-            <q-btn class="text-grey-6 q-mb-md" @click="pageType = 'login'" flat>
-              Already registered? Go to the login page.
-            </q-btn>
-          </q-card-section>
-
-          <!--START POLICY CONFIRMATION DIALOG-->
-          <q-dialog v-model="confirm" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <q-avatar
-                  icon="mdi-alert-circle"
-                  color="accent"
-                  text-color="white"
-                  class="q-mb-md"
-                />
-                <span class="q-ml-sm"
-                  >By continuing, you agree to pay $3.50 per month after 30 days
-                  for our service until you cancel. You also confirm you have
-                  reviewed and accept the Memories For Us Rules, Terms and
-                  Conditions and Privacy Policy as of today.
-                  <div>
-                    <router-link to="/policies" target="_blank"
-                      >Review Policies</router-link
-                    >
-                  </div></span
-                >
-              </q-card-section>
-
-              <q-card-actions align="right">
-                <q-btn flat label="Cancel" color="primary" v-close-popup />
-
-                <q-btn
-                  flat
-                  label="Continue to Payment"
-                  color="accent"
-                  @click="signup()"
-                />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-
-          <!--ENDING POLICY CONFIRMATION DIALOG-->
         </q-card>
       </div>
     </div>
+
+    <!--STARTING BILLING PAGE-->
+    <div class="column q-mt-lg" v-if="pageType === 'billing'">
+      <div class="text-h4">Enter your billing information</div>
+      <BillingCard :userID="newUserID" :email="email"></BillingCard>
+    </div>
+    <!--ENDING BILLING PAGE-->
+
+    <!--START POLICY CONFIRMATION DIALOG-->
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar
+            icon="mdi-alert-circle"
+            color="accent"
+            text-color="white"
+            class="q-mb-md"
+          />
+          <span class="q-ml-sm"
+            >By continuing, you agree to pay $3.50 per month after 30 days for
+            our service until you cancel. You also confirm you have reviewed and
+            accept the Memories For Us Rules, Terms and Conditions and Privacy
+            Policy as of today.
+            <div>
+              <router-link to="/policies" target="_blank"
+                >Review Policies</router-link
+              >
+            </div></span
+          >
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+
+          <q-btn
+            flat
+            label="Continue to Payment"
+            color="accent"
+            @click="signup()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!--ENDING POLICY CONFIRMATION DIALOG-->
     <!--ENDING REGISTATION PAGE-->
   </q-page>
 </template>
 
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import loginAction from "/src/actions/login.js";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "stores/user";
 import { useQuasar, openURL } from "quasar";
 import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
 import zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import zxcvbnEnPackage from "@zxcvbn-ts/language-en";
+import { propsToAttrMap } from "@vue/shared";
+import BillingCard from "components/billingCard.vue";
 
 export default {
+  components: {
+    BillingCard,
+  },
   setup() {
+    const route = useRoute();
     const $q = useQuasar();
     const email = ref(null);
     const userFirst = ref(null);
@@ -220,6 +250,9 @@ export default {
     const userPassword = ref(null);
     const confirmPassword = ref(null);
     const errorMsg = ref(null);
+    const forgotDialog = ref(false);
+    const forgotEmail = ref(null);
+    const forgotSent = ref(false);
     const router = useRouter();
     const userState = useUserStore();
     const pageType = ref("login");
@@ -229,6 +262,8 @@ export default {
     const confirm = ref(false);
     const playstoreMsg = ref(null);
     const myPlatform = ref($q.platform.is.mobile);
+    const newUserID = ref(0);
+    const invitationCode = ref(null);
 
     const options = {
       dictionary: {
@@ -241,11 +276,10 @@ export default {
     zxcvbnOptions.setOptions(options);
 
     const score = computed(() => {
-      const hasValue = userPassword.value && userPassword.value.length > 0;
-
-      if (!hasValue) {
+      if (userPassword.value === null) {
         return 0;
       }
+
       var retScore = zxcvbn(userPassword.value).score;
       return zxcvbn(userPassword.value).score * 0.25;
     });
@@ -260,7 +294,6 @@ export default {
     });
 
     onMounted(() => {
-      //     userState.userLogout();
       if ($q.platform.is.mobile) {
         playstoreMsg.value =
           "Due to app store restrictions, you must register for Memories For Us on our webpage at : ";
@@ -270,6 +303,14 @@ export default {
         playstoreMsg.value = null;
       }
     });
+
+    if (route.query.code) {
+      invitationCode.value = route.query.code;
+      pageType.value = "register";
+      console.log("invitationCode is: ", invitationCode.value);
+    } else {
+      console.log("no invitation found");
+    }
 
     async function signup() {
       confirm.value = false;
@@ -309,18 +350,22 @@ export default {
           userLast.value,
           userDisplayName.value,
           email.value,
-          userPassword.value
+          userPassword.value,
+          invitationCode.value
         )
         .then((regResult) => {
-          if (regResult !== "") {
+          if (regResult !== "Success") {
             errorMsg.value =
               "Registration failed. Please try again or contact support.";
           }
-          //   loginAction.checkoutPage(email.value);
-        })
-        .then(async () => {
-          const sessionURL = await loginAction.checkoutPage(email.value);
-          openURL(sessionURL);
+          newUserID.value = regResult.UserID;
+
+          var checkoutUrl =
+            "https://buy.stripe.com/test_3csfZscrZ9PofO86oo?client_reference_id=" +
+            regResult.UserID;
+          console.log("checkoutUrl is: ", checkoutUrl);
+
+          window.location.href = checkoutUrl;
         });
     }
 
@@ -344,29 +389,52 @@ export default {
             window.scrollTo(0, 0);
             return;
           }
-          if (loginResult === "user terminated") {
+          if (loginResult === "user disabled by admin") {
             errorMsg.value =
-              "This account has been suspended. Please contact support.";
+              "This account has been disabled. Please contact support.";
             window.scrollTo(0, 0);
             return;
           }
-          if (loginResult === "payment problem") {
+          if (loginResult === "account canceled by user") {
+            errorMsg.value =
+              "This account was deleted. Please login with a different account or create a new account.";
+            window.scrollTo(0, 0);
+            return;
+          }
+          if (loginResult === "user suspended") {
+            errorMsg.value =
+              "This account was suspended. Please see your email for more information.";
+            window.scrollTo(0, 0);
+            return;
+          }
+
+          if (loginResult === "Initial payment failed") {
             errorMsg.value =
               "There is a problem with your subscription payment. Please contact support.";
             window.scrollTo(0, 0);
             return;
           }
-          if (loginResult !== "false") {
+          if (loginResult === "Subscription Expired") {
+            errorMsg.value =
+              "There is a problem with your subscription payment. Go to www.something.com to manage your payment.";
+            window.scrollTo(0, 0);
+            return;
+          }
+          if (loginResult.token) {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
-
             router.push({ path: "/home" });
           } else {
             errorMsg.value = "Invalid Login";
             window.scrollTo(0, 0);
           }
         });
+    }
+
+    async function sendForgotEamil() {
+      await loginAction.sendForgotEamil(forgotEmail.value);
+      forgotSent.value = true;
     }
 
     return {
@@ -378,10 +446,15 @@ export default {
       userPassword,
       confirmPassword,
       errorMsg,
+      forgotDialog,
+      forgotEmail,
+      forgotSent,
       pageType,
+      newUserID,
       isPasswordStrong,
       score,
       passMatch,
+      sendForgotEamil,
       signup,
       emailHint,
       confirm,
@@ -395,6 +468,10 @@ export default {
 <style scoped>
 .inputStyle {
   width: 95%;
+}
+
+.formStyle {
+  width: 100%;
 }
 
 .bg-image {

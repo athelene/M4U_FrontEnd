@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <!--BEGINNING OF HEADER-->
     <q-header elevated>
       <q-toolbar class="text-accent">
@@ -24,6 +24,9 @@
             {{ invitationCount }}
           </q-badge>
         </q-btn>
+        <q-avatar rounded v-if="isLoggedIn && user.UserMediaLoc">
+          <img :src="profileSas" />
+        </q-avatar>
         <q-btn
           v-if="isLoggedIn"
           flat
@@ -37,35 +40,19 @@
     </q-header>
     <!--END OF HEADER-->
 
-    <!--BEGINNING OF FOOTER-->
-    <q-footer elevated>
-      <q-toolbar>
-        Memories For Us, Copyright 2023
-        <q-space></q-space>
-        <q-btn
-          label="Get 30 days Free!"
-          flat
-          icon="mdi-currency-usd"
-          @click="goToPage('/daysfree')"
-        ></q-btn>
-        <q-space></q-space>
-        <q-btn
-          label="Invite a Friend"
-          flat
-          icon="mdi-account-plus-outline"
-          @click="goToPage('/invite')"
-        ></q-btn>
-      </q-toolbar>
-    </q-footer>
-    <!--END OF FOOTER-->
-
     <!--BEGINNING OF MENU DRAWER-->
-    <q-drawer v-if="isLoggedIn" v-model="rightDrawerOpen" side="right" bordered>
+    <q-drawer
+      v-if="isLoggedIn"
+      v-model="rightDrawerOpen"
+      side="right"
+      bordered
+      overlay
+    >
       <!-- drawer content -->
       <q-list>
         <q-item>
           <span class="q-ml-sm">
-            <q-avatar rounded>
+            <q-avatar rounded v-if="user.UserMediaLoc">
               <img :src="profileSas" />
             </q-avatar>
             {{ user.UserDisplayName }}
@@ -80,7 +67,7 @@
           <q-item-section> Home </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/profile')">
-          <q-item-section> Profile </q-item-section>
+          <q-item-section> Account </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/connections')">
           <q-item-section> My Connections </q-item-section>
@@ -89,7 +76,7 @@
           <q-item-section> Share Groups </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/quickconnect')">
-          <q-item-section> See All Quick Connect Questions</q-item-section>
+          <q-item-section> Quick Connect Questions</q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/suggestqc')">
           <q-item-section> Suggest A Quick Connect Question </q-item-section>
@@ -138,7 +125,12 @@
         >
           <q-item-section> Credits </q-item-section>
         </q-item>
-        <q-item clickable v-ripple @click="goToPage('/admin')">
+        <q-item
+          v-if="user.AdminLevel === 100"
+          clickable
+          v-ripple
+          @click="goToPage('/admin')"
+        >
           <q-item-section> Admin </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="logout()">
@@ -167,6 +159,27 @@
       </q-list>
       <router-view />
     </q-page-container>
+    <!--BEGINNING OF FOOTER-->
+    <q-footer elevated>
+      <q-toolbar>
+        Memories For Us, Copyright 2023
+        <q-space></q-space>
+        <q-btn
+          label="Get 30 days Free!"
+          flat
+          icon="mdi-currency-usd"
+          @click="goToPage('/daysfree')"
+        ></q-btn>
+        <q-space></q-space>
+        <q-btn
+          label="Invite a Friend"
+          flat
+          icon="mdi-account-plus-outline"
+          @click="goToPage('/invite')"
+        ></q-btn>
+      </q-toolbar>
+    </q-footer>
+    <!--END OF FOOTER-->
   </q-layout>
 </template>
 
@@ -289,7 +302,12 @@ export default defineComponent({
       isLoggedIn.value = false;
       user.value = null;
       token.value = null;
-      router.push({ path: "/" });
+      console.log("environment is: ", process.env.DEV);
+      if (process.env.DEV === true) {
+        window.location.replace("http://localhost:9000");
+      } else {
+        window.location.replace("https://www.memoriesforus.com/");
+      }
     }
 
     const invitations = async () => {

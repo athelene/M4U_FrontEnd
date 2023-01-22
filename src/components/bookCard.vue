@@ -3,7 +3,6 @@
   <!--START OF BOOK CARDS-->
   <q-card
     clickable
-    vertical
     @click="openBookDispDialog(bookDetails.BookID)"
     :class="bookClass"
   >
@@ -397,7 +396,6 @@ export default defineComponent({
   font-size: 5vw;
   overflow-wrap: break-word;
   word-wrap: break-word;
-
   white-space: normal;
 }
 .topOfBook {

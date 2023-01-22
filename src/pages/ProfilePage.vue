@@ -15,7 +15,167 @@
           <div class="text-h5 q-ml-md">
             Full name: {{ newUserFirst }} {{ newUserLast }}
           </div>
+          <div>
+            <q-btn v-if="user.StripeCustomer" flat @click="stripePortal()"
+              >Payment Information</q-btn
+            >
+          </div>
+          <div>
+            <!--THE FOLLOWING BTN ONLY SHOWS FOR CHARTER MEMBERS-->
+            <q-btn
+              flat
+              @click="cancelAccountDialog = true"
+              v-if="
+                user.UserSubType > 1 &&
+                user.UserSubType < 5 &&
+                user.CancelID === null
+              "
+              >Cancel Account</q-btn
+            >
+          </div>
+          <div
+            class="q-ml-md q-mt-md"
+            v-if="
+              user.UserSubType > 1 &&
+              user.UserSubType < 5 &&
+              user.CancelID !== null
+            "
+          >
+            <!--THE FOLLOWING BTN ONLY SHOWS FOR CHARTER MEMBERS-->
+            You cancelled your account. Have you changed your mind?
+            <div>
+              <q-btn
+                @click="reinstateAccount()"
+                v-if="
+                  user.UserSubType > 1 &&
+                  user.UserSubType < 5 &&
+                  user.CancelID !== null
+                "
+                >Yes! Reinstate My Charter Account</q-btn
+              >
+            </div>
+          </div>
+          <!--FIRST DIALOG TO CANCEL ACCOUNT-->
+          <q-dialog v-model="cancelAccountDialog" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar
+                  icon="mdi-alert-outline"
+                  color="negative"
+                  text-color="white"
+                />
+                <span class="q-ml-sm q-mb-xl text-h5"
+                  >By canceling your account, you will lose all of your
+                  memories, books and all other data in 10 days.
+                </span>
+                <div class="text-h5">Are you sure you want to do this?</div>
+              </q-card-section>
 
+              <q-card-actions align="right">
+                <div class="text-caption q-mt-xl">
+                  *Refunds are not available when accounts are canceled prior to
+                  the end of the billing period.
+                </div>
+                <q-btn flat label="Cancel" color="accent" v-close-popup />
+                <q-btn
+                  flat
+                  label="Cancel My Account"
+                  color="accent"
+                  @click="startCancel()"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!--END OF FIRST DIALOG TO CANCEL ACCOUNT-->
+          <!--SECOND DIALOG TO CANCEL ACCOUNT (GET REASON)-->
+          <q-dialog v-model="cancelReasonDialog" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <span class="q-ml-sm text-h5"
+                  >Can you please tell us why you are canceling your account?
+                </span>
+              </q-card-section>
+              <q-card-section>
+                <q-list>
+                  <q-item tag="label" v-ripple>
+                    <q-item-section avatar>
+                      <q-radio
+                        v-model="reason"
+                        val="Not using it anymore"
+                        color="accent"
+                      />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Not using it anymore</q-item-label>
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item tag="label" v-ripple>
+                    <q-item-section avatar>
+                      <q-radio
+                        v-model="reason"
+                        val="Too expensive"
+                        color="accent"
+                      />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Too expensive</q-item-label>
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item tag="label" v-ripple>
+                    <q-item-section avatar top>
+                      <q-radio
+                        v-model="reason"
+                        val="Technical Problem"
+                        color="accent"
+                      />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Technical Problem</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item tag="label" v-ripple>
+                    <q-item-section avatar top>
+                      <q-radio v-model="reason" val="Other" color="accent" />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Other</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn flat label="Cancel" color="accent" v-close-popup />
+                <q-btn
+                  flat
+                  label="Cancel My Account"
+                  color="accent"
+                  @click="completeCancel()"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!--END OF SECOND DIALOG TO CANCEL ACCOUNT-->
+          <!--BEGIN THIRD DIALOG TO CANCEL ACCOUNT-->
+          <q-dialog v-model="logOutNotice" persistent>
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">Alert</div>
+              </q-card-section>
+
+              <q-card-section class="q-pt-none">
+                You will need to log out and back in for this change to take
+                effect.
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn flat label="OK" color="primary" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!--END THIRD DIALOG TO CANCEL ACCOUNT-->
           <q-dialog v-model="editProfileDialog" persistent>
             <q-card style="min-width: 350px">
               <q-card-section>
@@ -39,15 +199,10 @@
               <q-card-section class="q-pt-none">
                 <q-input
                   dense
-                  @blur="valid()"
                   v-model="newUserEmail"
                   label="Your email"
                   autofocus
                 />
-
-                <q-item-label v-if="emailValid === false"
-                  >Enter a valid email address</q-item-label
-                >
               </q-card-section>
               <q-card-section>
                 <q-btn @click="passwordDialog = true"> Change Password </q-btn>
@@ -212,10 +367,11 @@ export default defineComponent({
     const user = reactive(userState.user);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
 
+    const cancelAccountDialog = ref(false);
+    const cancelReasonDialog = ref(false);
     const changeEmail = ref(false);
     const editProfileDialog = ref(false);
     const emailChangeMsg = ref(null);
-    const emailValid = ref(true);
     const newPassword1 = ref(null);
     const newPassword2 = ref(null);
     const newUserDisplayName = ref(user.UserDisplayName);
@@ -229,24 +385,8 @@ export default defineComponent({
     const pictureDialog = ref(false);
     const profileSas = ref(null);
     const qUploadFle = ref(null);
-
-    //EMAIL VALIDATION
-    const reg =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/;
-
-    const valid = async () => {
-      reg.test(newUserEmail.value);
-
-      if (reg.test === true) {
-        validEmail.value = true;
-        return;
-      } else {
-        emailValie.value = false;
-        return;
-      }
-    };
-
-    //END EMAIL VALIDATION
+    const reason = ref(null);
+    const logOutNotice = ref(false);
 
     //PASSWORD VALIDATION
     const isPasswordStrong = ref(false);
@@ -368,6 +508,14 @@ export default defineComponent({
         });
     };
 
+    const stripePortal = async () => {
+      await loginActions
+        .getStripePortal(user.StripeCustomer)
+        .then((stripeUrl) => {
+          window.open(stripeUrl.url);
+        });
+    };
+
     const refresh = (done) => {};
 
     const updateProfile = async () => {
@@ -393,14 +541,35 @@ export default defineComponent({
         });
     };
 
+    const startCancel = async () => {
+      cancelAccountDialog.value = false;
+      cancelReasonDialog.value = true;
+    };
+
+    const completeCancel = async () => {
+      cancelAccountDialog.value = false;
+      cancelReasonDialog.value = false;
+      //logic to change usersubtypeid to 9002
+      loginActions.cancelAccount(reason.value, user.UserID, user.UserSubTypeID);
+    };
+
+    const reinstateAccount = async () => {
+      await loginActions.reinstateAccount(user.UserID).then(() => {
+        logOutNotice.value = true;
+      });
+    };
+
     return {
+      cancelAccountDialog,
+      cancelReasonDialog,
       cancelProfileChange,
       cancelPasswordChange,
+      completeCancel,
       isLoggedIn,
       emailChangeMsg,
       editProfileDialog,
-      emailValid,
       handleFileUpload,
+      logOutNotice,
       newPassword1,
       newPassword2,
       newUserDisplayName,
@@ -417,11 +586,14 @@ export default defineComponent({
       pictureDialog,
       profileSas,
       qUploadFle,
+      reason,
       refresh,
+      reinstateAccount,
       score,
+      startCancel,
+      stripePortal,
       updateProfile,
       user,
-      valid,
     };
   },
 });

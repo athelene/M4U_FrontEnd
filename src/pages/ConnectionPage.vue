@@ -68,6 +68,7 @@
             <q-btn
               v-if="invitation.InvType === 'received'"
               label="Accept"
+              color="accent"
               size="xs"
               @click="acceptInvitation(invitation.CircleMemID)"
             ></q-btn>
@@ -369,6 +370,7 @@ export default defineComponent({
     };
 
     const getConnections = async () => {
+      console.log("running getConnections");
       await connectionActions
         .getCircleMembersAll([primaryCircle.value])
         .then((incomingConnections) => {
@@ -496,6 +498,7 @@ export default defineComponent({
 
     const cancelSearch = async () => {
       getConnections();
+      getOpenInvitations();
       nameErr.value = null;
       newConnectionFirstName.value = null;
       newConnectionLastName.value = null;
@@ -542,6 +545,7 @@ export default defineComponent({
           .addToEveryoneEmail(user.UserID, memberID)
           .then((returnMsg) => {
             resetSearchFields();
+            getConnections();
             nameErr.value = "Invitation to connect sent.";
           });
       }
@@ -550,6 +554,7 @@ export default defineComponent({
           .addToEveryoneEmail(user.UserID, memberID)
           .then((returnMsg) => {
             resetSearchFields();
+            getConnections();
             nameErr.value = "Invitation to connect sent.";
           });
       }

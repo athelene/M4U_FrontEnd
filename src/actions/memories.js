@@ -443,6 +443,63 @@ export default {
     return result;
   },
 
+  async getMemoryTemplates(userID, templateType) {
+    let myroute = servername + "/getTemplates";
+    const params = {
+      userID: userID,
+      typeID: templateType,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async saveTemplate(
+    userID,
+    templateType,
+    templateName,
+    templateText,
+    templateIngredients,
+    templateCircle
+  ) {
+    var circleID = "";
+    let myroute = servername + "/saveTemplate";
+    console.log("circleID for template is: ", templateCircle);
+    if (templateCircle) {
+      circleID = templateCircle;
+    }
+    const params = {
+      userID: userID,
+      typeID: templateType,
+      templateName: templateName,
+      templateText: templateText,
+      templateIngredients: templateIngredients,
+      templateCircle: circleID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async deleteTemplate(templateID) {
+    let myroute = servername + "/deleteTemplate";
+    const params = {
+      templateID: templateID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async callApi(myroute, params) {
     try {
       let res = await axios.get(myroute, { params });

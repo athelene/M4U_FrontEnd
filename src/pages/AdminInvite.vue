@@ -105,13 +105,13 @@ export default defineComponent({
     const sendInvitation = async () => {
       message.value = "";
       await inviteActions
-        .sendInvitation(
+        .sendAdminInvitation(
           user.UserID,
           invitee.value,
           email.value,
           tcDate.value,
           user.UserDisplayName,
-          user.UserSubType
+          selectedType.value
         )
         .then((invitationreturn) => {
           if (invitationreturn === "Duplicate") {

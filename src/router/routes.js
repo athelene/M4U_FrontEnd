@@ -22,6 +22,19 @@ const routes = [
       },
     ],
   },
+
+  {
+    path: "/charter",
+    component: () => import("layouts/LoginLayout.vue"),
+    children: [
+      {
+        path: "/charter",
+        name: "/charter",
+        component: () => import("pages/CharterRegister.vue"),
+      },
+    ],
+  },
+
   {
     path: "/home",
     name: "home:",
@@ -46,6 +59,22 @@ const routes = [
         path: "/newsubscribersuccess",
         name: "newsubscribersuccess",
         component: () => import("pages/SuccessPage.vue"),
+        meta: {
+          needsAuth: true,
+        },
+      },
+      {
+        path: "/newchartersuccess",
+        name: "newchartersuccess",
+        component: () => import("pages/SuccessCharterPage.vue"),
+        meta: {
+          needsAuth: true,
+        },
+      },
+      {
+        path: "/newpassword",
+        name: "newpassword",
+        component: () => import("pages/NewPassword.vue"),
         meta: {
           needsAuth: true,
         },

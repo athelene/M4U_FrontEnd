@@ -37,7 +37,7 @@ export default route(function (/* { store, ssrContext } */) {
         "auth required for this route, not authenticated, return to login page"
       );
       if (to.name !== "login") {
-        return "/login";
+        return "/";
       }
     }
   });

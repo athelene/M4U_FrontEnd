@@ -97,14 +97,23 @@
                     </q-item>
                     <q-item clickable v-close-popup @click="startFilter()">
                       <q-item-section>
-                        <q-btn flat icon="mdi-filter-outline"
+                        <q-btn
+                          flat
+                          icon="mdi-filter-outline"
+                          color="accent"
+                          v-if="selectedMemoryType !== 0"
+                          >Filter Memories</q-btn
+                        >
+                        <q-btn
+                          flat
+                          icon="mdi-filter-outline"
+                          v-if="selectedMemoryType === 0"
                           >Filter Memories</q-btn
                         >
                       </q-item-section>
                     </q-item>
                   </q-list>
                 </q-btn-dropdown>
-
                 <!--FILTER BUTTONS FOR MEMORIES END-->
 
                 <!--FILTER BUTTONS FOR Share Group START-->
@@ -174,7 +183,13 @@
             </q-item>
             <!--START SEARCH-->
             <q-item>
-              <div class="absolute-center"></div>
+              <div class="absolute-center">
+                <span
+                  class="text-center text-h6"
+                  v-if="selectedMemoryType !== 0"
+                  >(Filter On)</span
+                >
+              </div>
             </q-item>
 
             <!--END SEARCH-->
@@ -221,13 +236,13 @@
                     :options="memoryTypeOptions"
                     emit-value
                     map-options
-                    @click="selectMemoryType()"
+                    @update:model-value="selectMemoryType()"
                   />
                 </div>
               </q-card-section>
 
               <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="Done" v-close-popup />
+                <q-btn flat label="Cancel" v-close-popup />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -260,24 +275,18 @@
         <!--END OF MEMORY CARDS-->
 
         <!--START OF BOOK CARDS-->
-        <q-infinite-scroll @load="getMore" v-if="filterType === 'book'">
+        <div v-if="filterType === 'book'">
           <div
             v-for="book in allBookList"
             :key="book.BookID"
-            class="relative-center q-mt-md"
+            class="relative-center q-mt-md bookWrap"
           >
             <BookCard
               :bookID="book.BookID"
               @updateFeed="setFilter(filter)"
             ></BookCard>
           </div>
-
-          <template #loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner-dots color="accent"></q-spinner-dots>
-            </div>
-          </template>
-        </q-infinite-scroll>
+        </div>
         <!--END OF BOOK CARDS-->
       </div>
 
@@ -286,8 +295,9 @@
         v-model="newMemoryOpen"
         transition-show="rotate"
         transition-hide="rotate"
+        persistent
       >
-        <q-card tyle="min-width: 400px">
+        <q-card style="min-width: 75%">
           <q-card-section>
             <q-btn icon="mdi-camera-plus" @click="startCameraDialog()"></q-btn>
             <q-dialog v-model="openCameraDialog" persistent>
@@ -323,34 +333,7 @@
           </q-card-section>
           <q-card-section width="100%">
             <div class="text-h6">New Memory</div>
-            <div>
-              <q-btn-group spread>
-                <q-btn
-                  color="accent"
-                  label="Memory"
-                  @click="setStoryType(1)"
-                  size="sm"
-                />
-                <q-btn
-                  color="accent"
-                  label="Recipe"
-                  @click="setStoryType(3)"
-                  size="sm"
-                />
-                <q-btn
-                  color="accent"
-                  label="Interview"
-                  @click="setStoryType(2)"
-                  size="sm"
-                />
-                <q-btn
-                  color="accent"
-                  label="Tradition"
-                  @click="setStoryType(4)"
-                  size="sm"
-                />
-              </q-btn-group>
-            </div>
+            <div></div>
           </q-card-section>
 
           <!--BEGINNING OF MEDIA FOR NEW MEMORY DIALOG-->
@@ -466,7 +449,38 @@
                 ]"
               />
               <!--small editor for ingredients-->
-
+              <q-btn-dropdown size="xs" color="primary" label="Templates">
+                <q-list bordered separator>
+                  <q-item
+                    v-for="template in myTemplates"
+                    :key="template.MemoryTemplateID"
+                    clickable
+                    v-close-popup
+                    @click="
+                      setTemplate(
+                        template.MemoryText,
+                        template.MemoryIngredients,
+                        template.MemoryCircle
+                      )
+                    "
+                  >
+                    <q-item-section>
+                      <q-item-label>{{
+                        template.MemoryTemplateName
+                      }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>
+                        <q-btn
+                          flat
+                          icon="mdi-delete"
+                          @click="deleteTemplate(template.MemoryTemplateID)"
+                        ></q-btn>
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
               <!--small editor for ingredients-->
               <q-editor
                 v-if="ingEditorType === 'small'"
@@ -588,6 +602,34 @@
                   { label: 'Full', value: 'full' },
                 ]"
               />
+              <q-btn-dropdown size="xs" color="primary" label="Templates">
+                <q-list bordered separator>
+                  <q-item
+                    v-for="template in myTemplates"
+                    :key="template.MemoryTemplateID"
+                    clickable
+                    v-close-popup
+                    @click="
+                      setTemplate(template.MemoryText, template.MemoryCircle)
+                    "
+                  >
+                    <q-item-section>
+                      <q-item-label>{{
+                        template.MemoryTemplateName
+                      }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>
+                        <q-btn
+                          flat
+                          icon="mdi-delete"
+                          @click="deleteTemplate(template.MemoryTemplateID)"
+                        ></q-btn>
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
             </div>
             <div>
               <q-editor
@@ -718,25 +760,71 @@
                 @click="openBookDialog()"
               ></q-btn
             ></q-item>
+            <q-item>
+              <q-btn
+                icon="mdi-content-save"
+                label="Save Draft"
+                flat
+                class="text-accent"
+                @click="draftCheck('userSelected')"
+              ></q-btn
+            ></q-item>
+            <q-item>
+              <q-btn
+                icon="mdi-content-duplicate"
+                label="Save as Template"
+                flat
+                class="text-accent"
+                @click="saveTemplateDialog = true"
+              ></q-btn
+            ></q-item>
           </q-card-section>
 
           <q-card-actions align="right">
             <q-btn
               flat
               label="Cancel"
-              color="primary"
+              color="accent"
               class="q-mb-xl"
               @click="cancelNewMemory()"
             />
             <q-btn
               flat
               label="Save"
-              color="primary"
+              color="accent"
               class="q-mb-xl"
-              @click="draftCheck()"
+              @click="draftCheck('unknown')"
             />
           </q-card-actions>
         </q-card>
+
+        <!--DIALOG TO GET NEW TEMPLATE NAME-->
+        <q-dialog v-model="saveTemplateDialog" persistent>
+          <q-card style="min-width: 350px">
+            <q-card-section>
+              <div class="text-h6">Name your template</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <q-input
+                dense
+                v-model="newTemplateName"
+                autofocus
+                @keyup.enter="prompt = false"
+              />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn
+                flat
+                label="Add template"
+                @click="saveTemplate(storyTypeID)"
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+        <!--END OF DIALOG TO GET NEW TEMPLATE NAME-->
 
         <!--ADD BOOKS DIALOG INSIDE OF EDIT DIALOG-->
         <q-dialog v-model="booksDialogFlag">
@@ -819,34 +907,59 @@
       <q-dialog v-model="saveDraft" persistent>
         <q-card>
           <q-card-section class="row items-center">
-            <span class="q-ml-sm"
-              >You haven't chosen who to share with. Do you want to save this as
-              a draft?.</span
+            <span class="q-ml-sm" v-if="circleID === null"
+              >You haven't chosen who to share with.
+            </span>
+            <span class="q-ml-sm" v-if="circleID === null">
+              Do you want to save this as a draft?.</span
             >
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="primary" v-close-popup />
+            <q-btn flat label="Cancel" color="accent" v-close-popup />
             <q-btn
               flat
               label="Save as Draft"
-              color="primary"
-              @click="addMemory()"
+              color="accent"
+              @click="validationCheck()"
             />
           </q-card-actions>
         </q-card>
       </q-dialog>
     </q-pull-to-refresh>
     <q-page-sticky position="top-left" :offset="[8, 8]">
-      <q-btn
+      <q-btn-dropdown
         fab
         icon="add"
         color="accent"
         size="lg"
-        @click="addMemoryDialog()"
         style="z-index: 3"
       >
-      </q-btn>
+        <q-list>
+          <q-item clickable v-close-popup @click="addMemoryDialog(1)">
+            <q-item-section>
+              <q-item-label>Memory</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item clickable v-close-popup @click="addMemoryDialog(3)">
+            <q-item-section>
+              <q-item-label>Recipe</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item clickable v-close-popup @click="addMemoryDialog(2)">
+            <q-item-section>
+              <q-item-label>Interview</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="addMemoryDialog(4)">
+            <q-item-section>
+              <q-item-label>Tradition</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </q-page-sticky>
     <q-page-sticky position="bottom-right" :offset="[8, 8]">
       <q-btn
@@ -877,6 +990,7 @@ import BookCard from "components/bookCard.vue";
 import AddBook from "components/addBook.vue";
 import MediaCardEdit from "components/mediaCardEdit.vue";
 import bookActions from "../actions/books";
+import { createIfStatement } from "@vue/compiler-core";
 //import EditBook from "src/components/editBook.vue";
 
 export default defineComponent({
@@ -903,6 +1017,7 @@ export default defineComponent({
     const circleList = reactive([]);
     const draftLabel = ref(0);
     const drafts = ref(false);
+    const makeDraft = ref(false);
     const emptySlideList = [];
     const filter = ref("all");
     const filterIcon = ref("mdi-filter-outline");
@@ -941,24 +1056,36 @@ export default defineComponent({
     const textRef = ref(null);
     const message = ref("");
     const memoryTypeOn = ref(false);
+    const myTemplates = ref(null);
     const newBookDialog = ref(false);
     const newBookTitle = ref(null);
     const newMemoryOpen = ref(false);
     const newSlideCount = ref(0);
     const newSlideList = reactive([]);
     const newStartSlide = ref(0);
+    const newTemplateName = ref(null);
     const noBookMsg = ref("");
     const openCameraDialog = ref(false);
     const qUploadFle = ref(null);
-    const recordLast = ref(null);
+    const recordLast = ref(0);
     const recordStart = ref(0);
     const resetPage = ref(false);
     const saveDraft = ref(false);
+    const saveTemplateDialog = ref(false);
     const searchOn = ref(false);
     const searchTerm = ref("");
     const selectedMemoryType = ref(0);
     const stories = ref(null);
-    const story = ref(null);
+    const story = ref([
+      {
+        StoryID: 0,
+        StoryTitle: "Welcome to Memories for Us!",
+        StoryText: "Here is the text.",
+        StoryTypeID: 1,
+        StoryDate: "2023-01-12",
+        CircleID: 1,
+      },
+    ]);
     const newStoryID = ref(null);
     const storyID = ref(0);
     const storyData = ref(null);
@@ -982,6 +1109,7 @@ export default defineComponent({
       getMessage();
       getCircleList();
       setDate();
+      getMemoryTemplates(1);
     });
 
     const refresh = (done) => {
@@ -1012,6 +1140,10 @@ export default defineComponent({
       storyTypeID.value = newType;
     };
 
+    const selectMemoryType = () => {
+      memoryTypeOn.value = false;
+    };
+
     const startFilter = async () => {
       filterType.value = "memory";
       memoryTypeOn.value = !memoryTypeOn.value;
@@ -1020,6 +1152,7 @@ export default defineComponent({
 
     const setFilter = async (newfilter) => {
       searchOn.value = false;
+
       if (newfilter !== filter.value) {
         filter.value = newfilter;
       }
@@ -1210,13 +1343,14 @@ export default defineComponent({
         .then((newStories) => {
           recordLast.value = newStories.output.recordCount;
           stories.value = newStories.recordsets[0];
+          recordStart.value = recordStart.value + pageLength.value;
         });
     };
 
     const getMoreAllStories = async (index, done) => {
       filter.value = "all";
+      recordStart.value = recordStart.value + pageLength.value;
       if (recordStart.value < recordLast.value || !recordLast.value) {
-        recordStart.value = recordStart.value + pageLength.value;
         await actions
           .getAllStories(user.UserID, recordStart.value, pageLength.value)
           .then((newStories) => {
@@ -1265,7 +1399,7 @@ export default defineComponent({
     };
 
     const searchMemories = async () => {
-      filter.value = "all";
+      filter.value = "search";
       filterType.value = "memory";
       searchOn.value = false;
       stories.value = [];
@@ -1404,16 +1538,64 @@ export default defineComponent({
       }
     };
 
-    const addMemoryDialog = async () => {
-      await cancelNewMemory()
-        .then(async () => {
-          Object.assign(newSlideList, emptySlideList);
-          newStartSlide.value = 0;
-          newMemoryOpen.value = true;
-        })
-        .then(async () => {
-          await addMemory();
+    const getMemoryTemplates = async (tempType) => {
+      await actions
+        .getMemoryTemplates(user.UserID, tempType)
+        .then((retTemplates) => {
+          myTemplates.value = retTemplates;
         });
+    };
+
+    const setTemplate = async (memoryText, memoryIngredients, memoryCircle) => {
+      storyText.value = memoryText;
+      if (storyTypeID.value === 3 && memoryIngredients) {
+        storyIngredients.value = memoryIngredients;
+      }
+      if (memoryCircle === 0) {
+        circleID.value = null;
+      } else {
+        circleID.value = memoryCircle;
+      }
+    };
+
+    const saveTemplate = async (templateType) => {
+      await actions
+        .saveTemplate(
+          user.UserID,
+          templateType,
+          newTemplateName.value,
+          storyText.value,
+          storyIngredients.value,
+          circleID.value
+        )
+        .then(() => {
+          newTemplateName.value = null;
+          saveTemplateDialog.value = false;
+        })
+        .then(() => {
+          console.log(
+            "storyIngredients in saveTemplate: ",
+            storyIngredients.value
+          );
+          if (storyIngredients.value === 0) {
+            storyIngredients.value = null;
+          }
+          getMemoryTemplates(templateType);
+        });
+    };
+
+    const deleteTemplate = async (templateID) => {
+      await actions.deleteTemplate(templateID).then(() => {
+        getMemoryTemplates(storyTypeID.value);
+      });
+    };
+
+    const addMemoryDialog = async (newMemType) => {
+      Object.assign(newSlideList, emptySlideList);
+      newStartSlide.value = 0;
+      newMemoryOpen.value = true;
+      await addMemory(newMemType);
+      await getMemoryTemplates(newMemType);
     };
 
     const cancelNewMemory = async () => {
@@ -1433,7 +1615,34 @@ export default defineComponent({
       });
     };
 
-    const draftCheck = async () => {
+    const saveAsDraft = async () => {
+      circleID.value = null;
+      draftCheck("userSelected");
+    };
+
+    const draftCheck = async (draftType) => {
+      if (draftType === "userSelected") {
+        saveDraft.value = false;
+        circleID.value = null;
+        validationCheck();
+        return;
+      }
+
+      if (
+        draftType === "unknown" &&
+        (circleID.value === null || circleID.value === "")
+      ) {
+        saveDraft.value = true;
+        return;
+      }
+
+      validationCheck();
+    };
+    const validationCheck = async () => {
+      if (storyTitle.value === null || storyTitle.value === "") {
+        badDataMessage.value = "You must enter a title.";
+        return;
+      }
       if (storyText.value !== null) {
         if (
           storyText.value.includes("<script") ||
@@ -1452,7 +1661,8 @@ export default defineComponent({
           return;
         }
       }
-      if (storyIngredients.value !== null) {
+      console.log(storyIngredients.value);
+      if (storyIngredients.value !== null || storyIngredients.value !== 0) {
         if (
           storyIngredients.value.includes("<script") ||
           storyIngredients.value.includes("&lt;script")
@@ -1508,9 +1718,6 @@ export default defineComponent({
         }
       }
 
-      if (circleID.value === "" || circleID.value === null) {
-        saveDraft.value = true;
-      }
       if (newMemoryOpen.value === true) {
         await updateNewMemory();
       } else {
@@ -1518,7 +1725,11 @@ export default defineComponent({
       }
     };
 
-    const addMemory = async () => {
+    const addMemory = async (newMemType) => {
+      if (newMemType === null) {
+        newMemType = 1;
+      }
+      setStoryType(newMemType);
       saveDraft.value = false;
       var newCircleID = null;
       if (circleID.value === "") {
@@ -1527,7 +1738,7 @@ export default defineComponent({
         newCircleID = circleID.value;
       }
       storyData.value = {
-        StoryTypeID: 1,
+        StoryTypeID: newMemType,
         StoryTitle: "",
         StoryText: "",
         Interviewee: "",
@@ -1605,6 +1816,7 @@ export default defineComponent({
           hidden.value = false;
           newMemoryOpen.value = false;
           newSlideCount.value = 0;
+          makeDraft.value = false;
 
           Object.assign(newSlideList, emptySlideList);
           newStartSlide.value = 0;
@@ -1796,6 +2008,7 @@ export default defineComponent({
       circleID,
       circleList,
       circleTitle,
+      deleteTemplate,
       draftCheck,
       draftLabel,
       ingredientsRef,
@@ -1823,12 +2036,14 @@ export default defineComponent({
       memoryTypeOn,
       memoryTypeOptions,
       message,
+      myTemplates,
       newBookAdded,
       newBookDialog,
       newBookTitle,
       newMemoryOpen,
       newSlideList,
       newSlideCount,
+      newTemplateName,
       noBookMsg,
       onPasteIng,
       onPasteText,
@@ -1838,18 +2053,23 @@ export default defineComponent({
       openTraditions,
       openInterviews,
       qUploadFle,
+      saveAsDraft,
       saveDraft,
+      saveTemplate,
+      saveTemplateDialog,
       searchOn,
       searchMemories,
       searchTerm,
       startFilter,
       selectedMemoryType,
+      selectMemoryType,
       setFilter,
       setGroup,
       setInterviews,
       setMemoryType,
       setSearch,
       setStoryType,
+      setTemplate,
       setTraditions,
       startCameraDialog,
       stories,
@@ -1865,6 +2085,7 @@ export default defineComponent({
       updateBookTitle,
       updateMemory,
       updateMemoryBooks,
+      validationCheck,
     };
   },
 });
@@ -1916,6 +2137,10 @@ export default defineComponent({
   background-repeat: repeat;
 }
 
+.bookWrap {
+  display: flex;
+  flex-wrap: wrap;
+}
 .titleInput {
   width: 100%;
 }
