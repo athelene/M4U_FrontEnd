@@ -11,6 +11,7 @@
           animated
           control-color="accent"
           navigation
+          height="100%"
           arrows
           class="mediaBackground flat shadow-1 rounded-borders"
         >
@@ -21,7 +22,7 @@
             v-for="slide in slideList"
             :key="slide.MediaID"
           >
-            <MediaCard :media="slide"></MediaCard>
+            <MediaCard :media="slide" class="media-card"></MediaCard>
           </q-carousel-slide>
         </q-carousel>
       </q-card-section>
@@ -103,7 +104,7 @@
       </q-card-section>
       <!--STARTING THE DETAILS SECTION OF THE STORY CARD-->
       <q-card-section class="col-4 text-h3" @click="fullScreenDialog = true">
-        <div class="text-h6 text-accent q-mb-sm">
+        <div class="text-h6 text-info q-mb-sm">
           <div class="text-h6" v-if="story.StoryTypeID === 2">
             Interview of {{ story.Interviewee }}
           </div>
@@ -123,11 +124,11 @@
             >
             <div
               v-html="story.StoryIngredients"
-              class="text-body1 text-accent"
+              class="text-body1 text-info"
               v-if="story.StoryTypeID === 3"
             ></div>
             <span
-              class="text-subtitle1 text-weight-bold text-accent"
+              class="text-subtitle1 text-weight-bold text-info"
               v-if="story.StoryTypeID === 3"
             >
               <div>Directions:</div></span
@@ -171,22 +172,24 @@
               <q-btn flat label="Add Comment" @click="addComment()" />
             </q-card-actions>
           </q-card>
-          <div
-            v-for="comment in comments"
-            :key="comment.CommentID"
-            class="commentDiv q-ma-md"
-          >
-            <q-btn
-              v-if="comment.UserID === user.UserID"
-              size="sm"
-              round
-              icon="mdi-close-circle"
-              @click="deleteComment(comment.CommentID)"
-            ></q-btn>
-            <span class="commentHeader">
-              {{ comment.UserDisplayName }}, {{ comment.CommentDate }} :
-            </span>
-            {{ comment.CommentText }}
+          <div class="bg-primary">
+            <div
+              v-for="comment in comments"
+              :key="comment.CommentID"
+              class="commentDiv q-ma-md"
+            >
+              <q-btn
+                v-if="comment.UserID === user.UserID"
+                size="sm"
+                round
+                icon="mdi-close-circle"
+                @click="deleteComment(comment.CommentID)"
+              ></q-btn>
+              <span class="commentHeader">
+                {{ comment.UserDisplayName }}, {{ comment.CommentDate }} :
+              </span>
+              {{ comment.CommentText }}
+            </div>
           </div>
         </div>
 
@@ -1748,7 +1751,7 @@ export default defineComponent({
 }
 
 .mediaBackground {
-  background-color: #92b498;
+  background-color: #bbb7a9;
 }
 
 .fullScreenImage {
@@ -1764,6 +1767,9 @@ export default defineComponent({
   margin: auto;
 }
 
+.media-card {
+  height: 25%;
+}
 .commentDiv {
   width: 85%;
   background-color: #bbb7a9;

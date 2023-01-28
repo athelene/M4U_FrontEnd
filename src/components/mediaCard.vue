@@ -4,7 +4,7 @@
       class="row justify-center cardColor q-mt-xs"
       v-if="media.MediaType === 2"
     >
-      <q-img :src="mediaURL" fit="contain">
+      <q-img :src="mediaURL" fit="fill" class="image-size">
         <template v-slot:loading>
           <div class="accent">
             <q-spinner-ios />
@@ -69,5 +69,11 @@ export default defineComponent({
 <style scoped>
 .imageBtn {
   background-color: #fefbee;
+}
+
+.image-size {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
 }
 </style>
