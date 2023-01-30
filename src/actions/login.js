@@ -34,7 +34,7 @@ export default {
       userEmail: userEmail,
       userPassword: userPassword,
     };
-    var result = this.callApi(myroute, params).then((res) => {
+    var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
     return result;
@@ -51,6 +51,7 @@ export default {
     return result;
   },
 
+  //Register a monthly paying subscriber - config for post
   async register(
     userFirst,
     userLast,
@@ -68,12 +69,13 @@ export default {
       userPassword: userPassword,
       code: code,
     };
-    var result = this.callApi(myroute, params).then((res) => {
+    var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
     return result;
   },
 
+  //Register a charter member - configured for post
   async registerCharter(
     userFirst,
     userLast,
@@ -91,7 +93,7 @@ export default {
       userPassword: userPassword,
       verificationCode: verificationCode,
     };
-    var result = this.callApi(myroute, params).then((res) => {
+    var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
     return result;
@@ -149,7 +151,7 @@ export default {
       token: token,
       reauthToken: reauthToken,
     };
-    var result = this.callApi(myroute, params).then((res) => {
+    var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
     return result;

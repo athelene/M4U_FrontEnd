@@ -383,7 +383,7 @@ export default {
         reauthToken: reauthToken,
       };
     }
-    var result = this.callApi(myroute, params).then((res) => {
+    var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
     return result;
@@ -507,6 +507,27 @@ export default {
     } catch (error) {
       if (error.response.status === 401) {
         unAuthRedirect();
+      }
+      console.log("send the user to the login page", error);
+    }
+  },
+
+  async postApi(myroute, params) {
+    try {
+      let res = await axios.post(
+        myroute,
+        { params },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        //  unAuthRedirect();
+        console.log("error is: ", error.response);
       }
       console.log("send the user to the login page", error);
     }
