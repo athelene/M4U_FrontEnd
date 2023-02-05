@@ -1038,7 +1038,7 @@
             </q-dialog>
             <!--END INTERVIEW DIALOG-->
 
-            <q-card-actions align="right">
+            <q-card-actions align="right" class="q-mb-xl">
               <q-btn
                 flat
                 label="Cancel"

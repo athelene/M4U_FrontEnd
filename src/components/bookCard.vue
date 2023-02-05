@@ -7,12 +7,12 @@
     :class="bookClass"
   >
     <div class="shadow">
-      <div class="topOfBook bookClass bookText" lang="en">
+      <div :class="computedBookClass + ' topOfBook bookClass'" lang="en">
         <p class="text-center">
           <q-avatar size="2.5rem" v-if="bookDetails.TimeCapsuleDate !== null">
             <q-icon size="2.5rem" color="" name="mdi-timer-sand"></q-icon>
           </q-avatar>
-          {{ bookDetails.BookTitle }}
+          <span class="bookText">{{ bookDetails.BookTitle }}</span>
         </p>
       </div>
 
@@ -232,6 +232,7 @@
 <script>
 import { defineComponent, reactive } from "vue";
 import { ref, onMounted, computed } from "vue";
+import { useQuasar, openURL } from "quasar";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 import BookStoryCard from "components/bookStoryCard.vue";
@@ -256,6 +257,7 @@ export default defineComponent({
     const user = reactive(userState.user);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
     const reauthToken = window.localStorage.getItem("rt");
+    const $q = useQuasar();
 
     const bookClass = ref("bookLook shadow-box  shadow-4");
     const tcClass = ref("bookLook shadow-box  shadow-4 timeCapsule");
@@ -272,6 +274,10 @@ export default defineComponent({
 
     onMounted(() => {
       getBookDetails();
+    });
+
+    const computedBookClass = computed(() => {
+      return $q.platform.is.desktop ? "desktopBookText" : "mobileBookText";
     });
 
     const closeBookDialog = async () => {
@@ -365,6 +371,7 @@ export default defineComponent({
       bookSlide,
       bookSasKey,
       closeBookDialog,
+      computedBookClass,
       deleteBook,
       editBookTitleDialog,
       openBookDispDialog,
@@ -392,8 +399,15 @@ export default defineComponent({
   filter: drop-shadow(25px, 25px, 15px, #999);
 }
 
-.bookText {
-  font-size: 5vw;
+.mobileBookText {
+  font-size: 35px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.desktopBookText {
+  font-size: 45px;
   overflow-wrap: break-word;
   word-wrap: break-word;
   white-space: normal;

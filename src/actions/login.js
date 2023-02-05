@@ -12,13 +12,26 @@ const serverState = import.meta.env.VITE_SERVERSTATE;
 const userState = useUserStore();
 const { user, isLoggedIn, token } = storeToRefs(userState);
 
-//FUNCTION TO CALL IF ANY AXIOS CALLS RECEIVE A 401 (unauthorized) ERROR
-function unAuthRedirect() {
-  location.href = serverState + "/";
-}
-
 //ESTABLISH SERVER NAME TO SET UP PROPER API CALL
 let servername = "https://" + window.location.hostname;
+
+//FUNCTION TO CALL IF ANY AXIOS CALLS RECEIVE A 401 (unauthorized) ERROR
+// function unAuthRedirect() {
+//   location.href = serverState + "/";
+// }
+function unAuthRedirect() {
+  if (servername === "http://localhost") {
+    location.href = "http://localhost:9000";
+  }
+  //  location.href = serverState + "/login"
+  else {
+    userState.userLogout();
+    isLoggedIn.value = false;
+    user.value = null;
+    token.value = null;
+    location.href = "https://www.memoriesforus.com";
+  }
+}
 
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";

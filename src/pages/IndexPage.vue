@@ -14,9 +14,14 @@
           <q-card-section v-if="message">
             {{ message }}
           </q-card-section>
-          <q-card-section class="q-mt-md feed-card transparent" flat>
+          <q-card-section
+            class="q-mt-md feed-card transparent flex-cemter"
+            flat
+          >
             <!--HEADER DETERMINED BY FILTER-->
-            <p class="text-h4 text-center text-info text-weight-bolder">
+            <div
+              class="text-h5 text-center text-accent text-weight-bolder filterTitle bg-secondary"
+            >
               {{ filterText }}
 
               <q-btn
@@ -26,7 +31,7 @@
                 @click="newBookDialog = true"
                 >New Book</q-btn
               >
-            </p>
+            </div>
 
             <!--END OF HEADER-->
 
@@ -2140,6 +2145,12 @@ export default defineComponent({
 .bookWrap {
   display: flex;
   flex-wrap: wrap;
+}
+
+.filterTitle {
+  border-radius: 40%;
+  padding: 10px;
+  margin: auto;
 }
 .titleInput {
   width: 100%;

@@ -4,7 +4,12 @@
       class="row justify-center cardColor q-mt-xs"
       v-if="media.MediaType === 2"
     >
-      <q-img :src="mediaURL" fit="fill" class="image-size">
+      <q-img
+        :src="mediaURL"
+        fit="fill"
+        class="image-size"
+        @click="imageFullScreen = !imageFullScreen"
+      >
         <template v-slot:loading>
           <div class="accent">
             <q-spinner-ios />
@@ -23,6 +28,33 @@
         class="video"
       ></video>
     </div>
+    <!--START FULLSCREEN IMAGE DIALOG-->
+    <q-dialog v-model="imageFullScreen" full-height full-width>
+      <q-card class="fullScreenImage">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6"></div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <q-img
+            :src="mediaURL"
+            height="100%"
+            fit="contain"
+            responsive
+            fullscreen
+          >
+            <template v-slot:loading>
+              <div class="accent">
+                <q-spinner-ios />
+                <div class="q-mt-md">Loading...</div>
+              </div>
+            </template>
+          </q-img>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -49,6 +81,7 @@ export default defineComponent({
     const user = reactive(userState.user);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
     const mediaURL = ref("");
+    const imageFullScreen = ref(false);
 
     onMounted(() => {
       getSasKey();
@@ -62,6 +95,7 @@ export default defineComponent({
 
     return {
       mediaURL,
+      imageFullScreen,
     };
   },
 });
