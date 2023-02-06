@@ -39,6 +39,7 @@
 
           <q-card-section>
             <q-img
+              oncontextmenu="return false;"
               :src="storyURL"
               height="100%"
               fit="contain"
@@ -61,7 +62,7 @@
       <!--START MEMORY DETAILS SECTION-->
       <q-card-section class="text-overline">
         <q-avatar rounded v-if="story.MediaLoc">
-          <img :src="storySasKey" />
+          <img :src="storySasKey" oncontextmenu="return false;" />
         </q-avatar>
         {{ story.UserDisplayName }}, {{ story.date }}
         <q-btn
@@ -274,6 +275,7 @@
 
                 <q-card-section>
                   <q-img
+                    oncontextmenu="return false;"
                     :src="storyURL"
                     height="100%"
                     fit="contain"
@@ -301,7 +303,12 @@
                 v-if="story.MediaType === 2"
                 @click="toggleImage()"
               >
-                <q-img :src="storyURL" height="250px" fit="contain">
+                <q-img
+                  :src="storyURL"
+                  height="250px"
+                  fit="contain"
+                  oncontextmenu="return false;"
+                >
                   <template v-slot:loading>
                     <div class="accent">
                       <q-spinner-ios />
@@ -333,6 +340,7 @@
 
                 <q-card-section>
                   <q-img
+                    oncontextmenu="return false;"
                     :src="storyURL"
                     height="100%"
                     fit="contain"
@@ -1286,7 +1294,7 @@ export default defineComponent({
         imageHeight.value = "200px";
       }
       if (Screen.lg === true) {
-        imageHeight.value = "500px";
+        imageHeight.value = "300px";
       }
       if (Screen.xl === true) {
         imageHeight.value = "500px";

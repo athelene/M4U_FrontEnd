@@ -6,6 +6,7 @@
     >
       <q-img
         :src="mediaURL"
+        oncontextmenu="return false;"
         fit="fill"
         class="image-size"
         @click="imageFullScreen = !imageFullScreen"
@@ -19,9 +20,10 @@
       </q-img>
     </div>
     <!--VIDEO-->
-    <div class="row justify-center videoWrapper" v-if="media.MediaType === 1">
+
+    <div class="row justify-center" v-if="media.MediaType === 1">
       <video
-        height="300"
+        :height="videoHeight"
         controls
         controlsList="nodownload video"
         :src="mediaURL"
@@ -34,7 +36,13 @@
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6"></div>
           <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn
+            icon="close"
+            flat
+            round
+            dense
+            @click="imageFullScreen = !imageFullScreen"
+          />
         </q-card-section>
 
         <q-card-section>
@@ -82,9 +90,27 @@ export default defineComponent({
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
     const mediaURL = ref("");
     const imageFullScreen = ref(false);
+    const videoHeight = ref(200);
 
     onMounted(() => {
       getSasKey();
+
+      if (Screen.xs === true) {
+        videoHeight.value = "140";
+      }
+      if (Screen.sm === true) {
+        videoHeight.value = "250";
+      }
+      if (Screen.md === true) {
+        videoHeight.value = "350";
+      }
+      if (Screen.lg === true) {
+        videoHeight.value = "450";
+      }
+      if (Screen.xl === true) {
+        videoHeight.value = "500";
+      }
+      console.log(videoHeight.value);
     });
 
     const getSasKey = async () => {
@@ -96,6 +122,8 @@ export default defineComponent({
     return {
       mediaURL,
       imageFullScreen,
+      screen,
+      videoHeight,
     };
   },
 });
