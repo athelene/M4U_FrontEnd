@@ -327,6 +327,12 @@
                       <q-icon name="mdi-image-plus" @click.stop.prevent />
                     </template>
                   </q-file>
+                  <q-inner-loading
+                    :showing="progress"
+                    label="Uploading media..."
+                    label-class="info"
+                    label-style="font-size: 1.1em"
+                  />
                 </q-card-section>
 
                 <q-card-actions align="right" class="text-primary">
@@ -384,6 +390,7 @@ export default defineComponent({
     const passwordDialog = ref(false);
     const pictureDialog = ref(false);
     const profileSas = ref(null);
+    const progress = ref(false);
     const qUploadFle = ref(null);
     const reason = ref(null);
     const logOutNotice = ref(false);
@@ -478,6 +485,7 @@ export default defineComponent({
     };
 
     const handleFileUpload = async () => {
+      progress.value = true;
       pictureDialog.value = false;
       let formData = new FormData();
       formData.append("file", qUploadFle.value);
@@ -487,6 +495,7 @@ export default defineComponent({
       await mediaActions
         .addNewProfileBlob(formData)
         .then((ret) => {
+          progress.value = false;
           qUploadFle.value = null;
         })
         .then(() => {
@@ -585,6 +594,7 @@ export default defineComponent({
       passwordDialog,
       pictureDialog,
       profileSas,
+      progress,
       qUploadFle,
       reason,
       refresh,

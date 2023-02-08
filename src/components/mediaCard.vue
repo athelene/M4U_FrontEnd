@@ -1,6 +1,5 @@
 <template>
   <div class="text-center" style="width: 100%">
-    {{ videoHeight }}
     <div
       class="row justify-center cardColor q-mt-xs"
       v-if="media.MediaType === 2"

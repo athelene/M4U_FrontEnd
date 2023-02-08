@@ -571,7 +571,14 @@
               <q-btn
                 icon="mdi-camera-plus"
                 @click="startCameraDialog()"
+                v-if="progress === false"
               ></q-btn>
+              <q-inner-loading
+                :showing="progress"
+                label="Uploading media..."
+                label-class="info"
+                label-style="font-size: 1.1em"
+              />
               <q-dialog v-model="openCameraDialog" persistent>
                 <q-card style="min-width: 350px">
                   <q-card-section class="q-pt-md">
@@ -1262,6 +1269,7 @@ export default defineComponent({
     const storySasKey = ref(null);
     const ingEditorType = ref("small");
     const memEditorType = ref("small");
+    const progress = ref(false);
 
     onMounted(() => {
       if (props.story.Hidden === 0) {
@@ -1565,17 +1573,17 @@ export default defineComponent({
     };
 
     const handleFileUpload = async () => {
-      //    var file = this.$refs.file.files[0];
+      progress.value = true;
       openCameraDialog.value = false;
       let formData = new FormData();
       formData.append("file", qUploadFle.value);
       formData.append("userID", user.UserID);
       formData.append("storyID", props.story.StoryID);
       formData.append("reauthToken", reauthToken);
-
       await mediaActions
         .addNewBlob(formData)
         .then((ret) => {
+          progress.value = false;
           qUploadFle.value = null;
         })
         .then(() => {
@@ -1729,6 +1737,7 @@ export default defineComponent({
       toggleEditorType,
       ingEditorType,
       memEditorType,
+      progress,
     };
   },
 });

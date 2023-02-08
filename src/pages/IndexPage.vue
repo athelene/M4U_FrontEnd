@@ -304,7 +304,17 @@
       >
         <q-card style="min-width: 75%">
           <q-card-section>
-            <q-btn icon="mdi-camera-plus" @click="startCameraDialog()"></q-btn>
+            <q-btn
+              icon="mdi-camera-plus"
+              @click="startCameraDialog()"
+              v-if="progress === false"
+            ></q-btn>
+            <q-inner-loading
+              :showing="progress"
+              label="Uploading media..."
+              label-class="info"
+              label-style="font-size: 1.1em"
+            />
             <q-dialog v-model="openCameraDialog" persistent>
               <q-card style="min-width: 400px">
                 <q-card-section class="q-pt-md">
@@ -1071,6 +1081,7 @@ export default defineComponent({
     const newTemplateName = ref(null);
     const noBookMsg = ref("");
     const openCameraDialog = ref(false);
+    const progress = ref(false);
     const qUploadFle = ref(null);
     const recordLast = ref(0);
     const recordStart = ref(0);
@@ -1759,6 +1770,7 @@ export default defineComponent({
     };
 
     const handleFileUpload = async () => {
+      progress.value = true;
       openCameraDialog.value = false;
       let formData = new FormData();
       formData.append("file", qUploadFle.value);
@@ -1769,6 +1781,7 @@ export default defineComponent({
       await mediaActions
         .addNewBlob(formData)
         .then((ret) => {
+          progress.value = false;
           qUploadFle.value = null;
         })
         .then(() => {
@@ -2057,6 +2070,7 @@ export default defineComponent({
       openCameraDialog,
       openTraditions,
       openInterviews,
+      progress,
       qUploadFle,
       saveAsDraft,
       saveDraft,
