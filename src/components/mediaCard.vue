@@ -1,5 +1,6 @@
 <template>
   <div class="text-center" style="width: 100%">
+    {{ videoHeight }}
     <div
       class="row justify-center cardColor q-mt-xs"
       v-if="media.MediaType === 2"
@@ -90,26 +91,26 @@ export default defineComponent({
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
     const mediaURL = ref("");
     const imageFullScreen = ref(false);
-    const videoHeight = ref(200);
+    const videoHeight = ref(400);
 
     onMounted(() => {
       getSasKey();
 
-      if (Screen.xs === true) {
-        videoHeight.value = "140";
-      }
-      if (Screen.sm === true) {
-        videoHeight.value = "250";
-      }
-      if (Screen.md === true) {
-        videoHeight.value = "350";
-      }
-      if (Screen.lg === true) {
-        videoHeight.value = "450";
-      }
-      if (Screen.xl === true) {
-        videoHeight.value = "500";
-      }
+      // if (Screen.xs === true) {
+      //   videoHeight.value = "140";
+      // }
+      // if (Screen.sm === true) {
+      //   videoHeight.value = "400";
+      // }
+      // if (Screen.md === true) {
+      //   videoHeight.value = "350";
+      // }
+      // if (Screen.lg === true) {
+      //   videoHeight.value = "450";
+      // }
+      // if (Screen.xl === true) {
+      //   videoHeight.value = "500";
+      // }
       console.log(videoHeight.value);
     });
 
