@@ -37,22 +37,32 @@
             <q-btn icon="close" flat round dense v-close-popup />
           </q-card-section>
 
-          <q-card-section>
-            <q-img
-              oncontextmenu="return false;"
-              :src="storyURL"
+          <q-card-section
+            v-if="slideList && slideList.length > 0"
+            class="q-pt-md"
+          >
+            <q-carousel
+              v-model="startSlide"
+              transition-prev="slide-right"
+              transition-next="slide-left"
+              swipeable
+              animated
+              control-color="accent"
+              navigation
               height="100%"
-              fit="contain"
-              responsive
-              fullscreen
+              arrows
+              class="mediaBackground flat shadow-1 rounded-borders"
             >
-              <template v-slot:loading>
-                <div class="accent">
-                  <q-spinner-ios />
-                  <div class="q-mt-md">Loading...</div>
-                </div>
-              </template>
-            </q-img>
+              <q-carousel-slide
+                :name="slide.MediaID"
+                autoplay="true"
+                class="column no-wrap flex-center"
+                v-for="slide in slideList"
+                :key="slide.MediaID"
+              >
+                <MediaCard :media="slide" class="media-card"></MediaCard>
+              </q-carousel-slide>
+            </q-carousel>
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -234,7 +244,7 @@
             </q-bar>
 
             <!--START OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
-            <q-card-section v-if="slideList && slideList.length > 0">
+            <q-card-section v-if="newSlideList && newSlideList.length > 0">
               <q-btn dense flat icon="mdi-arrow-left" v-close-popup>
                 <q-tooltip class="bg-white text-primary">Close</q-tooltip>
               </q-btn>
@@ -295,7 +305,7 @@
             <!--END OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
 
             <q-card-section>
-              <div class="text-h6">{{ story.StoryTitle }}</div>
+              <div class="text-h6">{{ story.StoryTitle }} TEST HERE</div>
             </q-card-section>
             <q-card-section>
               <div
@@ -330,7 +340,7 @@
                 ></video>
               </div>
             </q-card-section>
-            <q-dialog v-model="imageFullScreen">
+            <!-- <q-dialog v-model="imageFullScreen">
               <q-card class="fullScreenImage">
                 <q-card-section class="row items-center q-pb-none">
                   <div class="text-h6"></div>
@@ -356,7 +366,7 @@
                   </q-img>
                 </q-card-section>
               </q-card>
-            </q-dialog>
+            </q-dialog> -->
             <q-card-section class="text-overline"
               >{{ story.UserDisplayName }}, {{ story.date }}
               <q-btn
@@ -454,6 +464,7 @@
                   {{ comment.CommentText }}
                 </div>
               </div>
+              <!--REAL FULLSCREENDIALOG-->
               <q-dialog
                 v-model="fullScreenDialog"
                 persistent
@@ -469,7 +480,38 @@
                     </q-btn>
                   </q-bar>
                   <q-card-section>
-                    <div
+                    <q-card-section
+                      v-if="slideList && slideList.length > 0"
+                      class="q-pt-md"
+                    >
+                      <q-carousel
+                        v-model="startSlide"
+                        transition-prev="slide-right"
+                        transition-next="slide-left"
+                        swipeable
+                        animated
+                        control-color="accent"
+                        navigation
+                        height="100%"
+                        arrows
+                        class="mediaBackground flat shadow-1 rounded-borders"
+                      >
+                        <q-carousel-slide
+                          :name="slide.MediaID"
+                          autoplay="true"
+                          class="column no-wrap flex-center"
+                          v-for="slide in slideList"
+                          :key="slide.MediaID"
+                          height="2rem"
+                        >
+                          <MediaCard
+                            :media="slide"
+                            class="media-card"
+                          ></MediaCard>
+                        </q-carousel-slide>
+                      </q-carousel>
+                    </q-card-section>
+                    <!-- <div
                       class="row justify-center cardColor"
                       v-if="story.MediaType === 2"
                       @click="toggleImage()"
@@ -494,7 +536,7 @@
                         :src="storyURL"
                         class="video"
                       ></video>
-                    </div>
+                    </div> -->
                   </q-card-section>
                   <q-dialog v-model="imageFullScreen">
                     <q-card class="fullScreenImage">
