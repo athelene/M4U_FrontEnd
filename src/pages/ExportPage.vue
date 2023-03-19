@@ -2,15 +2,26 @@
   <q-page class="flex-center qpage bg-image">
     <!--STARTING SHARE GROUPS PAGE-->
     <q-card class="q-mt-md feed-card text-accent" flat>
-      <div class="q-ml-lg">
+      <div class="q-ml-lg" v-if="mobileMsg === true">
+        <h6 class="text-h5 text-info">
+          Exports cannot be done from a mobile device. Please log in to
+          www.memoriesforus.com on a PC to download your data.
+        </h6>
+      </div>
+
+      <div class="q-ml-lg" v-if="mobileMsg === false">
         <p class="text-h5 text-info">
-          Export Memories
+          Export Memories {{ mobileMsg }}
           <q-icon
             name="mdi-information-outline"
             size="xs"
             @click="getInfo = true"
           ></q-icon>
         </p>
+        <h5>
+          Warning! This could take 5 or 10 minutes to complete. Do not close the
+          window while the export is taking place.
+        </h5>
         <q-btn
           label="Start Export"
           @click="getExport()"
@@ -112,13 +123,14 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
+//import { useRoute } from "vue-router";
+//import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 import exportActions from "../actions/exports";
-import axios from "axios";
+//import axios from "axios";
 
 export default defineComponent({
   name: "ConnectionPage",
@@ -126,6 +138,7 @@ export default defineComponent({
   setup() {
     const userState = useUserStore();
     const user = reactive(userState.user);
+    const $q = useQuasar();
     const lastExport = ref(null);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
     const getInfo = ref(false);
@@ -136,30 +149,21 @@ export default defineComponent({
     const exportReady = ref("no");
     const exportEarly = ref(true);
     const spinner = ref(false);
+    const mobileMsg = ref(false);
 
     onMounted(async () => {
       lastExport.value = await exportActions
         .getExportDate(user.UserID)
         .then((retDate) => {
           var today = new Date();
-          console.log("exportEarly is: ", exportEarly.value);
           var recordedDate = new Date(retDate);
           var compareDate = new Date(retDate);
           compareDate.setDate(recordedDate.getDate() + 30);
-          console.log("recordedDate is: ", recordedDate);
           var dd = String(recordedDate.getDate()).padStart(2, "0");
           var mm = String(recordedDate.getMonth() + 1).padStart(2, "0"); //January is 0!
           var yyyy = recordedDate.getFullYear();
           var dateReturned = yyyy + "-" + mm + "-" + dd;
 
-          console.log(
-            "today is: ",
-            today,
-            "retDate is: ",
-            retDate,
-            "compareDate is: ",
-            compareDate
-          );
           if (today < compareDate) {
             exportEarly.value = true;
           } else {
@@ -168,6 +172,12 @@ export default defineComponent({
 
           return dateReturned;
         });
+
+      if ($q.platform.is.mobile) {
+        mobileMsg.value = true;
+      } else {
+        mobileMsg.value = false;
+      }
     });
 
     const getExport = async () => {
@@ -222,6 +232,7 @@ export default defineComponent({
       exportEarly,
       lastExport,
       spinner,
+      mobileMsg,
     };
   },
 });

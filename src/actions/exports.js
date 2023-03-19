@@ -64,7 +64,6 @@ export default {
 
     try {
       let res = await axios.get(myroute, { params }).then((response) => {
-        console.log("response from api is: ", response.data);
         return response.data;
       });
       return res;
@@ -72,7 +71,6 @@ export default {
       if (error.response.status === 401) {
         unAuthRedirect();
       }
-      console.log("send the user to the login page", error);
     }
   },
 
@@ -82,7 +80,6 @@ export default {
       reauthToken: reauthToken,
     };
     let myroute = servername + "/downloadHtml";
-    console.log("about to download blob");
     await axios({
       url: myroute,
       method: "GET",
@@ -91,7 +88,6 @@ export default {
         userID: userID,
       },
     }).then((response) => {
-      console.log("blob response is: ", response);
       var fileURL = window.URL.createObjectURL(new Blob([response.data]));
       var fileLink = document.createElement("a");
 
@@ -104,13 +100,11 @@ export default {
   },
 
   async getExportZip(userID) {
-    console.log("action page receives userID as ", userID);
     const params = {
       token: token,
       reauthToken: reauthToken,
     };
     let myroute = servername + "/downloadZip";
-    console.log("about to download blob, myroute is: ", myroute);
 
     await axios({
       url: myroute,
@@ -126,7 +120,6 @@ export default {
       },
     })
       .then((response) => {
-        console.log(response.data);
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
@@ -135,7 +128,6 @@ export default {
         link.click();
       })
       .then(() => {
-        console.log("about to return to exportpage");
         return 1;
       });
   },
