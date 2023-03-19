@@ -298,7 +298,9 @@
             </div>
           </template>
         </q-img>
-        <q-btn @click="pictureDialog = true">Edit Profile Picture</q-btn>
+        <q-btn @click="pictureDialog = true" color="primary"
+          >Edit Profile Picture</q-btn
+        >
 
         <!--START UPDATE PICTURE DIALOG-->
         <q-dialog v-model="pictureDialog" persistent>

@@ -126,6 +126,15 @@
           <q-item-section> Credits </q-item-section>
         </q-item>
         <q-item
+          clickable
+          v-ripple
+          @click="goToPage('/export')"
+          v-if="moreBtn"
+          class="q-ml-lg"
+        >
+          <q-item-section> Export Data </q-item-section>
+        </q-item>
+        <q-item
           v-if="user.AdminLevel === 100"
           clickable
           v-ripple

@@ -2152,8 +2152,9 @@ export default defineComponent({
 
 .bg-image {
   background-image: url(../../public/m4u_background.jpg);
-  background-size: contain;
-  background-repeat: repeat;
+  background-size: cover;
+  background-repeat: none;
+  background-attachment: fixed;
 }
 
 .bookWrap {

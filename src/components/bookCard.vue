@@ -8,7 +8,7 @@
   >
     <div class="shadow">
       <div :class="computedBookClass + ' topOfBook bookClass'" lang="en">
-        <p class="text-center">
+        <p class="text-center q-pa-lg">
           <q-avatar size="2.5rem" v-if="bookDetails.TimeCapsuleDate !== null">
             <q-icon size="2.5rem" color="" name="mdi-timer-sand"></q-icon>
           </q-avatar>
@@ -86,6 +86,28 @@
         </q-dialog>
         <!--END EDIT BOOK TITLE DIALOG -->
         <q-card-section class="q-mt-xl">
+          <q-btn-dropdown color="primary" icon="mdi-sort" size="xs">
+            <q-list>
+              <q-item clickable v-close-popup @click="sortContentAscDate()">
+                <q-item-section>
+                  <q-item-label>Date Ascending</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item clickable v-close-popup @click="sortContentRevDate()">
+                <q-item-section>
+                  <q-item-label>Date Decending</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item clickable v-close-popup @click="sortContentTitle()">
+                <q-item-section>
+                  <q-item-label>By Title</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+
           <q-carousel
             v-model="bookSlide"
             transition-prev="slide-right"
@@ -127,8 +149,8 @@
                   >
                     <q-item-section>
                       <p class="text-subtitle1">
-                        <span v-if="story.StoryTypeID === 4">Tradition: </span>
                         {{ story.StoryTitle }}
+                        <span v-if="story.StoryTypeID === 4"> - Tradition</span>
                       </p>
                     </q-item-section>
                   </q-item>
@@ -303,12 +325,61 @@ export default defineComponent({
         .getBookContent(user.UserID, props.bookID)
         .then((retList) => {
           bookMemoryList.value = retList;
+          console.log("bookMemoryList is: ", bookMemoryList.value);
           if (retList.length > 0) {
             bookContent.value = true;
           } else {
             bookContent.value = false;
           }
         });
+    };
+
+    const sortContentRevDate = async () => {
+      bookMemoryList.value.sort((a, b) => {
+        const dateA = a.StoryDate; // ignore upper and lowercase
+        const dateB = b.StoryDate; // ignore upper and lowercase
+        if (dateA > dateB) {
+          return -1;
+        }
+        if (dateA < dateB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      });
+    };
+
+    const sortContentAscDate = async () => {
+      bookMemoryList.value.sort((a, b) => {
+        const dateA = a.StoryDate; // ignore upper and lowercase
+        const dateB = b.StoryDate; // ignore upper and lowercase
+        if (dateA < dateB) {
+          return -1;
+        }
+        if (dateA > dateB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      });
+    };
+
+    const sortContentTitle = async () => {
+      bookMemoryList.value.sort((a, b) => {
+        const titleA = a.StoryTitle; // ignore upper and lowercase
+        const titleB = b.StoryTitle; // ignore upper and lowercase
+        if (titleA < titleB) {
+          return -1;
+        }
+        if (titleA > titleB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      });
     };
 
     const getBookDetails = async () => {
@@ -379,6 +450,9 @@ export default defineComponent({
       openEditBookTitleDialog,
       updateBookTitle,
       getBookContent,
+      sortContentAscDate,
+      sortContentRevDate,
+      sortContentTitle,
       tcClass,
     };
   },

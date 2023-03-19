@@ -111,6 +111,20 @@ const routes = [
   },
 
   {
+    path: "/export",
+    name: "export",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/export",
+        name: "export",
+        component: () => import("pages/ExportPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/tos",
     name: "tos",
     meta: { needsAuth: true },

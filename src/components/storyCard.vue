@@ -71,7 +71,7 @@
 
       <!--START MEMORY DETAILS SECTION-->
       <q-card-section class="text-overline">
-        <q-avatar rounded v-if="story.MediaLoc">
+        <q-avatar rounded v-if="story.UserMediaLoc">
           <img :src="storySasKey" oncontextmenu="return false;" />
         </q-avatar>
         {{ story.UserDisplayName }}, {{ story.date }}
@@ -598,8 +598,345 @@
             </q-card-section>
           </q-card>
         </q-dialog>
-
         <!--END FULLSCREEN DIALOG-->
+
+        <!--START OF EXPORT DIALOG-->
+        <q-dialog
+          v-model="fullScreenDialog"
+          persistent
+          :maximized="maximizedToggle"
+          transition-show="slide-up"
+          transition-hide="slide-down"
+        >
+          <q-card class="bg-primary">
+            <q-bar>
+              <q-space />
+
+              <q-btn
+                dense
+                flat
+                icon="minimize"
+                @click="maximizedToggle = false"
+                :disable="!maximizedToggle"
+              >
+                <q-tooltip v-if="maximizedToggle" class="bg-white text-primary"
+                  >Minimize</q-tooltip
+                >
+              </q-btn>
+              <q-btn
+                dense
+                flat
+                icon="crop_square"
+                @click="maximizedToggle = true"
+                :disable="maximizedToggle"
+              >
+                <q-tooltip v-if="!maximizedToggle" class="bg-white text-primary"
+                  >Maximize</q-tooltip
+                >
+              </q-btn>
+              <q-btn dense flat icon="close" v-close-popup>
+                <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+              </q-btn>
+            </q-bar>
+
+            <!--START OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
+            <q-card-section v-if="newSlideList && newSlideList.length > 0">
+              <q-btn dense flat icon="mdi-arrow-left" v-close-popup>
+                <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+              </q-btn>
+              <q-carousel
+                v-model="startSlide"
+                transition-prev="slide-right"
+                transition-next="slide-left"
+                swipeable
+                animated
+                control-color="accent"
+                navigation
+                padding
+                arrows
+                height="250px"
+                class="mediaBackground flat shadow-1 rounded-borders"
+              >
+                <q-carousel-slide
+                  :name="slide.MediaID"
+                  autoplay="true"
+                  class="column no-wrap flex-center"
+                  v-for="slide in slideList"
+                  :key="slide.MediaID"
+                >
+                  <MediaCard :media="slide"></MediaCard>
+                </q-carousel-slide>
+              </q-carousel>
+            </q-card-section>
+            <!--END NEW MEDIA SECTION-->
+
+            <!--START FULLSCREEN IMAGE DIALOG-->
+            <q-dialog v-model="imageFullScreen">
+              <q-card class="fullScreenImage">
+                <q-card-section class="row items-center q-pb-none">
+                  <div class="text-h6"></div>
+                  <q-space />
+                  <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section>
+                  <q-img
+                    oncontextmenu="return false;"
+                    :src="storyURL"
+                    height="100%"
+                    fit="contain"
+                    responsive
+                    fullscreen
+                  >
+                    <template v-slot:loading>
+                      <div class="accent">
+                        <q-spinner-ios />
+                        <div class="q-mt-md">Loading...</div>
+                      </div>
+                    </template>
+                  </q-img>
+                </q-card-section>
+              </q-card>
+            </q-dialog>
+            <!--END OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
+
+            <q-card-section>
+              <div class="text-h6">{{ story.StoryTitle }} TEST HERE</div>
+            </q-card-section>
+            <q-card-section>
+              <div
+                class="row justify-center cardColor"
+                v-if="story.MediaType === 2"
+                @click="toggleImage()"
+              >
+                <q-img
+                  :src="storyURL"
+                  height="250px"
+                  fit="contain"
+                  oncontextmenu="return false;"
+                >
+                  <template v-slot:loading>
+                    <div class="accent">
+                      <q-spinner-ios />
+                      <div class="q-mt-md">Loading...</div>
+                    </div>
+                  </template>
+                </q-img>
+              </div>
+              <div
+                class="row justify-center videoWrapper"
+                v-if="story.MediaType === 1"
+              >
+                <video
+                  height="300"
+                  controls
+                  controlsList="nodownload video"
+                  :src="storyURL"
+                  class="video"
+                ></video>
+              </div>
+            </q-card-section>
+            <!-- <q-dialog v-model="imageFullScreen">
+              <q-card class="fullScreenImage">
+                <q-card-section class="row items-center q-pb-none">
+                  <div class="text-h6"></div>
+                  <q-space />
+                  <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section>
+                  <q-img
+                    oncontextmenu="return false;"
+                    :src="storyURL"
+                    height="100%"
+                    fit="contain"
+                    responsive
+                    fullscreen
+                  >
+                    <template v-slot:loading>
+                      <div class="accent">
+                        <q-spinner-ios />
+                        <div class="q-mt-md">Loading...</div>
+                      </div>
+                    </template>
+                  </q-img>
+                </q-card-section>
+              </q-card>
+            </q-dialog> -->
+            <q-card-section class="text-overline"
+              >{{ story.UserDisplayName }}, {{ story.date }}
+              <q-btn
+                class="text-accent"
+                flat
+                round
+                icon="mdi-pencil-outline"
+                v-if="story.Userid === user.UserID"
+              ></q-btn>
+              <q-btn
+                class="text-accent"
+                flat
+                round
+                icon="mdi-delete-forever-outline"
+                v-if="story.Userid === user.UserID"
+              ></q-btn>
+            </q-card-section>
+            <q-card-section class="col-4 text-h3">
+              <div class="text-h6 text-accent q-mb-sm">
+                <div class="text-h6" v-if="story.StoryTypeID === 2">
+                  Interview of {{ story.Interviewee }}
+                </div>
+                <div class="text-h5" v-if="story.StoryTypeID === 4">
+                  Tradition
+                </div>
+                {{ story.StoryTitle }}
+                <q-btn
+                  icon="mdi-fullscreen"
+                  size="sm"
+                  @click="fullScreenDialog = true"
+                ></q-btn>
+              </div>
+              <div class="text-body1" v-if="story.StoryTypeID === 3">
+                <q-scroll-area class="scrollArea" :visible="scrollVisible">
+                  <div>Ingredients:</div>
+                  <div v-html="story.StoryIngredients"></div>
+                </q-scroll-area>
+              </div>
+              <div class="text-body1">
+                <div>
+                  <span
+                    class="text-subtitle1 text-accent"
+                    v-if="story.StoryTypeID === 3"
+                    >Directions:</span
+                  >
+                </div>
+                <q-scroll-area
+                  class="scrollArea"
+                  :visible="scrollVisible"
+                  v-if="story.StoryText"
+                >
+                  <div v-html="story.StoryText"></div>
+                </q-scroll-area>
+              </div>
+            </q-card-section>
+
+            <q-card-section>
+              <div v-if="commentsOpen">
+                <q-card style="max-width: 85%">
+                  <q-card-actions align="right" class="text-primary">
+                    <q-btn flat label="Clear" @click="newComment = null" />
+                    <q-btn flat label="Add Comment" @click="addComment()" />
+                  </q-card-actions>
+                </q-card>
+              </div>
+              <!--REAL FULLSCREENDIALOG-->
+              <q-dialog
+                v-model="fullScreenDialog"
+                persistent
+                :maximized="maximizedToggle"
+                transition-show="slide-up"
+                transition-hide="slide-down"
+              >
+                <q-card class="bg-primary">
+                  <q-bar>
+                    <q-space />
+                    <q-btn dense flat icon="close" v-close-popup>
+                      <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+                    </q-btn>
+                  </q-bar>
+                  <q-card-section>
+                    <q-card-section
+                      v-if="slideList && slideList.length > 0"
+                      class="q-pt-md"
+                    >
+                      <q-carousel
+                        v-model="startSlide"
+                        transition-prev="slide-right"
+                        transition-next="slide-left"
+                        swipeable
+                        animated
+                        control-color="accent"
+                        navigation
+                        height="100%"
+                        arrows
+                        class="mediaBackground flat shadow-1 rounded-borders"
+                      >
+                        <q-carousel-slide
+                          :name="slide.MediaID"
+                          autoplay="true"
+                          class="column no-wrap flex-center"
+                          v-for="slide in slideList"
+                          :key="slide.MediaID"
+                          height="2rem"
+                        >
+                          <MediaCard
+                            :media="slide"
+                            class="media-card"
+                          ></MediaCard>
+                        </q-carousel-slide>
+                      </q-carousel>
+                    </q-card-section>
+                  </q-card-section>
+                  <q-dialog v-model="imageFullScreen">
+                    <q-card class="fullScreenImage">
+                      <q-card-section class="row items-center q-pb-none">
+                        <div class="text-h6"></div>
+                        <q-space />
+                        <q-btn icon="close" flat round dense v-close-popup />
+                      </q-card-section>
+
+                      <q-card-section>
+                        <q-img
+                          :src="storyURL"
+                          height="100%"
+                          fit="contain"
+                          responsive
+                          fullscreen
+                        >
+                          <template v-slot:loading>
+                            <div class="accent">
+                              <q-spinner-ios />
+                              <div class="q-mt-md">Loading...</div>
+                            </div>
+                          </template>
+                        </q-img>
+                      </q-card-section>
+                    </q-card>
+                  </q-dialog>
+                  <q-card-section class="q-pt-none">
+                    <div class="text-h6 text-accent q-mb-sm">
+                      <div class="text-h6" v-if="story.StoryTypeID === 2">
+                        Interview of {{ story.Interviewee }}
+                      </div>
+                      <div class="text-h5" v-if="story.StoryTypeID === 4">
+                        Tradition
+                      </div>
+                      {{ story.StoryTitle }}
+                      <span
+                        class="text-subtitle1"
+                        v-if="story.StoryTypeID === 3"
+                      >
+                        <div>Ingredients</div></span
+                      >
+                    </div>
+                    <div v-html="story.StoryIngredients"></div>
+                    <div class="text-body1">
+                      <div>
+                        <span
+                          class="text-subtitle1 text-accent"
+                          v-if="story.StoryTypeID === 3"
+                          >Directions:</span
+                        >
+                      </div>
+
+                      <div v-html="story.StoryText"></div>
+                    </div>
+                  </q-card-section>
+                </q-card>
+              </q-dialog>
+            </q-card-section>
+          </q-card>
+        </q-dialog>
+        <!--END OF EXPORT DIALOG-->
 
         <!--START EDIT DIALOG-->
 
