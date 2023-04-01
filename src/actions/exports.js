@@ -54,6 +54,19 @@ export default {
     return result;
   },
 
+  async checkExportStarted(userID) {
+    let myroute = servername + "/checkExportStarted";
+    const params = {
+      userID: userID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async getExport(userID) {
     let myroute = servername + "/exportMemories";
     const params = {
@@ -130,6 +143,26 @@ export default {
       .then(() => {
         return 1;
       });
+  },
+
+  async resetReady(userID) {
+    let myroute = servername + "/resetReady";
+    const params = {
+      userID: userID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+
+    try {
+      let res = await axios.get(myroute, { params }).then((response) => {
+        return response.data;
+      });
+      return res;
+    } catch {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+    }
   },
 
   async callApi(myroute, params) {
