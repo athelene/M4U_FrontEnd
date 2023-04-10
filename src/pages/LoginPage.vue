@@ -361,7 +361,7 @@ export default {
           newUserID.value = regResult.UserID;
 
           var checkoutUrl =
-            "https://buy.stripe.com/test_3csfZscrZ9PofO86oo?client_reference_id=" +
+            "https://buy.stripe.com/4gweWx4SDdFi4Q8dQQ?client_reference_id=" +
             regResult.UserID;
           console.log("checkoutUrl is: ", checkoutUrl);
 
