@@ -91,7 +91,7 @@
 
           <q-card-section class="q-pt-none">
             <q-uploader
-              url="http://localhost:8700/importBlobs"
+              :url="servername"
               label="Individual upload"
               multiple
               style="max-width: 300px"
@@ -172,6 +172,8 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
+    //ESTABLISH SERVER NAME TO SET UP PROPER API CALL
+    const serverHost = "https://" + window.location.hostname;
     const userState = useUserStore();
     const user = reactive(userState.user);
     const $q = useQuasar();
@@ -189,12 +191,22 @@ export default defineComponent({
     const importBookTitle = ref(null);
     const selectFilesDialog = ref(false);
     const doneUploadDialog = ref(false);
+    const servername = ref("");
 
     onMounted(async () => {
       if ($q.platform.is.mobile) {
         mobileMsg.value = true;
       } else {
         mobileMsg.value = false;
+      }
+
+      console.log("serverHost is: ", serverHost);
+
+      if (serverHost === "https://localhost") {
+        servername.value = "http://localhost:8700/importBlobs";
+      } else {
+        servername.value =
+          "https://memoriesforusbe.azurewebsites.net/importBlobs";
       }
     });
 
@@ -250,6 +262,7 @@ export default defineComponent({
       doneUpload,
       doneUploadDialog,
       reauthToken,
+      servername,
     };
   },
 });
