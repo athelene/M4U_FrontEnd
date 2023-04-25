@@ -85,7 +85,12 @@
         <q-item clickable v-ripple @click="goToPage('/suggestinterview')">
           <q-item-section> Suggest an Interview Question </q-item-section>
         </q-item>
-        <q-item clickable v-ripple @click="goToPage('/import')">
+        <q-item
+          clickable
+          v-ripple
+          @click="goToPage('/import')"
+          v-if="user.AdminLevel === 100"
+        >
           <q-item-section> Bulk Import Photos </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="moreBtn = !moreBtn">
@@ -124,7 +129,7 @@
           clickable
           v-ripple
           @click="goToPage('/credits')"
-          v-if="moreBtn"
+          v-if="moreBtn && user.AdminLevel === 100"
           class="q-ml-lg"
         >
           <q-item-section> Credits </q-item-section>
