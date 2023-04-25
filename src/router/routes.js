@@ -7,18 +7,7 @@ const routes = [
       {
         path: "",
         component: () => import("pages/LoginPage.vue"),
-      },
-    ],
-  },
-
-  {
-    path: "/register",
-    component: () => import("layouts/LoginLayout.vue"),
-    children: [
-      {
-        path: "/register",
-        name: "/register",
-        component: () => import("pages/NewUser.vue"),
+        props: true,
       },
     ],
   },
@@ -111,6 +100,20 @@ const routes = [
   },
 
   {
+    path: "/import",
+    name: "import",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/import",
+        name: "import",
+        component: () => import("pages/ImportPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/export",
     name: "export",
     meta: { needsAuth: true },
@@ -120,6 +123,20 @@ const routes = [
         path: "/export",
         name: "export",
         component: () => import("pages/ExportPage.vue"),
+      },
+    ],
+  },
+
+  {
+    path: "/exportComplete",
+    name: "exportComplete",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/exportComplete",
+        name: "exportComplete",
+        component: () => import("pages/ExportCompletePage.vue"),
       },
     ],
   },
@@ -136,6 +153,12 @@ const routes = [
         component: () => import("pages/PolicyPage.vue"),
       },
     ],
+  },
+
+  {
+    path: "/info",
+    name: "info",
+    component: () => import("pages/InfoPage.vue"),
   },
 
   {

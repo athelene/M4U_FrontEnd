@@ -77,8 +77,10 @@ export default {
 
     try {
       let res = await axios.get(myroute, { params }).then((response) => {
+        console.log("response from getExport is: ", response.data);
         return response.data;
       });
+      console.log("res is: ", res);
       return res;
     } catch {
       if (error.response.status === 401) {

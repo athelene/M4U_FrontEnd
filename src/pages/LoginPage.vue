@@ -46,7 +46,9 @@
               >Forgot Password</q-btn
             >
           </q-card-section>
-
+          <q-card-section class="text-center q-pa-none">
+            <q-btn size="xl" to="info" flat color="accent">Learn More</q-btn>
+          </q-card-section>
           <q-dialog v-model="forgotDialog">
             <q-card>
               <q-card-section class="text-center" v-if="forgotSent === true">
@@ -306,10 +308,12 @@ export default {
 
     if (route.query.code) {
       invitationCode.value = route.query.code;
-      pageType.value = "register";
-      console.log("invitationCode is: ", invitationCode.value);
     } else {
       console.log("no invitation found");
+    }
+
+    if (route.query.page === "registration") {
+      pageType.value = "register";
     }
 
     async function signup() {
@@ -363,8 +367,6 @@ export default {
           var checkoutUrl =
             "https://buy.stripe.com/4gweWx4SDdFi4Q8dQQ?client_reference_id=" +
             regResult.UserID;
-          console.log("checkoutUrl is: ", checkoutUrl);
-
           window.location.href = checkoutUrl;
         });
     }

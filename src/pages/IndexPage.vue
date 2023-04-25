@@ -1000,13 +1000,11 @@ import { storeToRefs } from "pinia";
 import QcCard from "components/QuickConnectCard.vue";
 import StoryCard from "components/storyCard.vue";
 import BookCard from "components/bookCard.vue";
-//mport BookStoryCard from "components/bookStoryCard.vue";
 import AddBook from "components/addBook.vue";
 import MediaCardEdit from "components/mediaCardEdit.vue";
 import MediaCard from "components/mediaCard.vue";
 import bookActions from "../actions/books";
 import { createIfStatement } from "@vue/compiler-core";
-//import EditBook from "src/components/editBook.vue";
 
 export default defineComponent({
   name: "IndexPage",

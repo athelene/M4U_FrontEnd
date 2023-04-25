@@ -150,6 +150,19 @@ export default {
     return result;
   },
 
+  async getMyBookList(userID) {
+    let myroute = servername + "/getmybooklist";
+    const params = {
+      userID: userID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async newBook(userID, bookTitle, tcDate, circleID, coverColor, coverFont) {
     let myroute = servername + "/newbook";
     const params = {

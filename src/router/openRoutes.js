@@ -7,6 +7,8 @@ const publicPages = [
   "/register",
   "/charter",
   "/newpassword",
+  "/info",
+  "/login",
 ];
 
 export default publicPages;

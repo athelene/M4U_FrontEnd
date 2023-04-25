@@ -78,11 +78,15 @@
         <q-item clickable v-ripple @click="goToPage('/quickconnect')">
           <q-item-section> Quick Connect Questions</q-item-section>
         </q-item>
+
         <q-item clickable v-ripple @click="goToPage('/suggestqc')">
           <q-item-section> Suggest A Quick Connect Question </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/suggestinterview')">
           <q-item-section> Suggest an Interview Question </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple @click="goToPage('/import')">
+          <q-item-section> Bulk Import Photos </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="moreBtn = !moreBtn">
           <q-item-section>
@@ -125,7 +129,7 @@
         >
           <q-item-section> Credits </q-item-section>
         </q-item>
-        <!-- <q-item
+        <q-item
           clickable
           v-ripple
           @click="goToPage('/export')"
@@ -133,7 +137,7 @@
           class="q-ml-lg"
         >
           <q-item-section> Export Data </q-item-section>
-        </q-item> -->
+        </q-item>
         <q-item
           v-if="user.AdminLevel === 100"
           clickable
