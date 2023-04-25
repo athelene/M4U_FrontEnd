@@ -167,6 +167,27 @@ export default {
     }
   },
 
+  async cleanUpExports() {
+    let myroute = servername + "/cleanUpExports";
+    const params = {
+      token: token,
+      reauthToken: reauthToken,
+    };
+
+    try {
+      let res = await axios.get(myroute, { params }).then((response) => {
+        console.log("response from getExport is: ", response.data);
+        return response.data;
+      });
+      console.log("res is: ", res);
+      return res;
+    } catch {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+    }
+  },
+
   async callApi(myroute, params) {
     try {
       let res = await axios.get(myroute, { params });

@@ -200,8 +200,6 @@ export default defineComponent({
         mobileMsg.value = false;
       }
 
-      console.log("serverHost is: ", serverHost);
-
       if (serverHost === "https://localhost") {
         servername.value = "http://localhost:8700/importBlobs";
       } else {

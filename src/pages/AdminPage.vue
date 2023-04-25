@@ -43,6 +43,11 @@
                 <router-link to="/adminusers">Manage Users</router-link>
               </q-item-label>
             </q-item>
+            <q-item class="text-center" clickable v-ripple>
+              <q-item-label class="absolute-center">
+                <q-btn @click="cleanUpExports()">Clean Up Exports</q-btn>
+              </q-item-label>
+            </q-item>
           </q-list>
         </div>
       </q-card-section>
@@ -171,6 +176,7 @@ import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 import adminActions from "../actions/admin";
+import exportActions from "../actions/exports";
 
 export default defineComponent({
   name: "SharePage",
@@ -296,8 +302,15 @@ export default defineComponent({
       userDialog.value = true;
     };
 
+    const cleanUpExports = async () => {
+      await exportActions.cleanUpExports().then(() => {
+        console.log("export files deleted");
+      });
+    };
+
     return {
       addMessage,
+      cleanUpExports,
       message,
       messageHeader,
       startDate,

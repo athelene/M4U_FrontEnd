@@ -85,12 +85,7 @@
         <q-item clickable v-ripple @click="goToPage('/suggestinterview')">
           <q-item-section> Suggest an Interview Question </q-item-section>
         </q-item>
-        <q-item
-          clickable
-          v-ripple
-          @click="goToPage('/import')"
-          v-if="user.AdminLevel === 100"
-        >
+        <q-item clickable v-ripple @click="goToPage('/import')">
           <q-item-section> Bulk Import Photos </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="moreBtn = !moreBtn">
@@ -358,11 +353,6 @@ export default defineComponent({
       token,
       user,
     };
-    //   .bg-image {
-    // background-image: url(../../public/background.jpg);
-    // background-repeat: no-repeat;
-    // background-size: contain;
-    //}
   },
 });
 </script>
