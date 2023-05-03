@@ -163,14 +163,39 @@ export default defineComponent({
     const exportErr = ref(false);
     const exportReady = ref(false);
     const exportEarly = ref(true);
+    const exportStarted = ref(false);
     const exportDialog = ref(false);
     const spinner = ref(false);
     const mobileMsg = ref(false);
 
     onMounted(async () => {
+      await setUpDates().then(async () => {
+        await exportActions
+          .checkExportCompleted(user.UserID)
+          .then((complete) => {
+            console.log("complete is: ", complete);
+            if (exportStarted.value === true && complete === "files ready") {
+              router.push("/exportProcessing");
+            }
+          });
+      });
+
+      if ($q.platform.is.mobile) {
+        mobileMsg.value = true;
+      } else {
+        mobileMsg.value = false;
+      }
+    });
+
+    const setUpDates = async () => {
       lastExport.value = await exportActions
         .getExportDate(user.UserID)
         .then(async (retDate) => {
+          if (retDate.ExportStarted === 1) {
+            exportStarted.value = true;
+          } else {
+            exportStarted.value = false;
+          }
           var today = new Date();
           var recordedDate = new Date(retDate.LastExport);
           var compareDate = new Date(retDate.LastExport);
@@ -191,13 +216,7 @@ export default defineComponent({
 
           return dateReturned;
         });
-
-      if ($q.platform.is.mobile) {
-        mobileMsg.value = true;
-      } else {
-        mobileMsg.value = false;
-      }
-    });
+    };
 
     const getExport = async () => {
       spinner.value = true;
@@ -213,7 +232,7 @@ export default defineComponent({
           if (memories === "Ready for download") {
             spinner.value = false;
             exportReady.value = true;
-            router.push("/exportComplete");
+            router.push("/exportProcessing");
           }
         });
       } catch (error) {}

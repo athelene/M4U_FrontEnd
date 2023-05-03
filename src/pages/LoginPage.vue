@@ -145,17 +145,31 @@
                 square
                 filled
                 v-model="userPassword"
-                type="password"
+                :type="isPwd ? 'password' : 'text'"
                 label="Password"
-                hint="Maximum 20 characters."
-              />
-              <q-item-label>Password Strength </q-item-label>
+                hint="Use upper and lowercase, numbers, symbols or make it
+                longer. Fewer common words. Maximum 20 characters."
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  /> </template
+              ></q-input>
               <q-linear-progress
                 rounded
                 :value="score"
-                color="accent q-mt-lg"
+                :color="scoreColor"
                 size="15px"
               >
+                <div class="absolute-full flex flex-center">
+                  <q-badge
+                    color="white"
+                    text-color="accent"
+                    :label="scoreLabel"
+                  />
+                </div>
               </q-linear-progress>
               <q-input
                 square
@@ -250,6 +264,7 @@ export default {
     const userLast = ref(null);
     const userDisplayName = ref(null);
     const userPassword = ref(null);
+    const isPwd = ref(true);
     const confirmPassword = ref(null);
     const errorMsg = ref(null);
     const forgotDialog = ref(false);
@@ -286,6 +301,34 @@ export default {
       return zxcvbn(userPassword.value).score * 0.25;
     });
 
+    const scoreLabel = computed(() => {
+      if (score.value <= 0.25) {
+        var secScore = "Weak password.";
+      } else if (score.value > 0.025 && score.value <= 0.5) {
+        var secScore = "Better, not there yet.";
+      } else if (score.value > 0.5 && score.value < 1) {
+        var secScore = "Almost!";
+      } else if (score.value >= 1) {
+        var secScore = "Great password!";
+      }
+      return secScore;
+    });
+
+    const scoreColor = computed(() => {
+      if (score.value === 0) {
+        var secColor = "red-10";
+      } else if (score.value > 0 && score.value <= 0.25) {
+        var secColor = "orange-10";
+      } else if (score.value > 0.025 && score.value <= 0.5) {
+        var secColor = "orange-5";
+      } else if (score.value > 0.5 && score.value < 1) {
+        var secColor = "yellow-3";
+      } else if (score.value === 1) {
+        var secColor = "light-green-5";
+      }
+      return secColor;
+    });
+
     const passMatch = computed(() => {
       if (userPassword.value !== confirmPassword.value) {
         var match = false;
@@ -308,12 +351,14 @@ export default {
 
     if (route.query.code) {
       invitationCode.value = route.query.code;
+      console.log("found route.query.code");
     } else {
       console.log("no invitation found");
     }
 
-    if (route.query.page === "registration") {
+    if (route.query.code) {
       pageType.value = "register";
+      console.log("pageType.value is: ", pageType.value);
     }
 
     async function signup() {
@@ -454,10 +499,13 @@ export default {
       pageType,
       newUserID,
       isPasswordStrong,
+      isPwd,
       score,
       passMatch,
       sendForgotEamil,
       signup,
+      scoreLabel,
+      scoreColor,
       emailHint,
       confirm,
       playstoreMsg,

@@ -14,7 +14,7 @@
           Accept your invitation and never pay!
         </div>
       </q-card>
-      <div class="text-h6">{{ errorMsg }}</div>
+      <div class="text-h6 text-negative">{{ errorMsg }}</div>
       <div class="q-mt-lg">
         <q-card square bordered class="q-pa-lg q-mb-xl shadow-1 formStyle">
           <q-card-section class="text-center q-pa-none">
@@ -67,17 +67,31 @@
                 square
                 filled
                 v-model="userPassword"
-                type="password"
+                :type="isPwd ? 'password' : 'text'"
                 label="Password"
-                hint="Maximum 20 characters."
-              />
-              <q-item-label>Password Strength </q-item-label>
+                hint="Use upper and lowercase, numbers, symbols or make it
+                longer. Fewer common words. Maximum 30 characters."
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  /> </template
+              ></q-input>
               <q-linear-progress
                 rounded
                 :value="score"
-                color="accent q-mt-lg"
+                :color="scoreColor"
                 size="15px"
               >
+                <div class="absolute-full flex flex-center">
+                  <q-badge
+                    color="white"
+                    text-color="accent"
+                    :label="scoreLabel"
+                  />
+                </div>
               </q-linear-progress>
               <q-input
                 square
@@ -88,6 +102,7 @@
               />
               <p v-if="passMatch === false">Passwords do not match.</p>
             </q-form>
+            <div class="text-h6 text-negative">{{ errorMsg }}</div>
           </q-card-section>
           <q-card-actions>
             <q-btn
@@ -120,6 +135,12 @@
               >
             </div></span
           >
+          <q-inner-loading
+            :showing="spinner"
+            label="Please wait..."
+            label-class="text-teal"
+            label-style="font-size: 1.1em"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
@@ -154,6 +175,7 @@ export default {
     const userLast = ref(null);
     const userDisplayName = ref(null);
     const userPassword = ref(null);
+    const isPwd = ref(true);
     const confirmPassword = ref(null);
     const errorMsg = ref(null);
     const router = useRouter();
@@ -164,9 +186,7 @@ export default {
       "You must use the same email addess as the one your invitation was sent to."
     );
     const confirm = ref(false);
-    //    const playstoreMsg = ref(null);
-    //    const myPlatform = ref($q.platform.is.mobile);
-    const newUserID = ref(0);
+    const spinner = ref(false);
     const verificationCode = ref(null);
 
     const options = {
@@ -188,6 +208,34 @@ export default {
       return zxcvbn(userPassword.value).score * 0.25;
     });
 
+    const scoreLabel = computed(() => {
+      if (score.value <= 0.25) {
+        var secScore = "Weak password.";
+      } else if (score.value > 0.025 && score.value <= 0.5) {
+        var secScore = "Better, not there yet.";
+      } else if (score.value > 0.5 && score.value < 1) {
+        var secScore = "Almost!";
+      } else if (score.value >= 1) {
+        var secScore = "Great password!";
+      }
+      return secScore;
+    });
+
+    const scoreColor = computed(() => {
+      if (score.value === 0) {
+        var secColor = "red-10";
+      } else if (score.value > 0 && score.value <= 0.25) {
+        var secColor = "orange-10";
+      } else if (score.value > 0.025 && score.value <= 0.5) {
+        var secColor = "orange-5";
+      } else if (score.value > 0.5 && score.value < 1) {
+        var secColor = "yellow-3";
+      } else if (score.value === 1) {
+        var secColor = "light-green-5";
+      }
+      return secColor;
+    });
+
     const passMatch = computed(() => {
       if (userPassword.value !== confirmPassword.value) {
         var match = false;
@@ -200,19 +248,23 @@ export default {
     onMounted(() => {});
 
     async function signup() {
-      confirm.value = false;
-
+      spinner.value = true;
+      errorMsg.value = null;
       if (userFirst.value.length < 2 || userLast.value.length < 2) {
         errorMsg.value =
           "First and last name must be at least 2 characters each.";
         window.scrollTo(0, 0);
+        spinner.value = false;
+        confirm.value = false;
         return;
       }
 
-      if (userPassword.value.length > 20) {
+      if (userPassword.value.length > 30) {
         errorMsg.value =
-          "Your password must be less than 21 characters in length.";
+          "Your password must be less than 31 characters in length.";
         window.scrollTo(0, 0);
+        spinner.value = false;
+        confirm.value = false;
         return;
       }
       if (userDisplayName.value.length < 1) {
@@ -223,6 +275,8 @@ export default {
         errorMsg.value =
           "You must provide the invitation code from the email invitation your received.";
         window.scrollTo(0, 0);
+        spinner.value = false;
+        confirm.value = false;
         return;
       }
 
@@ -248,12 +302,29 @@ export default {
           verificationCode.value
         )
         .then((regResult) => {
-          if (regResult !== "Success") {
+          console.log("regResult is: ", regResult);
+          if (regResult === "Success") {
+            console.log("should go to newchartersuccess");
+            spinner.value = false;
+            router.replace({ path: "/newchartersuccess" });
+          } else {
             errorMsg.value =
               "Registration failed. Please try again or contact support.";
+            spinner.value = false;
+            confirm.value = false;
+            return;
           }
-          newUserID.value = regResult.UserID;
-          router.replace({ path: "/newchartersuccess" });
+          // if (regResult !== "Success") {
+          //   errorMsg.value =
+          //     "Registration failed. Please try again or contact support.";
+          //   spinner.value = false;
+          //   confirm.value = false;
+          //   return;
+          // } else {
+          //   console.log("should go to newchartersuccess");
+          //   spinner.value = false;
+          //   router.replace({ path: "/newchartersuccess" });
+          // }
         });
     }
 
@@ -265,11 +336,14 @@ export default {
       userPassword,
       confirmPassword,
       errorMsg,
-      newUserID,
       isPasswordStrong,
+      isPwd,
       score,
       passMatch,
       signup,
+      spinner,
+      scoreLabel,
+      scoreColor,
       emailHint,
       confirm,
       verificationCode,

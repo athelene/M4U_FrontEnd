@@ -10,25 +10,20 @@
       </div>
 
       <div class="q-ml-lg" v-if="mobileMsg === false">
-        <p class="text-h5 text-info">Export Memories Being Prepared</p>
+        <p class="text-h5 text-info">Export Memories Ready</p>
         <div>
-          <p v-if="buttonOpen === false && exportFinished === false">
-            Your files are being packaged. This can take a few minutes. Please
-            wait.
-          </p>
-
           <p v-if="exportFinished === true">
             Your files have been downloaded. Check your download folders for
-            your files.
+            memories.html and media.zip.
           </p>
           <q-btn
-            :disable="!buttonOpen"
+            :disable="buttonOpen"
             color="primary"
             label="Start Download"
             @click="getDownload()"
             v-if="!exportFinished"
           />
-          <p v-if="buttonOpen === true || exportFinished === true">
+          <p v-if="exportFinished === true">
             To use your files, create a folder on your device, move the
             memories.html file into that folder. Then unzip the media.zip file
             into the folder. Once you have done that, you can open the
@@ -54,7 +49,7 @@ import { storeToRefs } from "pinia";
 import exportActions from "../actions/exports";
 
 export default defineComponent({
-  name: "ConnectionPage",
+  name: "ExportCompletedPage",
 
   setup() {
     const userState = useUserStore();
@@ -62,14 +57,12 @@ export default defineComponent({
     const $q = useQuasar();
     const lastExport = ref(null);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
-    const spinner = ref(true);
+    const spinner = ref(false);
     const mobileMsg = ref(false);
     const buttonOpen = ref(false);
     const exportFinished = ref(false);
 
-    onMounted(async () => {
-      setTimeout(enableButton, 60000);
-    });
+    onMounted(async () => {});
 
     const enableButton = () => {
       buttonOpen.value = true;
@@ -96,7 +89,7 @@ export default defineComponent({
             spinner.value = false;
             buttonOpen.value = false;
             exportFinished.value = true;
-            exportActions.resetReady();
+            exportActions.resetReady(user.UserID);
           });
       } catch (error) {}
     };

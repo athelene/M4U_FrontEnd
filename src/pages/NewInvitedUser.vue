@@ -31,9 +31,17 @@
                 square
                 filled
                 v-model="userPassword"
-                type="password"
+                :type="isPwd ? 'password' : 'text'"
                 label="Password"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  /> </template
+              ></q-input>
+
               <q-input
                 square
                 filled
@@ -77,6 +85,7 @@ export default {
     const errorMsg = ref(null);
     const router = useRouter();
     const userState = useUserStore();
+    const isPwd = ref(true);
 
     onMounted(() => {});
 

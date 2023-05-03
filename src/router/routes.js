@@ -128,6 +128,20 @@ const routes = [
   },
 
   {
+    path: "/exportProcessing",
+    name: "exportProcessing",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/exportProcessing",
+        name: "exportProcessing",
+        component: () => import("pages/ExportProcessingPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/exportComplete",
     name: "exportComplete",
     meta: { needsAuth: true },

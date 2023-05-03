@@ -24,6 +24,16 @@
             {{ invitationCount }}
           </q-badge>
         </q-btn>
+
+        <q-btn
+          v-if="exportReady === true"
+          to="/exportProcessing"
+          label="Export Ready"
+          class="q-mr-lg"
+          color="secondary"
+          text-color="negative"
+        >
+        </q-btn>
         <q-avatar rounded v-if="isLoggedIn && user.UserMediaLoc">
           <img :src="profileSas" />
         </q-avatar>
@@ -212,6 +222,7 @@ import connectionActions from "../actions/connections";
 import publicPages from "../router/openRoutes";
 import mediaActions from "../actions/blobs"; //
 import adminActions from "../actions/admin";
+import exportActions from "../actions/exports";
 
 export default defineComponent({
   name: "MainLayout",
@@ -230,6 +241,7 @@ export default defineComponent({
     const moreBtn = ref(false);
     const profileSas = ref(null);
     const rightDrawerOpen = ref(false);
+    const exportReady = ref(false);
 
     function goToPage(page) {
       rightDrawerOpen.value = false;
@@ -244,8 +256,10 @@ export default defineComponent({
 
       if (publicCheck === true && isLoggedIn.value === true) {
         invitations();
+        getExports();
       } else {
         invitationCount.value = null;
+        exportReady.value = false;
       }
       if (publicCheck === true && isLoggedIn.value === true) {
         getSasKey();
@@ -258,6 +272,7 @@ export default defineComponent({
     watch(
       () => route.name,
       () => {
+        console.log("route changed");
         const publicCheck = !publicPages.includes(route.name);
         if (publicCheck === true) {
           invitations();
@@ -268,6 +283,11 @@ export default defineComponent({
           getSasKey();
         } else {
           invitationCount.value = null;
+        }
+        if (publicCheck === true) {
+          getExports();
+        } else {
+          exportReady.value = false;
         }
       }
     );
@@ -335,9 +355,33 @@ export default defineComponent({
       }
     };
 
+    const getExports = async () => {
+      await exportActions
+        .getExportDate(userState.user.UserID)
+        .then((retDate) => {
+          console.log("retDate is: ", retDate);
+          var today = new Date();
+          var recordedDate = new Date(retDate.LastExport);
+          var compareDate = new Date(retDate.LastExport);
+          compareDate.setDate(recordedDate.getDate() + 1);
+          console.log(
+            "today, compareDate, retDate.ExportStarted",
+            today,
+            compareDate,
+            retDate.ExportStarted
+          );
+          if (today > compareDate && retDate.ExportStarted === 1) {
+            exportReady.value = true;
+          } else {
+            exportReady.value = false;
+          }
+        });
+    };
+
     return {
       goToPage,
       cancelMessage,
+      exportReady,
       incomingMessages,
       invitationCount,
       invitations,
