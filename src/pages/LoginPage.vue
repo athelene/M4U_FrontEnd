@@ -18,10 +18,24 @@
                 square
                 filled
                 v-model="userPassword"
-                type="password"
+                :type="isPwd ? 'password' : 'text'"
                 label="password"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
+              </q-input>
             </q-form>
+            <q-inner-loading
+              :showing="spinner"
+              label="Please wait..."
+              label-class="text-teal"
+              label-style="font-size: 1.1em"
+            />
           </q-card-section>
           <q-card-actions class="q-px-md">
             <q-btn
@@ -221,6 +235,12 @@
               >
             </div></span
           >
+          <q-inner-loading
+            :showing="spinner"
+            label="Please wait..."
+            label-class="text-teal"
+            label-style="font-size: 1.1em"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
@@ -281,6 +301,7 @@ export default {
     const myPlatform = ref($q.platform.is.mobile);
     const newUserID = ref(0);
     const invitationCode = ref(null);
+    const spinner = ref(false);
 
     const options = {
       dictionary: {
@@ -362,19 +383,23 @@ export default {
     }
 
     async function signup() {
-      confirm.value = false;
+      spinner.value = true;
 
       if (userFirst.value.length < 2 || userLast.value.length < 2) {
         errorMsg.value =
           "First and last name must be at least 2 characters each.";
         window.scrollTo(0, 0);
+        spinner.value = false;
+        confirm.value = false;
         return;
       }
 
-      if (userPassword.value.length > 20) {
+      if (userPassword.value.length > 30) {
         errorMsg.value =
-          "Your password must be less than 21 characters in length.";
+          "Your password must be less than 31 characters in length.";
         window.scrollTo(0, 0);
+        spinner.value = false;
+        confirm.value = false;
         return;
       }
       if (userDisplayName.value.length < 1) {
@@ -403,20 +428,37 @@ export default {
           invitationCode.value
         )
         .then((regResult) => {
-          if (regResult !== "Success") {
+          console.log("regResult is: ", regResult);
+          if (regResult === "Success") {
+            console.log("should go to newchartersuccess");
+            spinner.value = false;
+            newUserID.value = regResult.UserID;
+            var checkoutUrl =
+              "https://buy.stripe.com/4gweWx4SDdFi4Q8dQQ?client_reference_id=" +
+              regResult.UserID;
+            window.location.href = checkoutUrl;
+          } else {
             errorMsg.value =
               "Registration failed. Please try again or contact support.";
+            spinner.value = false;
+            confirm.value = false;
+            return;
           }
-          newUserID.value = regResult.UserID;
+          //   if (regResult !== "Success") {
+          //     errorMsg.value =
+          //       "Registration failed. Please try again or contact support.";
+          //   }
+          //   newUserID.value = regResult.UserID;
 
-          var checkoutUrl =
-            "https://buy.stripe.com/4gweWx4SDdFi4Q8dQQ?client_reference_id=" +
-            regResult.UserID;
-          window.location.href = checkoutUrl;
+          //   var checkoutUrl =
+          //     "https://buy.stripe.com/4gweWx4SDdFi4Q8dQQ?client_reference_id=" +
+          //     regResult.UserID;
+          //   window.location.href = checkoutUrl;
         });
     }
 
     async function login() {
+      spinner.value = true;
       if (email.value === null || userPassword.value === null) {
         errorMsg.value = "You must include a user name and password.";
         window.scrollTo(0, 0);
@@ -427,30 +469,35 @@ export default {
         .then((loginResult) => {
           if (loginResult === false) {
             errorMsg.value = "Invalid email or password";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
           if (loginResult === "invalid usertype") {
             errorMsg.value =
               "Invalid Subscription Type. Please contact support.";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
           if (loginResult === "user disabled by admin") {
             errorMsg.value =
               "This account has been disabled. Please contact support.";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
           if (loginResult === "account canceled by user") {
             errorMsg.value =
               "This account was deleted. Please login with a different account or create a new account.";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
           if (loginResult === "user suspended") {
             errorMsg.value =
               "This account was suspended. Please see your email for more information.";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
@@ -458,21 +505,25 @@ export default {
           if (loginResult === "Initial payment failed") {
             errorMsg.value =
               "There is a problem with your subscription payment. Please contact support.";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
           if (loginResult === "Subscription Expired") {
             errorMsg.value =
               "There is a problem with your subscription payment. Go to www.something.com to manage your payment.";
+            spinner.value = false;
             window.scrollTo(0, 0);
             return;
           }
           if (loginResult.token) {
+            spinner.value = false;
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
             router.push({ path: "/home" });
           } else {
+            spinner.value = false;
             errorMsg.value = "Invalid Login";
             window.scrollTo(0, 0);
           }
@@ -510,6 +561,7 @@ export default {
       confirm,
       playstoreMsg,
       myPlatform,
+      spinner,
     };
   },
 };

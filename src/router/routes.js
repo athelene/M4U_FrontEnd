@@ -245,6 +245,34 @@ const routes = [
   },
 
   {
+    path: "/manageinvitations",
+    name: "manageinvitations",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/manageinvitations",
+        name: "manageinvitations",
+        component: () => import("src/pages/ManageInvitationsPage.vue"),
+      },
+    ],
+  },
+
+  {
+    path: "/news",
+    name: "news",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/news",
+        name: "news",
+        component: () => import("src/pages/NewsPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/invite",
     component: () => import("layouts/MainLayout.vue"),
     children: [

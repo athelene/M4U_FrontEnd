@@ -191,9 +191,14 @@ export default {
 
   async cleanUpExports() {
     let myroute = servername + "/cleanUpExports";
+    let today = new Date();
+    let dom = today.getDate();
+    let dow = today.getDay();
+    let yr = today.getFullYear();
+    let verify = dom * dow * yr;
+
     const params = {
-      token: token,
-      reauthToken: reauthToken,
+      verify: verify,
     };
 
     try {

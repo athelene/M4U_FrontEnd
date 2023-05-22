@@ -151,6 +151,19 @@ export default {
     return result;
   },
 
+  async getOpenAdminInvitations() {
+    let myroute = servername + "/openadmininvitations";
+    const params = {
+      token: token,
+      reauthToken: reauthToken,
+    };
+
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async getUserByName(firstName, lastName) {
     let myroute = servername + "/userbyname";
     const params = {
@@ -172,6 +185,36 @@ export default {
       subExpiration: subExpiration,
       subType: subType,
       userID: userID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async editInvitation(subExpiration, subType, userEmail) {
+    let myroute = servername + "/adminUpdateInvitation";
+    const params = {
+      subExpiration: subExpiration,
+      subType: subType,
+      userEmail: userEmail,
+      token: token,
+      reauthToken: reauthToken,
+    };
+
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async deleteInvitation(invitationID) {
+    let myroute = servername + "/adminDeleteInvitation";
+    const params = {
+      invitationID: invitationID,
       token: token,
       reauthToken: reauthToken,
     };

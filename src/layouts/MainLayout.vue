@@ -24,6 +24,17 @@
             {{ invitationCount }}
           </q-badge>
         </q-btn>
+        <q-btn
+          v-if="newsCount !== 0 && newsCount !== null && isLoggedIn === true"
+          to="/news"
+          icon="mdi-email-newsletter"
+          round
+          class="q-mr-lg"
+        >
+          <q-badge color="negative" floating transparent>
+            {{ newsCount }}
+          </q-badge>
+        </q-btn>
 
         <q-btn
           v-if="exportReady === true"
@@ -78,6 +89,9 @@
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/profile')">
           <q-item-section> Account </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple @click="goToPage('/news')">
+          <q-item-section> News </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="goToPage('/connections')">
           <q-item-section> My Connections </q-item-section>
@@ -165,8 +179,12 @@
 
     <q-page-container>
       <q-list bordered separator>
-        <q-item v-for="msg in incomingMessages" :key="msg.MessageID">
-          <q-item-section>
+        <q-item
+          v-for="msg in incomingMessages"
+          :key="msg.MessageID"
+          class="q-pt-xl"
+        >
+          <q-item-section class="q-pt-md">
             <q-item-label>
               <span class="text-h6"
                 >{{ msg.MessageHeader }}:
@@ -223,6 +241,7 @@ import publicPages from "../router/openRoutes";
 import mediaActions from "../actions/blobs"; //
 import adminActions from "../actions/admin";
 import exportActions from "../actions/exports";
+import newsActions from "../actions/news";
 
 export default defineComponent({
   name: "MainLayout",
@@ -242,6 +261,7 @@ export default defineComponent({
     const profileSas = ref(null);
     const rightDrawerOpen = ref(false);
     const exportReady = ref(false);
+    const newsCount = ref(null);
 
     function goToPage(page) {
       rightDrawerOpen.value = false;
@@ -256,6 +276,7 @@ export default defineComponent({
 
       if (publicCheck === true && isLoggedIn.value === true) {
         invitations();
+        getNewsCount();
         getExports();
       } else {
         invitationCount.value = null;
@@ -272,10 +293,14 @@ export default defineComponent({
     watch(
       () => route.name,
       () => {
-        console.log("route changed");
         const publicCheck = !publicPages.includes(route.name);
         if (publicCheck === true) {
           invitations();
+        } else {
+          invitationCount.value = null;
+        }
+        if (publicCheck === true) {
+          getNewsCount();
         } else {
           invitationCount.value = null;
         }
@@ -355,21 +380,28 @@ export default defineComponent({
       }
     };
 
+    const getNewsCount = async () => {
+      console.log("running getNewsCount");
+      if (route.path === "/") {
+        return;
+      } else {
+        await newsActions
+          .getNewsUnread(userState.user.UserID, userState.user.UserSubType)
+          .then((newsItems) => {
+            newsCount.value = newsItems.length;
+            console.log("newsCount is: ", newsCount.value);
+          });
+      }
+    };
+
     const getExports = async () => {
       await exportActions
         .getExportDate(userState.user.UserID)
         .then((retDate) => {
-          console.log("retDate is: ", retDate);
           var today = new Date();
           var recordedDate = new Date(retDate.LastExport);
           var compareDate = new Date(retDate.LastExport);
           compareDate.setDate(recordedDate.getDate() + 1);
-          console.log(
-            "today, compareDate, retDate.ExportStarted",
-            today,
-            compareDate,
-            retDate.ExportStarted
-          );
           if (today > compareDate && retDate.ExportStarted === 1) {
             exportReady.value = true;
           } else {
@@ -385,6 +417,8 @@ export default defineComponent({
       incomingMessages,
       invitationCount,
       invitations,
+      newsCount,
+      getNewsCount,
       isLoggedIn,
       logout,
       moreBtn,

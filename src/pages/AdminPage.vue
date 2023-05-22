@@ -45,6 +45,23 @@
             </q-item>
             <q-item class="text-center" clickable v-ripple>
               <q-item-label class="absolute-center">
+                <router-link to="/manageinvitations"
+                  >Manage Admin Invitations</router-link
+                >
+              </q-item-label>
+            </q-item>
+            <q-item class="text-center" clickable v-ripple>
+              <q-item-section class="relative-center text-center">
+                <q-item-label class="absolute-center">
+                  <router-link to="/manageinvitations"
+                    >Manage Invitations</router-link
+                  >
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item class="text-center" clickable v-ripple>
+              <q-item-label class="absolute-center">
                 <q-btn @click="cleanUpExports()">Clean Up Exports</q-btn>
               </q-item-label>
             </q-item>
