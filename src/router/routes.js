@@ -100,6 +100,20 @@ const routes = [
   },
 
   {
+    path: "/help",
+    name: "help",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/help",
+        name: "help",
+        component: () => import("pages/HelpPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/import",
     name: "import",
     meta: { needsAuth: true },

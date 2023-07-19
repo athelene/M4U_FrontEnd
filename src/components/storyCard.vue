@@ -71,27 +71,37 @@
 
       <!--START MEMORY DETAILS SECTION-->
       <q-card-section class="text-overline">
-        <q-avatar rounded v-if="story.UserMediaLoc">
-          <img :src="storySasKey" oncontextmenu="return false;" />
-        </q-avatar>
-        {{ story.UserDisplayName }}, {{ story.date }}
-        <q-btn
-          class="text-accent"
-          flat
-          round
-          icon="mdi-pencil-outline"
-          @click="openEditMemory()"
-          v-if="story.Userid === user.UserID"
-        ></q-btn>
-        <q-btn
-          class="text-accent"
-          flat
-          round
-          icon="mdi-delete-forever-outline"
-          v-if="story.Userid === user.UserID"
-          @click="verifyDelete()"
-        ></q-btn>
+        <span v-if="story.StoryTypeID !== 5">
+          <q-avatar rounded v-if="story.UserMediaLoc">
+            <img :src="storySasKey" oncontextmenu="return false;" />
+          </q-avatar>
 
+          {{ story.UserDisplayName }}, {{ story.date }}
+        </span>
+        <span v-if="user.AdminLevel >= 5">
+          <q-btn
+            class="text-accent"
+            flat
+            round
+            icon="mdi-pencil-outline"
+            @click="openEditMemory(story.StoryTypeID, story.HelpType)"
+            v-if="
+              story.Userid === user.UserID ||
+              (story.StoryTypeID === 5 && user.AdminLevel >= 5)
+            "
+          ></q-btn>
+          <q-btn
+            class="text-accent"
+            flat
+            round
+            icon="mdi-delete-forever-outline"
+            v-if="
+              story.Userid === user.UserID ||
+              (story.StoryTypeID === 5 && user.AdminLevel >= 5)
+            "
+            @click="verifyDelete()"
+          ></q-btn
+        ></span>
         <!--DIALOG TO VERIFY DELETING A MEMORY-->
         <q-dialog v-model="verifyDeleteDialog" persistent>
           <q-card>
@@ -993,7 +1003,7 @@
             <q-card-section>
               <div class="text-h6">Edit Memory</div>
               <div>
-                <q-btn-group spread>
+                <q-btn-group spread v-if="storyTypeID !== 5">
                   <q-btn
                     color="accent"
                     label="Memory"
@@ -1121,6 +1131,23 @@
                     />
                   </template>
                 </q-input>
+              </q-item>
+
+              <q-item v-if="storyTypeID === 5 && user.AdminLevel >= 100">
+                <q-select
+                  input-debounce="0"
+                  filled
+                  label="Help Type"
+                  hint="Select the help type"
+                  v-model="helpTypeID"
+                  :options="helpList"
+                  option-value="HelpTypeID"
+                  option-label="HelpType"
+                  emit-value
+                  map-options
+                  clearable
+                  style="min-width: 250px; max-width: 70%"
+                />
               </q-item>
 
               <div
@@ -1583,6 +1610,7 @@ import actions from "../actions/blobs";
 import bookActions from "../actions/books";
 import memoryActions from "../actions/memories";
 import mediaActions from "../actions/blobs";
+import help from "../actions/help";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 import { Screen } from "quasar";
@@ -1649,6 +1677,8 @@ export default defineComponent({
     const ingEditorType = ref("small");
     const memEditorType = ref("small");
     const progress = ref(false);
+    const helpList = ref([]);
+    const helpTypeID = ref(null);
 
     onMounted(() => {
       if (props.story.Hidden === 0) {
@@ -1662,6 +1692,8 @@ export default defineComponent({
       getSasKey();
 
       getMedia();
+
+      getHelpTypes();
 
       getHeartStatus();
 
@@ -1815,8 +1847,13 @@ export default defineComponent({
       });
     };
 
-    const openEditMemory = async () => {
+    const openEditMemory = async (storyType, helpType) => {
+      console.log("storyType is: ", storyType);
       editMemoryOpen.value = !editMemoryOpen.value;
+      storyTypeID.value = storyType;
+      helpTypeID.value = helpType;
+      console.log("incoming type is: ", helpType);
+      console.log("set helpTypeID is: ", helpTypeID.value);
     };
 
     const cancelEditMemory = async () => {
@@ -1931,6 +1968,7 @@ export default defineComponent({
         StoryText: newText.value,
         Interviewee: newInterviewee.value,
         StoryIngredients: newIngredients.value,
+        HelpTypeID: helpTypeID.value,
         Hidden: newHidden.value,
       };
 
@@ -1947,7 +1985,11 @@ export default defineComponent({
     };
 
     const deleteMemory = async () => {
+      // if (props.story.HelpType === 5) {
+      //   await helpActions.deleteMemory(props.story.StoryID).then(() => {});
+      // } else {
       await memoryActions.deleteMemory(props.story.StoryID).then(() => {});
+      //      }
       emit("updateFeed");
     };
 
@@ -2044,6 +2086,13 @@ export default defineComponent({
       interviewsFlag.value = false;
     };
 
+    const getHelpTypes = async () => {
+      await help.getHelpTypes().then((helpTypes) => {
+        helpList.value = helpTypes.recordset;
+        helpList.value = helpTypes;
+      });
+    };
+
     return {
       user,
       token,
@@ -2111,6 +2160,9 @@ export default defineComponent({
       setInterviews,
       getTraditions,
       setTraditions,
+      getHelpTypes,
+      helpList,
+      helpTypeID,
       newBookAdded,
       storySasKey,
       toggleEditorType,

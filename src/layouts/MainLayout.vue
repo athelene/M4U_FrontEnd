@@ -9,6 +9,9 @@
           Memories For Us
         </q-toolbar-title>
         <q-separator></q-separator>
+        <q-avatar rounded v-if="isLoggedIn && user.UserMediaLoc">
+          <img :src="profileSas" />
+        </q-avatar>
         <q-btn
           v-if="
             invitationCount !== 0 &&
@@ -45,9 +48,7 @@
           text-color="negative"
         >
         </q-btn>
-        <q-avatar rounded v-if="isLoggedIn && user.UserMediaLoc">
-          <img :src="profileSas" />
-        </q-avatar>
+
         <q-btn
           v-if="isLoggedIn"
           flat
@@ -360,7 +361,6 @@ export default defineComponent({
       isLoggedIn.value = false;
       user.value = null;
       token.value = null;
-      console.log("environment is: ", process.env.DEV);
       if (process.env.DEV === true) {
         window.location.replace("http://localhost:9000");
       } else {
@@ -381,7 +381,6 @@ export default defineComponent({
     };
 
     const getNewsCount = async () => {
-      console.log("running getNewsCount");
       if (route.path === "/") {
         return;
       } else {
@@ -389,7 +388,6 @@ export default defineComponent({
           .getNewsUnread(userState.user.UserID, userState.user.UserSubType)
           .then((newsItems) => {
             newsCount.value = newsItems.length;
-            console.log("newsCount is: ", newsCount.value);
           });
       }
     };

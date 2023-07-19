@@ -38,6 +38,16 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
+            <q-item
+              class="text-center"
+              clickable
+              v-ripple
+              @click="newsDialog = true"
+            >
+              <q-item-section class="relative-center text-center">
+                <q-item-label class="absolute-center"> Add News </q-item-label>
+              </q-item-section>
+            </q-item>
             <q-item class="text-center" clickable v-ripple>
               <q-item-label class="absolute-center">
                 <router-link to="/adminusers">Manage Users</router-link>
@@ -125,7 +135,7 @@
         </div>
       </q-card-section>
     </q-card>
-
+    <!--ADD SYSTEM MESSAGE-->
     <q-dialog v-model="messageDialog" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
@@ -181,6 +191,57 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!--ADD NEWS ITEM-->
+
+    <q-dialog v-model="newsDialog" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">New News</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input dense v-model="newsTitle" autofocus label="Title" />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input dense type="textarea" v-model="newsText" label="Message" />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input filled v-model="startDate" label="Start Date">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date v-model="startDate" mask="YYYY-MM-DD">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-select
+            filled
+            v-model="selectedSubType"
+            :options="userSubTypes"
+            label="Subscription Type"
+            emit-value
+            map-options
+            option-value="UserSubTypeID"
+            option-label="UserSubType"
+          />
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancel" @click="restartNews()" />
+          <q-btn flat label="Add News" @click="addNews()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -211,6 +272,9 @@ export default defineComponent({
     const incomingMessages = reactive([]);
 
     const messageDialog = ref(false);
+    const newsDialog = ref(false);
+    const newsTitle = ref(null);
+    const newsText = ref(null);
     const type1 = ref(null);
     const type2 = ref(null);
     const type3 = ref(null);
@@ -224,16 +288,19 @@ export default defineComponent({
     const unUsedInvitations = ref(null);
     const usedInvitations = ref(null);
     const totalCurrentUsers = ref(null);
+    const selectedSubType = ref(null);
     const sentInvitations = ref(null);
     const unclaimedCharters = ref(null);
     const totalPotentialUsers = ref(null);
     const userList = ref(null);
+    const userSubTypes = ref(null);
 
     onMounted(() => {
       if (Number(userState.user.AdminLevel) !== 100) {
         router.push({ name: "home" });
       }
       getUserCountsSubType();
+      getUserSubTypes();
     });
 
     const addMessage = async () => {
@@ -252,11 +319,39 @@ export default defineComponent({
     };
 
     const restartMessage = async () => {
-      message.value = null;
-      messageHeader.value = null;
+      newsTitle.value = null;
+      newsText.value = null;
+      startDate.value = null;
+      selectedSubType.value = null;
+      newsDialog.value = false;
+    };
+
+    const getUserSubTypes = async () => {
+      await adminActions.getUserSubTypes().then((subTypes) => {
+        userSubTypes.value = subTypes;
+      });
+    };
+
+    const restartNews = async () => {
+      newsText.value = null;
+      newsTitle.value = null;
       startDate.value = null;
       endDate.value = null;
-      messageDialog.value = false;
+      newsDialog.value = false;
+    };
+
+    const addNews = async () => {
+      newsDialog.value = false;
+      await adminActions
+        .addNews(
+          newsTitle.value,
+          newsText.value,
+          startDate.value,
+          selectedSubType.value
+        )
+        .then(() => {
+          window.location.reload();
+        });
     };
 
     const getUserCountsSubType = async () => {
@@ -312,28 +407,31 @@ export default defineComponent({
         totalCurrentUsers.value + unclaimedCharters.value;
     };
 
-    const userDialogOpen = async () => {
-      await adminActions.getUserList().then((users) => {
-        userList.value = users;
-      });
-      userDialog.value = true;
-    };
+    // const userDialogOpen = async () => {
+    //   await adminActions.getUserList().then((users) => {
+    //     userList.value = users;
+    //   });
+    //   userDialog.value = true;
+    // };
 
     const cleanUpExports = async () => {
-      await exportActions.cleanUpExports().then(() => {
-        console.log("export files deleted");
-      });
+      await exportActions.cleanUpExports().then(() => {});
     };
 
     return {
       addMessage,
+      addNews,
       cleanUpExports,
       message,
       messageHeader,
       startDate,
       endDate,
       messageDialog,
+      newsDialog,
+      newsText,
+      newsTitle,
       restartMessage,
+      restartNews,
       type1,
       type2,
       type3,
@@ -343,12 +441,14 @@ export default defineComponent({
       totalCurrentUsers,
       potential3,
       potential4,
+      selectedSubType,
       sentInvitations,
       totalPotentialCharters,
       unUsedInvitations,
       unclaimedCharters,
       totalPotentialUsers,
       userList,
+      userSubTypes,
     };
   },
 });

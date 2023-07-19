@@ -14,6 +14,7 @@ const { user, isLoggedIn, token } = storeToRefs(userState);
 
 //ESTABLISH SERVER NAME TO SET UP PROPER API CALL
 let servername = "https://" + window.location.hostname;
+let adminID = 310;
 
 //FUNCTION TO CALL IF ANY AXIOS CALLS RECEIVE A 401 (unauthorized) ERROR
 // function unAuthRedirect() {
@@ -35,9 +36,11 @@ function unAuthRedirect() {
 
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";
+  adminID = 126;
 } else {
   // servername = "https://login.memoriesforus.com";
   servername = "https://memoriesforusbe.azurewebsites.net";
+  adminID = 310;
 }
 
 export default {
@@ -265,6 +268,7 @@ export default {
   async newMemory(userID, storyData, circleID) {
     var params = {};
     let myroute = servername + "/addmemory";
+
     if (storyData.Hidden === true) {
       var hidden = 1;
     } else {
@@ -315,13 +319,47 @@ export default {
     if (storyData.StoryTypeID === 4) {
       params = {
         userID: userID,
-        StoryTitle: storyData.StoryTitle.trim,
-        StoryText: storyData.StoryText.trim,
+        StoryTitle: storyData.StoryTitle,
+        StoryText: storyData.StoryText,
         StoryTypeID: storyData.StoryTypeID,
-        StoryIngredients: storyData.StoryIngredients.trim,
-        Interviewee: storyData.Interviewee.trim,
+        StoryIngredients: storyData.StoryIngredients,
+        Interviewee: storyData.Interviewee,
         Hidden: hidden,
         CircleID: circleID,
+        token: token,
+        reauthToken: reauthToken,
+      };
+    }
+
+    if (storyData.StoryTypeID === 5 && servername === "http://localhost:9000") {
+      params = {
+        userID: 310,
+        StoryTitle: storyData.StoryTitle,
+        StoryText: storyData.StoryText,
+        StoryTypeID: storyData.StoryTypeID,
+        StoryIngredients: storyData.StoryIngredients,
+        Interviewee: storyData.Interviewee,
+        Hidden: hidden,
+        HelpType: storyData.HelpType,
+        CircleID: 0,
+        UserMediaLoc: "Logo.png",
+        token: token,
+        reauthToken: reauthToken,
+      };
+    }
+
+    if (storyData.StoryTypeID === 5 && servername !== "http://localhost:9000") {
+      params = {
+        userID: 126,
+        StoryTitle: storyData.StoryTitle,
+        StoryText: storyData.StoryText,
+        StoryTypeID: storyData.StoryTypeID,
+        StoryIngredients: storyData.StoryIngredients,
+        Interviewee: storyData.Interviewee,
+        Hidden: hidden,
+        HelpType: storyData.HelpType,
+        CircleID: 0,
+        UserMediaLoc: "Logo.png",
         token: token,
         reauthToken: reauthToken,
       };
@@ -396,6 +434,21 @@ export default {
         reauthToken: reauthToken,
       };
     }
+
+    if (storyData.StoryTypeID === 5) {
+      params = {
+        StoryID: Number(storyData.StoryID),
+        StoryTitle: storyData.StoryTitle,
+        StoryText: storyData.StoryText,
+        StoryTypeID: Number(setType),
+        Hidden: hidden,
+        CircleID: newCircle,
+        HelpTypeID: storyData.HelpTypeID,
+        token: token,
+        reauthToken: reauthToken,
+      };
+    }
+
     var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
@@ -431,6 +484,19 @@ export default {
 
   async getInterviews() {
     let myroute = servername + "/getinterviews";
+    const params = {
+      token: token,
+      reauthToken: reauthToken,
+    };
+
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async getHelpTypes() {
+    let myroute = servername + "/gethelptypes";
     const params = {
       token: token,
       reauthToken: reauthToken,

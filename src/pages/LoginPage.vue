@@ -372,14 +372,12 @@ export default {
 
     if (route.query.code) {
       invitationCode.value = route.query.code;
-      console.log("found route.query.code");
     } else {
       console.log("no invitation found");
     }
 
     if (route.query.code) {
       pageType.value = "register";
-      console.log("pageType.value is: ", pageType.value);
     }
 
     async function signup() {
@@ -428,9 +426,7 @@ export default {
           invitationCode.value
         )
         .then((regResult) => {
-          console.log("regResult is: ", regResult);
           if (regResult === "Success") {
-            console.log("should go to newchartersuccess");
             spinner.value = false;
             newUserID.value = regResult.UserID;
             var checkoutUrl =

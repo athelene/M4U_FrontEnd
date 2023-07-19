@@ -10,7 +10,7 @@
         size="xl"
         label="Get Started"
         color="accent"
-        to="login/?page=registration"
+        to="/"
         style="z-index: 3"
       ></q-btn>
     </q-card-section>

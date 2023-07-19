@@ -83,6 +83,19 @@ export default {
     return result;
   },
 
+  async deleteNews(newsID) {
+    let myroute = servername + "/deletenews";
+    const params = {
+      newsID: newsID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async callApi(myroute, params) {
     try {
       let res = await axios.get(myroute, { params });

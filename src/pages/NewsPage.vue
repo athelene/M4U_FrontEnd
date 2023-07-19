@@ -3,7 +3,7 @@
     <!--STARTING SHARE GROUPS PAGE-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <div class="q-ml-lg">
-        <p class="text-h5 text-info">MEMORIES FOR US NEWS</p>
+        <p class="text-h5 text-info">NEWS</p>
       </div>
       <div class="text-center relative-center" id="list">
         <q-list bordered separator class="justify-center groupList">
@@ -62,6 +62,13 @@
             </q-card-section>
             <div class="text-h6 text-accent">
               {{ newsTitle }}, <span class="text-caption">{{ newsDate }}</span>
+              <q-btn
+                icon="mdi-delete"
+                @click="deleteNews()"
+                flat
+                size="sm"
+                v-if="user.AdminLevel === 100"
+              ></q-btn>
             </div>
             <div class="text-body1 q-pt-sm">
               {{ newsText }}
@@ -110,7 +117,6 @@ export default defineComponent({
         .getNews(userState.user.UserID, userState.user.UserSubType)
         .then((newsArticles) => {
           news.value = newsArticles;
-          console.log(news.value);
         });
     };
 
@@ -119,7 +125,6 @@ export default defineComponent({
       newsTitle.value = title;
       newsText.value = text;
       newsDate.value = date;
-      console.log("newsStatus is: ", newsStatus);
       newsStatus.value = readStatus;
       newsDialog.value = true;
     };
@@ -131,13 +136,23 @@ export default defineComponent({
           .then(() => {
             getNews();
             newsDialog.value = false;
+            location.reload();
           });
       } else {
         newsDialog.value = false;
       }
     };
 
+    const deleteNews = async () => {
+      await newsActions.deleteNews(newsID.value).then(() => {
+        getNews();
+        newsDialog.value = false;
+        location.reload();
+      });
+    };
+
     return {
+      deleteNews,
       getNews,
       newsDialog,
       newsID,
@@ -147,6 +162,7 @@ export default defineComponent({
       newsDate,
       newsOpen,
       markRead,
+      user,
     };
   },
 });

@@ -87,6 +87,47 @@ export default {
     return result;
   },
 
+  async addNews(newsTitle, newsText, newsDate, newsSubType) {
+    let myroute = servername + "/addnews";
+    const params = {
+      newsTitle: newsTitle,
+      newsText: newsText,
+      newsDate: newsDate,
+      newsSubType: newsSubType,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async deleteNews(newsID) {
+    let myroute = servername + "/deletenews";
+    const params = {
+      newsID: newsID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async getUserSubTypes() {
+    let myroute = servername + "/getsubtypes";
+    const params = {
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async getUserCountsSubType() {
     let myroute = servername + "/getUserCountsSubType";
     const params = {

@@ -184,6 +184,14 @@
                 </q-btn-dropdown>
 
                 <!--FILTER BUTTONS FOR BOOKS END-->
+                <q-btn
+                  color="accent"
+                  icon="mdi-help"
+                  rounded
+                  glossy
+                  @click="setFilter('help')"
+                >
+                </q-btn>
               </q-btn-group>
             </q-item>
             <!--START SEARCH-->
@@ -228,7 +236,7 @@
           </q-dialog>
           <!--SEARCH DIALOG END-->
 
-          <!--MEMORY TYPE DIALOG-->
+          <!--MEMORY TYPE DIALOG USED FOR FILTER-->
           <q-dialog v-model="memoryTypeOn" persistent>
             <q-card style="min-width: 350px">
               <q-card-section>
@@ -302,6 +310,7 @@
         persistent
       >
         <q-card style="min-width: 75%">
+          Memory Title: {{ memoryTitle }}
           <q-card-section>
             <q-btn
               icon="mdi-camera-plus"
@@ -346,7 +355,7 @@
             <!--END CAMERA DIALOG-->
           </q-card-section>
           <q-card-section width="100%">
-            <div class="text-h6">New Memory</div>
+            <div class="text-h6">New {{ memoryTitle }}</div>
             <div></div>
           </q-card-section>
 
@@ -402,6 +411,23 @@
                 v-model="storyTitle"
                 rows="2"
               ></q-input>
+            </q-item>
+
+            <q-item v-if="storyTypeID === 5 && user.AdminLevel >= 100">
+              <q-select
+                input-debounce="0"
+                filled
+                label="Help Type"
+                hint="Select the help type"
+                v-model="helpTypeID"
+                :options="helpList"
+                option-value="HelpTypeID"
+                option-label="HelpType"
+                emit-value
+                map-options
+                clearable
+                style="min-width: 250px; max-width: 70%"
+              />
             </q-item>
 
             <q-item v-if="storyTypeID === 2">
@@ -972,6 +998,16 @@
               <q-item-label>Tradition</q-item-label>
             </q-item-section>
           </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            @click="addMemoryDialog(5)"
+            v-if="user.AdminLevel >= 100"
+          >
+            <q-item-section>
+              <q-item-label>Help</q-item-label>
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-btn-dropdown>
     </q-page-sticky>
@@ -996,15 +1032,13 @@ import actions from "../actions/memories"; //
 import mediaActions from "../actions/blobs";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
-//import { useRouter } from "vue-router";
 import QcCard from "components/QuickConnectCard.vue";
 import StoryCard from "components/storyCard.vue";
 import BookCard from "components/bookCard.vue";
 import AddBook from "components/addBook.vue";
 import MediaCardEdit from "components/mediaCardEdit.vue";
-import MediaCard from "components/mediaCard.vue";
 import bookActions from "../actions/books";
-import { createIfStatement } from "@vue/compiler-core";
+import helpActions from "../actions/help";
 
 export default defineComponent({
   name: "IndexPage",
@@ -1083,23 +1117,12 @@ export default defineComponent({
     const qUploadFle = ref(null);
     const recordLast = ref(0);
     const recordStart = ref(0);
-    const resetPage = ref(false);
     const saveDraft = ref(false);
     const saveTemplateDialog = ref(false);
     const searchOn = ref(false);
     const searchTerm = ref("");
     const selectedMemoryType = ref(0);
     const stories = ref(null);
-    const story = ref([
-      {
-        StoryID: 0,
-        StoryTitle: "Welcome to Memories for Us!",
-        StoryText: "Here is the text.",
-        StoryTypeID: 1,
-        StoryDate: "2023-01-12",
-        CircleID: 1,
-      },
-    ]);
     const newStoryID = ref(null);
     const storyID = ref(0);
     const storyData = ref(null);
@@ -1113,6 +1136,9 @@ export default defineComponent({
     const ingEditorType = ref("small");
     const memEditorType = ref("small");
     const filterText = ref("Memories");
+    const memoryTitle = ref("Memory");
+    const helpList = ref([]);
+    const helpTypeID = ref(null);
 
     const booksDialogFlag = ref(false);
 
@@ -1124,6 +1150,7 @@ export default defineComponent({
       getCircleList();
       setDate();
       getMemoryTemplates(1);
+      getHelpTypes();
     });
 
     const refresh = (done) => {
@@ -1166,6 +1193,10 @@ export default defineComponent({
 
     const setFilter = async (newfilter) => {
       searchOn.value = false;
+      searchTerm.value = "";
+      stories.value = [];
+      recordStart.value = 0;
+      recordLast.value = "";
 
       if (newfilter !== filter.value) {
         filter.value = newfilter;
@@ -1210,7 +1241,14 @@ export default defineComponent({
         filterIcon.value = "mdi-filter";
         return;
       }
-
+      if (filter.value === "help") {
+        filterType.value = "memory";
+        filterText.value = "Help";
+        getHelp();
+        draftCount();
+        filterIcon.value = "mdi-filter";
+        return;
+      }
       //Start book filters
 
       if (filter.value === "allbooks") {
@@ -1272,6 +1310,9 @@ export default defineComponent({
         }
         if (filter.value === "drafts") {
           await getMoreDrafts(index, done);
+        }
+        if (filter.value === "help") {
+          await getMoreHelp();
         }
         if (filter.value === "search") {
           await searchMoreMemories();
@@ -1371,6 +1412,37 @@ export default defineComponent({
             stories.value.push(...newStories.recordset);
           });
       }
+    };
+
+    const getHelp = async () => {
+      filter.value = "help";
+      searchOn.value = false;
+      searchTerm.value = "";
+      stories.value = [];
+      recordStart.value = 0;
+      recordLast.value = "";
+      await helpActions
+        .getAllHelp(recordStart.value, pageLength.value)
+        .then((newStories) => {
+          if (typeof newStories !== "undefined") {
+            recordLast.value = newStories.output.recordCount;
+            stories.value = newStories.recordsets[0];
+            //    recordStart.value = recordStart.value + pageLength.value;
+          }
+        });
+    };
+
+    const getMoreHelp = async (index, done) => {
+      filter.value = "help";
+      recordStart.value = recordStart.value + pageLength.value;
+      if (recordStart.value < recordLast.value || !recordLast.value) {
+        await helpActions
+          .getAllHelp(recordStart.value, pageLength.value)
+          .then((newStories) => {
+            stories.value.push(...newStories.recordset);
+          });
+      }
+      return;
     };
 
     const getGroupMemories = async (circleID) => {
@@ -1587,10 +1659,6 @@ export default defineComponent({
           saveTemplateDialog.value = false;
         })
         .then(() => {
-          console.log(
-            "storyIngredients in saveTemplate: ",
-            storyIngredients.value
-          );
           if (storyIngredients.value === 0) {
             storyIngredients.value = null;
           }
@@ -1608,6 +1676,27 @@ export default defineComponent({
       Object.assign(newSlideList, emptySlideList);
       newStartSlide.value = 0;
       newMemoryOpen.value = true;
+      switch (newMemType) {
+        case 1:
+          memoryTitle.value = "Memory";
+          break;
+        case 2:
+          memoryTitle.value = "Interview";
+          break;
+        case 3:
+          memoryTitle.value = "Recipe";
+          break;
+        case 4:
+          memoryTitle.value = "Tradition";
+          break;
+        case 5:
+          memoryTitle.value = "Help";
+          break;
+
+        default:
+          memoryTitle.value = "Memory";
+      }
+
       await addMemory(newMemType);
       await getMemoryTemplates(newMemType);
     };
@@ -1622,6 +1711,7 @@ export default defineComponent({
         circleID.value = null;
         hidden.value = false;
         newMemoryOpen.value = false;
+        helpTypeID.value = null;
         newSlideCount.value = 0;
 
         Object.assign(newSlideList, emptySlideList);
@@ -1675,7 +1765,6 @@ export default defineComponent({
           return;
         }
       }
-      console.log(storyIngredients.value);
       if (storyIngredients.value !== null || storyIngredients.value !== 0) {
         if (
           storyIngredients.value.includes("<script") ||
@@ -1751,6 +1840,10 @@ export default defineComponent({
       } else {
         newCircleID = circleID.value;
       }
+
+      if (newMemType === 5) {
+        newCircleID = 0;
+      }
       storyData.value = {
         StoryTypeID: newMemType,
         StoryTitle: "",
@@ -1758,6 +1851,7 @@ export default defineComponent({
         Interviewee: "",
         StoryIngredients: "",
         Hidden: 0,
+        HelpTypeID: 0,
       };
       await actions
         .newMemory(user.UserID, storyData.value, newCircleID)
@@ -1803,6 +1897,7 @@ export default defineComponent({
           Interviewee: interviewee.value,
           StoryIngredients: storyIngredients.value,
           Hidden: hidden.value,
+          HelpTypeID: helpTypeID.value,
         };
       } else {
         storyData.value = {
@@ -1813,6 +1908,7 @@ export default defineComponent({
           Interviewee: interviewee.value,
           StoryIngredients: storyIngredients.value,
           Hidden: hidden.value,
+          HelpTypeID: helpTypeID.value,
         };
       }
 
@@ -1830,6 +1926,7 @@ export default defineComponent({
           storyIngredients.value = "";
           circleID.value = null;
           hidden.value = false;
+          helpTypeID.value = 0;
           newMemoryOpen.value = false;
           newSlideCount.value = 0;
           makeDraft.value = false;
@@ -1855,6 +1952,7 @@ export default defineComponent({
           Interviewee: interviewee.value,
           StoryIngredients: storyIngredients.value,
           Hidden: hidden.value,
+          HelpTypeID: helpTypeID.value,
         };
       }
 
@@ -1933,6 +2031,12 @@ export default defineComponent({
     const setTraditions = async (traditionName) => {
       storyTitle.value = traditionName;
       traditionsFlag.value = false;
+    };
+
+    const getHelpTypes = async () => {
+      await actions.getHelpTypes().then((helpTypes) => {
+        helpList.value = helpTypes.recordset;
+      });
     };
 
     const getInterviews = async () => {
@@ -2036,11 +2140,17 @@ export default defineComponent({
       getMoreGroupMemories,
       getInterviews,
       getMore,
+      getAllStories,
+      getMyStories,
       getMoreAllStories,
+      getHelp,
+      getMoreHelp,
       getNewMedia,
       getTraditions,
       goToTop,
       handleFileUpload,
+      helpList,
+      helpTypeID,
       hidden,
       imageFullScreen,
       imageHeight,
@@ -2049,6 +2159,7 @@ export default defineComponent({
       interviewsFlag,
       interviewList,
       memEditorType,
+      memoryTitle,
       memoryTypeOn,
       memoryTypeOptions,
       message,
@@ -2070,6 +2181,8 @@ export default defineComponent({
       openInterviews,
       progress,
       qUploadFle,
+      recordStart,
+      recordLast,
       saveAsDraft,
       saveDraft,
       saveTemplate,
