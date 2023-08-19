@@ -26,6 +26,16 @@
               </q-item-section>
             </q-item>
 
+            <q-item class="text-center" clickable v-ripple>
+              <q-item-section class="relative-center text-center">
+                <q-item-label class="absolute-center">
+                  <router-link to="/admininterviews"
+                    >Manage Interview Questions</router-link
+                  >
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+
             <q-item
               class="text-center"
               clickable

@@ -230,7 +230,7 @@ export default defineComponent({
         mm = "0" + mm;
       }
       var yyyy = props.questionProp.ViewPointDate.slice(6, 10);
-      var d = new Date(yyyy, mm, dd);
+      var d = new Date(yyyy, mm - 1, dd);
       editViewPointDate.value = yyyy + "-" + mm + "-" + dd;
       editViewPointDay.value = weekday[d.getDay()];
     });
@@ -239,7 +239,7 @@ export default defineComponent({
       var dd = Number(val.slice(8, 10));
       var mm = Number(val.slice(5, 7));
       var yyyy = Number(val.slice(0, 4));
-      var d = new Date(yyyy, mm, dd);
+      var d = new Date(yyyy, mm - 1, dd);
       editViewPointDay.value = weekday[d.getDay()];
     });
 

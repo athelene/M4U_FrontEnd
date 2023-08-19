@@ -76,7 +76,8 @@
             <img :src="storySasKey" oncontextmenu="return false;" />
           </q-avatar>
 
-          {{ story.UserDisplayName }}, {{ story.date }}
+          {{ story.UserDisplayName }},
+          {{ story.date }}
         </span>
         <span v-if="user.AdminLevel >= 5">
           <q-btn
@@ -225,7 +226,6 @@
           <q-card class="bg-primary">
             <q-bar>
               <q-space />
-
               <q-btn
                 dense
                 flat
@@ -350,33 +350,7 @@
                 ></video>
               </div>
             </q-card-section>
-            <!-- <q-dialog v-model="imageFullScreen">
-              <q-card class="fullScreenImage">
-                <q-card-section class="row items-center q-pb-none">
-                  <div class="text-h6"></div>
-                  <q-space />
-                  <q-btn icon="close" flat round dense v-close-popup />
-                </q-card-section>
 
-                <q-card-section>
-                  <q-img
-                    oncontextmenu="return false;"
-                    :src="storyURL"
-                    height="100%"
-                    fit="contain"
-                    responsive
-                    fullscreen
-                  >
-                    <template v-slot:loading>
-                      <div class="accent">
-                        <q-spinner-ios />
-                        <div class="q-mt-md">Loading...</div>
-                      </div>
-                    </template>
-                  </q-img>
-                </q-card-section>
-              </q-card>
-            </q-dialog> -->
             <q-card-section class="text-overline"
               >{{ story.UserDisplayName }}, {{ story.date }}
               <q-btn
@@ -521,32 +495,6 @@
                         </q-carousel-slide>
                       </q-carousel>
                     </q-card-section>
-                    <!-- <div
-                      class="row justify-center cardColor"
-                      v-if="story.MediaType === 2"
-                      @click="toggleImage()"
-                    >
-                      <q-img :src="storyURL" height="250px" fit="contain">
-                        <template v-slot:loading>
-                          <div class="accent">
-                            <q-spinner-ios />
-                            <div class="q-mt-md">Loading...</div>
-                          </div>
-                        </template>
-                      </q-img>
-                    </div>
-                    <div
-                      class="row justify-center videoWrapper"
-                      v-if="story.MediaType === 1"
-                    >
-                      <video
-                        height="300"
-                        controls
-                        controlsList="nodownload video"
-                        :src="storyURL"
-                        class="video"
-                      ></video>
-                    </div> -->
                   </q-card-section>
                   <q-dialog v-model="imageFullScreen">
                     <q-card class="fullScreenImage">
@@ -681,7 +629,7 @@
             <!--END NEW MEDIA SECTION-->
 
             <!--START FULLSCREEN IMAGE DIALOG-->
-            <q-dialog v-model="imageFullScreen">
+            <!-- <q-dialog v-model="imageFullScreen">
               <q-card class="fullScreenImage">
                 <q-card-section class="row items-center q-pb-none">
                   <div class="text-h6"></div>
@@ -707,7 +655,7 @@
                   </q-img>
                 </q-card-section>
               </q-card>
-            </q-dialog>
+            </q-dialog> -->
             <!--END OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
 
             <q-card-section>
@@ -746,33 +694,6 @@
                 ></video>
               </div>
             </q-card-section>
-            <!-- <q-dialog v-model="imageFullScreen">
-              <q-card class="fullScreenImage">
-                <q-card-section class="row items-center q-pb-none">
-                  <div class="text-h6"></div>
-                  <q-space />
-                  <q-btn icon="close" flat round dense v-close-popup />
-                </q-card-section>
-
-                <q-card-section>
-                  <q-img
-                    oncontextmenu="return false;"
-                    :src="storyURL"
-                    height="100%"
-                    fit="contain"
-                    responsive
-                    fullscreen
-                  >
-                    <template v-slot:loading>
-                      <div class="accent">
-                        <q-spinner-ios />
-                        <div class="q-mt-md">Loading...</div>
-                      </div>
-                    </template>
-                  </q-img>
-                </q-card-section>
-              </q-card>
-            </q-dialog> -->
             <q-card-section class="text-overline"
               >{{ story.UserDisplayName }}, {{ story.date }}
               <q-btn
@@ -849,6 +770,7 @@
                 <q-card class="bg-primary">
                   <q-bar>
                     <q-space />
+
                     <q-btn dense flat icon="close" v-close-popup>
                       <q-tooltip class="bg-white text-primary">Close</q-tooltip>
                     </q-btn>

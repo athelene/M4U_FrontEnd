@@ -385,6 +385,7 @@ export default {
         StoryTitle: storyData.StoryTitle,
         StoryText: storyData.StoryText,
         StoryTypeID: Number(setType),
+        HelpTypeID: null,
         Hidden: hidden,
         CircleID: newCircle,
         token: token,

@@ -102,7 +102,7 @@
           </q-item>
           <q-item>
             <q-item-section>
-              <q-item-label overline>KYLIE AT WEBDEV SIMPLIFIED</q-item-label>
+              <q-item-label overline>KYLE AT WEBDEV SIMPLIFIED</q-item-label>
               <q-item-label>for his help learning javascript.</q-item-label>
             </q-item-section>
           </q-item>

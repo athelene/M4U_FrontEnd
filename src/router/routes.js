@@ -245,6 +245,20 @@ const routes = [
   },
 
   {
+    path: "/admininterviews",
+    name: "admininterviews",
+    meta: { needsAuth: true },
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "/admininterviews",
+        name: "admininterviews",
+        component: () => import("pages/AdminInterviewsPage.vue"),
+      },
+    ],
+  },
+
+  {
     path: "/adminusers",
     name: "adminusers",
     meta: { needsAuth: true },

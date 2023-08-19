@@ -1,5 +1,6 @@
 <template>
   <div class="text-center" style="width: 100%">
+    <!-- IMAGE -->
     <div
       class="row justify-center cardColor q-mt-xs"
       v-if="media.MediaType === 2"
@@ -30,6 +31,7 @@
         class="video"
       ></video>
     </div>
+
     <!--START FULLSCREEN IMAGE DIALOG-->
     <q-dialog v-model="imageFullScreen" full-height full-width>
       <q-card class="fullScreenImage">
