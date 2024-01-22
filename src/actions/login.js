@@ -3,10 +3,15 @@
 import axios from "axios";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
+import { apiName } from "./apiName";
+import { CapacitorHttp } from "@capacitor/core";
+
 const reauthToken = window.localStorage.getItem("rt");
 
 //SERVERSTATE will be either DEV or PRODUCTION
 const serverState = import.meta.env.VITE_SERVERSTATE;
+const devMode = import.meta.env.MODE;
+const viteMode = import.meta.env.VITE_MODENAME;
 
 //Bringing in user, logged in flag, jwt token and refresh token
 const userState = useUserStore();
@@ -22,21 +27,17 @@ let servername = "https://" + window.location.hostname;
 function unAuthRedirect() {
   if (servername === "http://localhost") {
     location.href = "http://localhost:9000";
-  }
-  //  location.href = serverState + "/login"
-  else {
+  } else {
     userState.userLogout();
     isLoggedIn.value = false;
     user.value = null;
     token.value = null;
-    location.href = "https://www.memoriesforus.com";
   }
 }
 
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";
 } else {
-  // servername = "https://login.memoriesforus.com";
   servername = "https://memoriesforusbe.azurewebsites.net";
 }
 
@@ -246,7 +247,7 @@ export default {
     return result;
   },
 
-  async callApi(myroute, params) {
+  async callApi_orig(myroute, params) {
     try {
       let res = await axios.get(myroute, { params });
       return res.data;
@@ -258,7 +259,7 @@ export default {
     }
   },
 
-  async postApi(myroute, params) {
+  async postApi_orig(myroute, params) {
     try {
       let res = await axios.post(myroute, { params });
       return res.data;
@@ -268,5 +269,62 @@ export default {
       }
       console.log("send the user to the login page", error);
     }
+  },
+
+  async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+      console.log("send the user to the login page", error);
+    }
+  },
+
+  async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      console.log("postapi2 returns: ", res);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+    }
+  },
+
+  async sample(userEmail, userPassword) {
+    let myroute = servername + "/auth";
+    const params = {
+      userEmail: userEmail,
+      userPassword: userPassword,
+    };
+
+    var result = this.postApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
   },
 };

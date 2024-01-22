@@ -24,7 +24,7 @@
                 input-debounce="0"
                 filled
                 label="Share with..."
-                hint="Select the group you want to seee this"
+                hint="Select the group you want to see this"
                 v-model="selectedCircle"
                 :options="circleList"
                 option-value="CircleID"

@@ -36,7 +36,6 @@ function unAuthRedirect() {
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";
 } else {
-  // servername = "https://login.memoriesforus.com";
   servername = "https://memoriesforusbe.azurewebsites.net";
 }
 

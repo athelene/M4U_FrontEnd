@@ -5,7 +5,11 @@
       <div>
         <qcCard
           class="qcCard"
-          v-if="filterType === 'memory' || filterType === 'group'"
+          v-if="
+            filterType === 'memory' ||
+            filterType === 'group' ||
+            filterType === 'lists'
+          "
         ></qcCard>
       </div>
       <!--ERROR MSG, BUTTON GROUP SEARCH-->
@@ -31,6 +35,14 @@
                 @click="newBookDialog = true"
                 >New Book</q-btn
               >
+
+              <q-btn
+                v-if="user.AdminLevel === 100 && filterType === 'lists'"
+                color="accent"
+                size="sm"
+                icon="mdi-playlist-plus"
+                @click="newListDialog = true"
+              ></q-btn>
             </div>
 
             <!--END OF HEADER-->
@@ -48,6 +60,24 @@
 
                 <q-card-section>
                   <AddBook @bookAdded="newBookAdded()"></AddBook>
+                </q-card-section>
+              </q-card>
+            </q-dialog>
+            <!--end of new book dialog-->
+
+            <!--start of new list dialog-->
+            <q-dialog v-model="newListDialog" class="newListDialog">
+              <q-card class="newListDialog">
+                <q-toolbar>
+                  <q-avatar>
+                    <q-icon name="mdi-playlist-plus"></q-icon>
+                  </q-avatar>
+
+                  <q-toolbar-title>New List</q-toolbar-title>
+                </q-toolbar>
+
+                <q-card-section>
+                  <AddList @listAdded="newListAdded()"></AddList>
                 </q-card-section>
               </q-card>
             </q-dialog>
@@ -184,6 +214,17 @@
                 </q-btn-dropdown>
 
                 <!--FILTER BUTTONS FOR BOOKS END-->
+                <!--FILTER BUTTONS FOR LISTS-->
+                <q-btn
+                  v-if="user.AdminLevel === 100"
+                  color="accent"
+                  icon="mdi-playlist-plus"
+                  rounded
+                  glossy
+                  @click="setFilter('lists')"
+                >
+                </q-btn>
+                <!--FILTER BUTTONS FOR HELP-->
                 <q-btn
                   color="accent"
                   icon="mdi-help"
@@ -297,6 +338,24 @@
               :bookID="book.BookID"
               @updateFeed="setFilter(filter)"
             ></BookCard>
+          </div>
+        </div>
+        <!--END OF BOOK CARDS-->
+
+        <!--START OF LIST CARDS-->
+        <div v-if="filterType === 'lists'">
+          <div
+            v-for="list in allListsList"
+            :key="list.ListID"
+            class="relative-center q-mt-md feed-card"
+          >
+            <q-card inline class="text-center">
+              <ListCard
+                class="listClass"
+                :listID="list.ListID"
+                @updateFeed="setFilter(filter)"
+              ></ListCard>
+            </q-card>
           </div>
         </div>
         <!--END OF BOOK CARDS-->
@@ -1035,9 +1094,12 @@ import { storeToRefs } from "pinia";
 import QcCard from "components/QuickConnectCard.vue";
 import StoryCard from "components/storyCard.vue";
 import BookCard from "components/bookCard.vue";
+import ListCard from "components/listCard.vue";
 import AddBook from "components/addBook.vue";
+import AddList from "components/addList.vue";
 import MediaCardEdit from "components/mediaCardEdit.vue";
 import bookActions from "../actions/books";
+import listActions from "../actions/lists";
 import helpActions from "../actions/help";
 
 export default defineComponent({
@@ -1047,7 +1109,9 @@ export default defineComponent({
     MediaCardEdit,
     QcCard,
     BookCard,
+    ListCard,
     AddBook,
+    AddList,
   },
   setup() {
     const userState = useUserStore();
@@ -1056,6 +1120,7 @@ export default defineComponent({
     const reauthToken = window.localStorage.getItem("rt");
 
     const allBookList = ref(null);
+    const allListsList = ref(null);
     const badDataMessage = ref("");
     const bookList = reactive([]);
     const buttonList = reactive([]);
@@ -1135,6 +1200,7 @@ export default defineComponent({
     const traditionList = reactive([]);
     const ingEditorType = ref("small");
     const memEditorType = ref("small");
+    const newListDialog = ref(false);
     const filterText = ref("Memories");
     const memoryTitle = ref("Memory");
     const helpList = ref([]);
@@ -1151,6 +1217,7 @@ export default defineComponent({
       setDate();
       getMemoryTemplates(1);
       getHelpTypes();
+      getLists();
     });
 
     const refresh = (done) => {
@@ -1275,6 +1342,18 @@ export default defineComponent({
         getTimeCapsules();
         draftCount();
         filterIcon.value = "mdi-filter";
+        return;
+      }
+
+      //Start List Filter
+
+      if (filter.value === "lists") {
+        filterType.value = "lists";
+        filterText.value = "Lists";
+        getLists();
+        draftCount();
+        filterIcon.value = "mdi-playlist-plus";
+        console.log(filterType.value, filterText.value);
         return;
       }
     };
@@ -2074,6 +2153,18 @@ export default defineComponent({
       setFilter(filter.value);
     };
 
+    const newListAdded = async () => {
+      newListDialog.value = false;
+      getLists();
+      setFilter(filter.value);
+    };
+
+    const getLists = async () => {
+      await listActions.getLists(user.UserID).then((lists) => {
+        allListsList.value = lists;
+      });
+    };
+
     const getBookMemoryList = async (bookID) => {
       await bookActions.getBookMemoryList(bookID).then((memoryList) => {
         getBookMemoryList.value = memoryList;
@@ -2116,7 +2207,7 @@ export default defineComponent({
       user,
       token,
       isLoggedIn,
-
+      allListsList,
       addMemory,
       addMemoryDialog,
       allBookList,
@@ -2136,6 +2227,7 @@ export default defineComponent({
       filterIcon,
       filterText,
       filterType,
+      getLists,
       getGroupMemories,
       getMoreGroupMemories,
       getInterviews,
@@ -2165,7 +2257,9 @@ export default defineComponent({
       message,
       myTemplates,
       newBookAdded,
+      newListAdded,
       newBookDialog,
+      newListDialog,
       newBookTitle,
       newMemoryOpen,
       newSlideList,
@@ -2243,6 +2337,12 @@ export default defineComponent({
 .cardColor {
   background-color: #ffffff;
 }
+
+.listClass {
+  cursor: pointer;
+  cursor: hand;
+}
+
 .qc-card {
   width: 85%;
   margin-top: 10%;
@@ -2262,7 +2362,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(m4u_background.jpg);
   background-size: cover;
   background-repeat: none;
   background-attachment: fixed;

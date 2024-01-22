@@ -437,7 +437,7 @@ body {
   color: #160159;
 }
 .bg-image {
-  background-image: url(../../public/m4u_background2.jpg);
+  background-image: url(/m4u_background2.jpg);
   background-repeat: no-repeat;
   background-size: contain;
 }

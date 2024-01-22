@@ -22,21 +22,17 @@ let servername = "https://" + window.location.hostname;
 function unAuthRedirect() {
   if (servername === "http://localhost") {
     location.href = "http://localhost:9000";
-  }
-  //  location.href = serverState + "/login"
-  else {
+  } else {
     userState.userLogout();
     isLoggedIn.value = false;
     user.value = null;
     token.value = null;
-    location.href = "https://www.memoriesforus.com";
   }
 }
 
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";
 } else {
-  // servername = "https://login.memoriesforus.com";
   servername = "https://memoriesforusbe.azurewebsites.net";
 }
 

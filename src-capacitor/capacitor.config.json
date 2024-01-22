@@ -1,0 +1,7 @@
+{
+  "appId": "com.memoriesforus.www",
+  "appName": "MemoriesForUs",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
