@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING Credits PAGE used to give credit to all the people who helped make M4U possibe-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <q-card-section class="q-ml-lg">
         <p class="text-h5 text-info">Credits</p>
@@ -201,7 +201,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

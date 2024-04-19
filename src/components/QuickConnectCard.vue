@@ -154,14 +154,7 @@ export default defineComponent({
 
     const saveAnswer = async (VPAnswerID) => {
       await qcActions
-        .saveMyAnswer(
-          todaysQuestionID.value,
-          myAnswer.value,
-          user.UserID
-          // todaysQuestionID.value,
-          // myAnswer.value,
-          // VPAnswerID
-        )
+        .saveMyAnswer(todaysQuestionID.value, myAnswer.value, user.UserID)
         .then(async () => {
           await getMyQCAnswerToday();
         });

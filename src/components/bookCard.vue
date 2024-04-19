@@ -325,7 +325,6 @@ export default defineComponent({
         .getBookContent(user.UserID, props.bookID)
         .then((retList) => {
           bookMemoryList.value = retList;
-          console.log("bookMemoryList is: ", bookMemoryList.value);
           if (retList.length > 0) {
             bookContent.value = true;
           } else {

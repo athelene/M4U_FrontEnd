@@ -2,7 +2,13 @@
   <q-page class="flex-center qpage bg-image">
     <!--STARTING SHARE GROUPS PAGE-->
     <q-card class="q-mt-md feed-card text-accent" flat>
-      <div class="q-ml-lg">
+      <div class="q-ml-lg" v-if="mobileMsg === true">
+        <h6 class="text-h5 text-info">
+          Exports cannot be done from a mobile device. Please log in to
+          www.memoriesforus.com on a PC to download your data.
+        </h6>
+      </div>
+      <div class="q-ml-lg" v-if="mobileMsg !== true">
         <p class="text-h5 text-info">Export Memories Processing</p>
         <div>
           <p>
@@ -36,8 +42,15 @@ export default defineComponent({
     const $q = useQuasar();
     const lastExport = ref(null);
     const { isLoggedIn, token, pageLength } = storeToRefs(userState);
+    const mobileMsg = ref(false);
 
     onMounted(async () => {
+      if ($q.platform.is.mobile) {
+        mobileMsg.value = true;
+      } else {
+        mobileMsg.value = false;
+      }
+
       getLastExported();
     });
 
@@ -67,6 +80,7 @@ export default defineComponent({
 
     return {
       lastExport,
+      mobileMsg,
     };
   },
 });
@@ -96,7 +110,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

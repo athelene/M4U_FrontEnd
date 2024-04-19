@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex-center qpage bg-image text-accent">
     <q-pull-to-refresh @refresh="refresh">
-      <!--STARTING SHARE GROUPS PAGE-->
+      <!--STARTING ADMIN Invite PAGE, only accessed by Admins-->
 
       <q-card class="q-mt-md feed-card text-accent" flat>
         <q-card-section>
@@ -181,7 +181,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

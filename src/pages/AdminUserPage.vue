@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING Admin Users PAGE for admins to manage users' sub expiration date or sub type-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <div class="q-ml-lg">
         <p class="text-h5 text-info">MANAGE USERS</p>
@@ -155,7 +155,7 @@
 
 <script>
 import { defineComponent, reactive, ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+//import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
 import { useUserStore } from "stores/user";
@@ -324,7 +324,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

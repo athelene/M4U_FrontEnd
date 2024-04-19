@@ -1,6 +1,7 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
+import { CapacitorHttp } from "@capacitor/core";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 const reauthToken = window.localStorage.getItem("rt");
@@ -161,10 +162,16 @@ export default {
 
   async newBook(userID, bookTitle, tcDate, circleID, coverColor, coverFont) {
     let myroute = servername + "/newbook";
+    console.log("tcDate type is: ", typeof tcDate, tcDate);
+    if (tcDate) {
+      var sendTcDate = tcDate;
+    } else {
+      var sendTcDate = null;
+    }
     const params = {
       userID: userID,
       bookTitle: bookTitle,
-      tcDate: tcDate,
+      tcDate: sendTcDate,
       circleID: circleID,
       coverColor: coverColor,
       coverFont: coverFont,
@@ -233,8 +240,18 @@ export default {
   },
 
   async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.get(myroute, { params });
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
@@ -243,4 +260,37 @@ export default {
       console.log("send the user to the login page", error);
     }
   },
+
+  async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      console.log("postapi2 returns: ", res);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+    }
+  },
+  // async callApi(myroute, params) {
+  //   try {
+  //     let res = await axios.get(myroute, { params });
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       unAuthRedirect();
+  //     }
+  //     console.log("send the user to the login page", error);
+  //   }
+  // },
 };

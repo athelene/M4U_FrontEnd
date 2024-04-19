@@ -164,7 +164,6 @@ import { useQuasar, openURL } from "quasar";
 import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
 import zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import zxcvbnEnPackage from "@zxcvbn-ts/language-en";
-//import { propsToAttrMap } from "@vue/shared";
 
 export default {
   components: {},
@@ -200,6 +199,8 @@ export default {
     zxcvbnOptions.setOptions(options);
 
     const score = computed(() => {
+      //Checks that the user has added a password. Then uses zxcvbn to evaluate and return the strength
+      //of the password
       if (userPassword.value === null) {
         return 0;
       }
@@ -209,6 +210,7 @@ export default {
     });
 
     const scoreLabel = computed(() => {
+      //Sets the text of the error message if the password is too week
       if (score.value <= 0.25) {
         var secScore = "Weak password.";
       } else if (score.value > 0.025 && score.value <= 0.5) {
@@ -222,6 +224,7 @@ export default {
     });
 
     const scoreColor = computed(() => {
+      // Sets the color of the error text based on the strength of the password
       if (score.value === 0) {
         var secColor = "red-10";
       } else if (score.value > 0 && score.value <= 0.25) {
@@ -237,6 +240,7 @@ export default {
     });
 
     const passMatch = computed(() => {
+      //confirms the user has typed the password consistently two times
       if (userPassword.value !== confirmPassword.value) {
         var match = false;
       } else {
@@ -292,6 +296,7 @@ export default {
     }
 
     async function saveUser() {
+      //if dupcheck succeeds, saves user into database with fields user provided
       await loginAction
         .registerCharter(
           userFirst.value,
@@ -314,17 +319,6 @@ export default {
             confirm.value = false;
             return;
           }
-          // if (regResult !== "Success") {
-          //   errorMsg.value =
-          //     "Registration failed. Please try again or contact support.";
-          //   spinner.value = false;
-          //   confirm.value = false;
-          //   return;
-          // } else {
-          //   console.log("should go to newchartersuccess");
-          //   spinner.value = false;
-          //   router.replace({ path: "/newchartersuccess" });
-          // }
         });
     }
 
@@ -362,7 +356,7 @@ export default {
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

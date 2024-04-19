@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING Admin  PAGE provides admin info and menu for admin functions-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <q-card-section>
         <div class="q-ml-lg">
@@ -257,7 +257,7 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
-import { useRoute } from "vue-router";
+//import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
 import { ref, onMounted, computed } from "vue";
@@ -267,7 +267,7 @@ import adminActions from "../actions/admin";
 import exportActions from "../actions/exports";
 
 export default defineComponent({
-  name: "SharePage",
+  name: "AdminPage",
   components: {},
   setup() {
     const userState = useUserStore();
@@ -329,6 +329,7 @@ export default defineComponent({
     };
 
     const restartMessage = async () => {
+      //Clears the message fields
       newsTitle.value = null;
       newsText.value = null;
       startDate.value = null;
@@ -337,12 +338,14 @@ export default defineComponent({
     };
 
     const getUserSubTypes = async () => {
+      //returns the types of subscriptions a new user can have
       await adminActions.getUserSubTypes().then((subTypes) => {
         userSubTypes.value = subTypes;
       });
     };
 
     const restartNews = async () => {
+      //reset the news fields
       newsText.value = null;
       newsTitle.value = null;
       startDate.value = null;
@@ -351,6 +354,8 @@ export default defineComponent({
     };
 
     const addNews = async () => {
+      //Add news items. This allows an admin to add information that can be found in the users menu.
+      //Unlike messages, these can be found after they appear on screen.
       newsDialog.value = false;
       await adminActions
         .addNews(
@@ -365,6 +370,7 @@ export default defineComponent({
     };
 
     const getUserCountsSubType = async () => {
+      //get the number of users for each type of subscription
       await adminActions
         .getUserCountsSubType()
         .then((userCounts) => {
@@ -404,6 +410,7 @@ export default defineComponent({
     };
 
     const calcUsers = async () => {
+      //calculates the total users by category and total
       potential3.value = type2.value * 10;
       potential4.value = type3.value * 5;
       totalPotentialCharters.value =
@@ -417,14 +424,8 @@ export default defineComponent({
         totalCurrentUsers.value + unclaimedCharters.value;
     };
 
-    // const userDialogOpen = async () => {
-    //   await adminActions.getUserList().then((users) => {
-    //     userList.value = users;
-    //   });
-    //   userDialog.value = true;
-    // };
-
     const cleanUpExports = async () => {
+      //Removes any exported files over 7 days old from the backend server
       await exportActions.cleanUpExports().then(() => {});
     };
 
@@ -488,7 +489,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

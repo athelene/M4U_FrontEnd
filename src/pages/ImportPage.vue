@@ -158,7 +158,7 @@ import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 import bookActions from "../actions/books";
-import circleActions from "../actions/memories";
+//import circleActions from "../actions/memories";
 import AddBook from "components/addBook.vue";
 
 export default defineComponent({
@@ -290,7 +290,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

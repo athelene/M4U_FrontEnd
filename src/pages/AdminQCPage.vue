@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING ADMIN QC PAGE which allows admin to manage the quick connect questions-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <div class="q-ml-lg">
         <p class="text-h5 text-info">MANAGE QUICK CONNECT</p>
@@ -167,6 +167,8 @@ export default defineComponent({
     });
 
     watch(newViewPointDate, (val, oldval) => {
+      //This watch variable see when the admin has changed the date field and fills in the appropriate question for
+      //days where a set question has been established.
       var dd = Number(val.slice(8, 10));
       var mm = Number(val.slice(5, 7)) - 1;
       var yyyy = Number(val.slice(0, 4));
@@ -189,6 +191,7 @@ export default defineComponent({
     });
 
     const getAllQuestions = async () => {
+      //gets questions from most recent date in quantity determined in const retrieveBlock above
       await qcActions
         .getQuestions("2999-12-31", retrieveBlock.value)
         .then((result) => {
@@ -197,6 +200,8 @@ export default defineComponent({
     };
 
     const getQuestions = async () => {
+      //gets questions from the date given by the user in quantity determined in const
+      //retrieveBlock above
       await qcActions
         .getQuestions(startDate.value, retrieveBlock.value)
         .then((result) => {
@@ -205,6 +210,7 @@ export default defineComponent({
     };
 
     const addQuestion = async () => {
+      //allows an admin to ad a Quick Connect question
       if (!newViewPointDate.value) {
         errMsg.value = "You must enter a date.";
       }
@@ -315,7 +321,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

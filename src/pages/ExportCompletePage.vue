@@ -62,7 +62,13 @@ export default defineComponent({
     const buttonOpen = ref(false);
     const exportFinished = ref(false);
 
-    onMounted(async () => {});
+    onMounted(async () => {
+      if ($q.platform.is.mobile) {
+        mobileMsg.value = true;
+      } else {
+        mobileMsg.value = false;
+      }
+    });
 
     const enableButton = () => {
       buttonOpen.value = true;
@@ -130,7 +136,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

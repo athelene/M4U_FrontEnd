@@ -1,6 +1,7 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
+import { CapacitorHttp } from "@capacitor/core";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 const reauthToken = window.localStorage.getItem("rt");
@@ -276,10 +277,13 @@ export default {
     }
 
     if (storyData.StoryTypeID === 1) {
+      //This is a simple memory
       params = {
         userID: userID,
         StoryTitle: storyData.StoryTitle,
         StoryText: storyData.StoryText,
+        StoryTitle: null,
+        StoryText: null,
         StoryTypeID: storyData.StoryTypeID,
         CircleID: circleID,
         Hidden: hidden,
@@ -289,6 +293,7 @@ export default {
     }
 
     if (storyData.StoryTypeID === 2) {
+      //This is an interview
       params = {
         userID: userID,
         StoryTitle: storyData.StoryTitle,
@@ -303,6 +308,7 @@ export default {
     }
 
     if (storyData.StoryTypeID === 3) {
+      //This is a recipe
       params = {
         userID: userID,
         StoryTitle: storyData.StoryTitle,
@@ -317,6 +323,7 @@ export default {
     }
 
     if (storyData.StoryTypeID === 4) {
+      //This is a tradition
       params = {
         userID: userID,
         StoryTitle: storyData.StoryTitle,
@@ -332,6 +339,7 @@ export default {
     }
 
     if (storyData.StoryTypeID === 5 && servername === "http://localhost:9000") {
+      //This is a Help Memory for localhost and makes owner an admin
       params = {
         userID: 310,
         StoryTitle: storyData.StoryTitle,
@@ -348,24 +356,23 @@ export default {
       };
     }
 
-    if (storyData.StoryTypeID === 5 && servername !== "http://localhost:9000") {
-      params = {
-        userID: 126,
-        StoryTitle: storyData.StoryTitle,
-        StoryText: storyData.StoryText,
-        StoryTypeID: storyData.StoryTypeID,
-        StoryIngredients: storyData.StoryIngredients,
-        Interviewee: storyData.Interviewee,
-        Hidden: hidden,
-        HelpType: storyData.HelpType,
-        CircleID: 0,
-        UserMediaLoc: "Logo.png",
-        token: token,
-        reauthToken: reauthToken,
-      };
-    }
-
-    var result = this.callApi(myroute, params).then((res) => {
+    // if (storyData.StoryTypeID === 5 && servername !== "http://localhost:9000") {
+    //   params = {
+    //     userID: 126,
+    //     StoryTitle: storyData.StoryTitle,
+    //     StoryText: storyData.StoryText,
+    //     StoryTypeID: storyData.StoryTypeID,
+    //     StoryIngredients: storyData.StoryIngredients,
+    //     Interviewee: storyData.Interviewee,
+    //     Hidden: hidden,
+    //     HelpType: storyData.HelpType,
+    //     CircleID: 0,
+    //     UserMediaLoc: "Logo.png",
+    //     token: token,
+    //     reauthToken: reauthToken,
+    //   };
+    // }
+    var result = this.postApi(myroute, params).then((res) => {
       return res;
     });
     return result;
@@ -580,9 +587,52 @@ export default {
     return result;
   },
 
+  // async callApi(myroute, params) {
+  //   try {
+  //     let res = await axios.get(myroute, { params });
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       unAuthRedirect();
+  //     }
+  //     console.log("send the user to the login page", error);
+  //   }
+  // },
+
+  // async postApi(myroute, params) {
+  //   try {
+  //     let res = await axios.post(
+  //       myroute,
+  //       { params },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       //  unAuthRedirect();
+  //       console.log("error is: ", error.response);
+  //     }
+  //     console.log("send the user to the login page", error);
+  //   }
+  // },
+
   async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.get(myroute, { params });
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
@@ -593,23 +643,24 @@ export default {
   },
 
   async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.post(
-        myroute,
-        { params },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
+      console.log("error is: ", error);
       if (error.response.status === 401) {
-        //  unAuthRedirect();
-        console.log("error is: ", error.response);
+        unAuthRedirect();
       }
-      console.log("send the user to the login page", error);
     }
   },
 };

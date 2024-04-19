@@ -49,7 +49,16 @@
                 @click="toggleDueDate()"
               />
             </q-item>
-
+            <q-item>
+              <q-checkbox
+                left-label
+                v-model="makeAssigned"
+                label="Do you want to assign these items to people?"
+                checked-icon="task_alt"
+                color="teal"
+                @click="toggleAssigned()"
+              />
+            </q-item>
             <q-item>
               <div style="min-width: 150px">
                 <q-select
@@ -98,6 +107,7 @@ export default defineComponent({
 
     const circleID = ref(null);
     const dateFlag = ref(null);
+    const assignedFlag = ref(null);
     const circleList = reactive([]);
     const selectedDueDate = ref(0);
     const colorOptions = [
@@ -143,8 +153,9 @@ export default defineComponent({
     const makeDueDate = ref(false);
     const newListErrMsg = ref(null);
     const newListName = ref(null);
-    const openTcFields = ref(false);
-    const selectedCircle = ref(null);
+    //    const selectedCircle = ref(null);
+    const makeAssigned = ref(false);
+    const selectedAssigned = ref(0);
 
     onMounted(() => {
       getCircleList();
@@ -160,31 +171,27 @@ export default defineComponent({
 
     const newList = async () => {
       if (newListName.value === null) {
-        newBookErrMsg.value = "You must give the list a name.";
+        newListErrMsg.value = "You must give the list a name.";
         return;
       }
       if (newListName.value.length < 1) {
-        newBookErrMsg.value = "You must give the list a name.";
+        newListErrMsg.value = "You must give the list a name.";
         return;
       }
       if (circleID.value === null) {
-        newBookErrMsg.value = "You must select a Share Group.";
+        newListErrMsg.value = "You must select a Share Group.";
         return;
       }
 
-      if ((makeDueDate.value = true)) {
-        dateFlag.value = 1;
-      } else {
-        dateFlag.value = 0;
-      }
       await listActions
         .newList(
           user.UserID,
           newListName.value,
-          dateFlag.value,
+          selectedDueDate.value,
           circleID.value,
           listColor.value,
-          listCircleRights.value
+          listCircleRights.value,
+          selectedAssigned.value
         )
         .then(() => {
           newListErrMsg.value = null;
@@ -200,10 +207,16 @@ export default defineComponent({
     const toggleDueDate = async () => {
       if (makeDueDate.value === true) {
         selectedDueDate.value === 1;
-        return;
-      }
-      if (makeDueDate.value === false) {
+      } else {
         selectedDueDate.value === 0;
+      }
+    };
+
+    const toggleAssigned = async () => {
+      if (makeAssigned.value === true) {
+        selectedAssigned.value = 1;
+      } else {
+        selectedAssigned.value = 0;
       }
     };
 
@@ -225,6 +238,9 @@ export default defineComponent({
       rightsList,
       selectedDueDate,
       toggleDueDate,
+      selectedAssigned,
+      makeAssigned,
+      toggleAssigned,
     };
   },
 });

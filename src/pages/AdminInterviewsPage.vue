@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING Admin Interviews Page displayed only on admin page to enable adding interview questions-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <div class="q-ml-lg">
         <p class="text-h5 text-info">MANAGE INTERVIEW QUESTIONS</p>
@@ -167,7 +167,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

@@ -1,6 +1,7 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
+import { CapacitorHttp } from "@capacitor/core";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 const reauthToken = window.localStorage.getItem("rt");
@@ -93,24 +94,40 @@ export default {
     return result;
   },
 
-  async addNewBlob(formData) {
+  // async addNewBlob_old(formData) {
+  //   let myroute = servername + "/addNewBlob";
+  //   let res = await axios.post(myroute, formData, {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   });
+  //   return res;
+  // },
+
+  async addNewBlob(params) {
     let myroute = servername + "/addNewBlob";
-    let res = await axios.post(myroute, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    var result = this.postBlobApi(myroute, params).then((res) => {
+      return res;
     });
-    return res;
+    return result;
   },
 
-  async addNewProfileBlob(formData) {
+  // async addNewProfileBlob(formData) {
+  //   let myroute = servername + "/addNewProfileBlob";
+  //   let profileReturn = await axios.post(myroute, formData, {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   });
+  //   return profileReturn;
+  // },
+
+  async addNewProfileBlob(params) {
     let myroute = servername + "/addNewProfileBlob";
-    let profileReturn = await axios.post(myroute, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    var result = this.postBlobApi(myroute, params).then((res) => {
+      return res;
     });
-    return profileReturn;
+    return result;
   },
 
   async deleteMedia(mediaLoc) {
@@ -140,9 +157,73 @@ export default {
   },
 
   //USED TO CALL EVERY API IN THIS FILE
+  // async callApi(myroute, params) {
+  //   try {
+  //     let res = await axios.get(myroute, { params });
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       unAuthRedirect();
+  //     }
+  //   }
+  // },
+
   async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.get(myroute, { params });
+      let res = await CapacitorHttp.request(config);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+      console.log("send the user to the login page", error);
+    }
+  },
+
+  async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
+    }
+  },
+
+  async postBlobApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "multipart/form-data",
+        Accept: "application/json, text/plain, */*",
+      },
+      data: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {

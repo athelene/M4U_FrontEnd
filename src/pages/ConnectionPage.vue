@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING CONNECTIONS PAGE where users manage connections-->
     <q-card class="q-mt-md feed-card text-accent" flat>
       <div class="q-ml-lg">
         <p class="text-h5 text-info">
@@ -318,8 +318,8 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
+//import { useRoute } from "vue-router";
+//import { useRouter } from "vue-router";
 import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
@@ -641,7 +641,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

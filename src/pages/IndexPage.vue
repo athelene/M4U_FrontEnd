@@ -3,16 +3,9 @@
     <q-pull-to-refresh @refresh="refresh">
       <!--STARTING QUICK CONNECT-->
       <div>
-        <qcCard
-          class="qcCard"
-          v-if="
-            filterType === 'memory' ||
-            filterType === 'group' ||
-            filterType === 'lists'
-          "
-        ></qcCard>
+        <qcCard class="qcCard"></qcCard>
       </div>
-      <!--ERROR MSG, BUTTON GROUP SEARCH-->
+
       <div class="q-pa-md items-start flex-center">
         <q-card class="q-mt-md feed-card transparent bg-secondary" flat>
           <q-card-section v-if="message">
@@ -27,25 +20,81 @@
               class="text-h5 text-center text-accent text-weight-bolder filterTitle bg-secondary"
             >
               {{ filterText }}
-
-              <q-btn
-                color="accent"
-                v-if="filterType === 'book'"
-                size="sm"
-                @click="newBookDialog = true"
-                >New Book</q-btn
-              >
-
-              <q-btn
-                v-if="user.AdminLevel === 100 && filterType === 'lists'"
-                color="accent"
-                size="sm"
-                icon="mdi-playlist-plus"
-                @click="newListDialog = true"
-              ></q-btn>
+              <span v-if="user.AdminLevel === 100 && filterType === 'lists'">
+                <q-icon
+                  name="mdi-information-outline"
+                  size="xs"
+                  @click="listInfo = true"
+                ></q-icon
+              ></span>
+              <span v-if="filterType === 'book'">
+                <q-icon
+                  name="mdi-information-outline"
+                  size="xs"
+                  @click="bookInfo = true"
+                ></q-icon
+              ></span>
+              <div v-if="filterType === 'book'">
+                <q-btn color="accent" size="sm" @click="newBookDialog = true"
+                  >New Book</q-btn
+                >
+              </div>
+              <div v-if="user.AdminLevel === 100 && filterType === 'lists'">
+                <q-btn color="accent" size="sm" @click="newListDialog = true"
+                  >New List</q-btn
+                >
+              </div>
             </div>
 
             <!--END OF HEADER-->
+
+            <!--Dialog for book info-->
+
+            <q-dialog v-model="bookInfo">
+              <q-card>
+                <q-card-section>
+                  <div class="text-h6">Books</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <p class="text-h6">
+                    You can create books to group your memories. For example,
+                    you can have a book for each child, for special events, or
+                    for groups and clubs you share with. You can even create
+                    special books called "Time Capsules" that won't be shared
+                    until the date you set. A memory can be saved into multiple
+                    books.
+                  </p>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                  <q-btn flat label="OK" color="primary" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
+
+            <!--Dialog for list info-->
+
+            <q-dialog v-model="listInfo">
+              <q-card>
+                <q-card-section>
+                  <div class="text-h6">Lists</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <p class="text-h6">
+                    Create lists for your self or to share with others. Keep
+                    track of projects, keep a list of movies you want to watch,
+                    share a grocery list or share a list for everyone to sign up
+                    for a potluck dinner!
+                  </p>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                  <q-btn flat label="OK" color="primary" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
 
             <!--start of new book dialog-->
             <q-dialog v-model="newBookDialog" class="newBookDialog">
@@ -77,12 +126,14 @@
                 </q-toolbar>
 
                 <q-card-section>
-                  <AddList @listAdded="newListAdded()"></AddList>
+                  <AddList @listAdded="listAdded()"></AddList>
                 </q-card-section>
               </q-card>
             </q-dialog>
             <!--end of new book dialog-->
           </q-card-section>
+
+          <!--START OF BUTTONS FOR MEMORY TYPES, BOOKS TYPES, LISTS, HELP-->
           <q-card-section>
             <q-item>
               <q-btn-group rounded class="absolute-center">
@@ -218,7 +269,7 @@
                 <q-btn
                   v-if="user.AdminLevel === 100"
                   color="accent"
-                  icon="mdi-playlist-plus"
+                  icon="mdi-check"
                   rounded
                   glossy
                   @click="setFilter('lists')"
@@ -347,18 +398,17 @@
           <div
             v-for="list in allListsList"
             :key="list.ListID"
-            class="relative-center q-mt-md feed-card"
+            class="relative-center q-mt-md feed-card listClass"
           >
-            <q-card inline class="text-center">
+            <q-card class="text-center">
               <ListCard
-                class="listClass"
                 :listID="list.ListID"
                 @updateFeed="setFilter(filter)"
               ></ListCard>
             </q-card>
           </div>
         </div>
-        <!--END OF BOOK CARDS-->
+        <!--END OF LIST CARDS-->
       </div>
 
       <!--START NEW MEMORY DIALOG-->
@@ -392,6 +442,9 @@
                     v-model="qUploadFle"
                     label="Click to add a photo or video"
                   >
+                    <template v-slot:prepend>
+                      <q-icon name="attach_file" />
+                    </template>
                     <template v-slot:append>
                       <q-icon
                         v-if="qUploadFle !== null"
@@ -469,6 +522,7 @@
                 color="m4u_text"
                 v-model="storyTitle"
                 rows="2"
+                tabindex="1"
               ></q-input>
             </q-item>
 
@@ -486,6 +540,7 @@
                 map-options
                 clearable
                 style="min-width: 250px; max-width: 70%"
+                tabindex="2"
               />
             </q-item>
 
@@ -496,6 +551,7 @@
                 color="m4u_text"
                 v-model="storyTitle"
                 rows="2"
+                tabindex="2"
               >
                 <template v-slot:append>
                   <q-icon
@@ -513,6 +569,7 @@
                 color="m4u_text"
                 v-model="interviewee"
                 rows="2"
+                tabindex="3"
               ></q-input>
             </q-item>
 
@@ -523,6 +580,7 @@
                 color="m4u_text"
                 v-model="storyTitle"
                 rows="2"
+                tabindex="3"
               >
                 <template v-slot:append>
                   <q-icon
@@ -586,6 +644,7 @@
                 ref="ingredientsRef"
                 @paste="onPasteIng"
                 v-model="storyIngredients"
+                tabindex="5"
                 content-class="bg-primary"
                 toolbar-text-color="white"
                 toolbar-bg="accent"
@@ -610,6 +669,7 @@
                 @paste="onPasteIng"
                 v-if="ingEditorType === 'full'"
                 content-class="bg-primary"
+                tabindex="6"
                 toolbar-text-color="white"
                 toolbar-toggle-color="yellow-8"
                 toolbar-bg="accent"
@@ -707,6 +767,7 @@
                     v-for="template in myTemplates"
                     :key="template.MemoryTemplateID"
                     clickable
+                    tabindex="6"
                     v-close-popup
                     @click="
                       setTemplate(template.MemoryText, template.MemoryCircle)
@@ -804,6 +865,7 @@
                   ref="textRef"
                   @paste="onPasteText"
                   v-model="storyText"
+                  tabindex="6"
                   content-class="bg-primary"
                   toolbar-text-color="white"
                   toolbar-toggle-color="yellow-8"
@@ -837,6 +899,7 @@
                 emit-value
                 map-options
                 clearable
+                tabindex="7"
                 style="min-width: 250px; max-width: 70%"
               />
             </q-item>
@@ -847,6 +910,7 @@
                 label="Share only in time capsules?"
                 checked-icon="task_alt"
                 color="teal"
+                tabindex="8"
               />
             </q-item>
 
@@ -1120,9 +1184,11 @@ export default defineComponent({
     const reauthToken = window.localStorage.getItem("rt");
 
     const allBookList = ref(null);
+    const text = ref(null);
     const allListsList = ref(null);
     const badDataMessage = ref("");
     const bookList = reactive([]);
+    const bookInfo = ref(false);
     const buttonList = reactive([]);
     const circleID = ref(null);
     const circleTitle = ref(null);
@@ -1140,6 +1206,7 @@ export default defineComponent({
     const interviewee = ref(null);
     const interviewList = reactive([]);
     const interviewsFlag = ref(false);
+    const listInfo = ref(false);
     const memoryTypeOptions = ref([
       {
         label: "All",
@@ -1165,7 +1232,6 @@ export default defineComponent({
     ]);
 
     const ingredientsRef = ref(null);
-    const textRef = ref(null);
     const message = ref("");
     const memoryTypeOn = ref(false);
     const myTemplates = ref(null);
@@ -1353,7 +1419,6 @@ export default defineComponent({
         getLists();
         draftCount();
         filterIcon.value = "mdi-playlist-plus";
-        console.log(filterType.value, filterText.value);
         return;
       }
     };
@@ -1914,15 +1979,16 @@ export default defineComponent({
       setStoryType(newMemType);
       saveDraft.value = false;
       var newCircleID = null;
-      if (circleID.value === "") {
-        newCircleID = null;
-      } else {
-        newCircleID = circleID.value;
-      }
+      // if (circleID.value === "") {
+      //   newCircleID = null;
+      // } else {
+      //   newCircleID = circleID.value;
+      // }
 
-      if (newMemType === 5) {
-        newCircleID = 0;
-      }
+      // if (newMemType === 5) {
+      //   //TYPE 5 IS A HELP MEMORY
+      //   newCircleID = 0;
+      // }
       storyData.value = {
         StoryTypeID: newMemType,
         StoryTitle: "",
@@ -2165,10 +2231,9 @@ export default defineComponent({
       });
     };
 
-    const getBookMemoryList = async (bookID) => {
-      await bookActions.getBookMemoryList(bookID).then((memoryList) => {
-        getBookMemoryList.value = memoryList;
-      });
+    const listAdded = async () => {
+      newListDialog.value = false;
+      getLists();
     };
 
     const openBookDispDialog = async (
@@ -2212,6 +2277,7 @@ export default defineComponent({
       addMemoryDialog,
       allBookList,
       badDataMessage,
+      bookInfo,
       bookList,
       booksDialogFlag,
       buttonList,
@@ -2250,6 +2316,8 @@ export default defineComponent({
       interviewee,
       interviewsFlag,
       interviewList,
+      listAdded,
+      listInfo,
       memEditorType,
       memoryTitle,
       memoryTypeOn,
@@ -2303,7 +2371,7 @@ export default defineComponent({
       storyTitle,
       storyTypeID,
       tcDate,
-      textRef,
+      text,
       traditionsFlag,
       traditionList,
       updateBookTitle,
@@ -2334,22 +2402,10 @@ export default defineComponent({
   width: 100px;
 }
 
-.cardColor {
-  background-color: #ffffff;
-}
-
 .listClass {
   cursor: pointer;
   cursor: hand;
-}
-
-.qc-card {
-  width: 85%;
-  margin-top: 10%;
-  padding-top: 15%;
-  margin-right: auto;
-  margin-left: auto;
-  margin-bottom: auto;
+  min-height: 4vh;
 }
 
 .qpage {
@@ -2357,12 +2413,8 @@ export default defineComponent({
   padding-top: 10%;
 }
 
-.imageBtnBackground {
-  background-color: #fefbee;
-}
-
 .bg-image {
-  background-image: url(m4u_background.jpg);
+  background-image: url(../../public/m4u_background.jpg);
   background-size: cover;
   background-repeat: none;
   background-attachment: fixed;

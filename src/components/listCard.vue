@@ -1,101 +1,183 @@
 <template>
   <!--THIS PAGE IS A COMPONENT TO DISPLAY A SINGLE LIST - LIST ID SENT FROM INDEXPAGE-->
   <!--START OF LIST CARDS-->
-  <q-card
-    class="feed-card"
-    clickable
-    @click="openListDispDialog(listDetails.ListID)"
-  >
-    {{ listDetails.ListName }}
-  </q-card>
-  <!--  START OF LIST DIALOG -->
-  <q-dialog v-model="listDialog" full-width>
-    <q-card class="cardColor flat q-ma-md feed-card bg-secondary">
-      <q-toolbar>
-        <q-toolbar-title
-          ><span class="text-weight-bold">{{ listDetails.ListName }} </span>
-          <span class="q-ma-sm"
-            ><q-btn
-              v-if="listDetails.ListOwner === user.UserID"
-              flat
-              icon="mdi-pencil"
-              @click="openEditListDialog()"
-            ></q-btn>
-            <q-btn
-              v-if="listDetails.ListOwner === user.UserID"
-              flat
-              icon="delete"
-              @click="listDeleteConfirmOpen = true"
-            ></q-btn>
-          </span>
-        </q-toolbar-title>
-
-        <q-btn flat round dense icon="close" @click="closeListDialog()" />
-      </q-toolbar>
-
-      <!--START EDIT LIST DIALOG-->
-      <q-dialog v-model="editListDialog" persistent>
-        <q-card style="min-width: 350px">
-          <EditList :listID="listID" @listEdited="updateList"></EditList>
-        </q-card>
-      </q-dialog>
-      <!--END EDIT LIST DIALOG -->
-
-      <!--START CONFIRM DELETE LIST DIALOG-->
-      <q-dialog v-model="listDeleteConfirmOpen" persistent>
-        <q-card>
-          <q-card-section class="row items-center">
-            <q-avatar
-              color="negative"
-              text-color="white"
-              icon="mdi-alert-circle"
-            />
-            <span class="q-ml-sm"
-              >Are you sure you want to delete
-              {{ listDetails.ListName }} permanently?</span
-            >
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="primary" v-close-popup />
-            <q-btn
-              @click="deleteList(listDetails.ListID)"
-              flat
-              label="Delete"
-              color="primary"
-              v-close-popup
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <!--END CONFIRM DELETE LIST DIALOG-->
-      <q-card-actions>
-        <q-btn
-          @click="listDeleteConfirmOpen = true"
-          icon="mdi-delete-outline"
-          v-if="listDetails.ListOwner === user.UserID"
-        ></q-btn>
-      </q-card-actions>
+  <div>
+    <q-card :class="listClass" clickable @click="openListDispDialog()">
+      <h5>
+        {{ listName }}
+      </h5>
     </q-card>
-  </q-dialog>
-  <!--END OF BOOK DIALOG -->
 
-  <!--END OF BOOK CARDS-->
+    <!--  START OF LIST DIALOG -->
+    <q-dialog v-model="listDialog" full-width full-height>
+      <q-card class="bg-primary">
+        <!--START EDIT LIST DIALOG-->
+        <q-dialog v-model="editListDialog" persistent>
+          <q-card style="min-width: 350px">
+            <EditList :listID="listID" @listEdited="updateList"></EditList>
+          </q-card>
+        </q-dialog>
+        <!--END EDIT LIST DIALOG -->
+
+        <!--START CONFIRM DELETE LIST DIALOG-->
+        <q-dialog v-model="listDeleteConfirmOpen" persistent>
+          <q-card>
+            <q-card-section class="row items-center">
+              <q-avatar
+                color="negative"
+                text-color="white"
+                icon="mdi-alert-circle"
+              />
+              <span class="q-ml-sm"
+                >Are you sure you want to delete
+                {{ listName }} permanently?</span
+              >
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-btn flat label="Cancel" color="primary" v-close-popup />
+              <q-btn
+                @click="deleteList(listID)"
+                flat
+                label="Delete"
+                color="primary"
+                v-close-popup
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <!--END CONFIRM DELETE LIST DIALOG-->
+
+        <!--START CONFIRM COMPLETED ITEM DELETE  DIALOG-->
+        <q-dialog v-model="completedDeleteConfirmOpen" persistent>
+          <q-card>
+            <q-card-section class="row items-center">
+              <q-avatar
+                color="negative"
+                text-color="white"
+                icon="mdi-alert-circle"
+              />
+              <span class="q-ml-sm"
+                >Are you sure you want to delete all completed items
+                permanently?</span
+              >
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-btn flat label="Cancel" color="primary" v-close-popup />
+              <q-btn
+                @click="deleteCompletedItems(listID)"
+                flat
+                label="Delete Completed Items"
+                color="primary"
+                v-close-popup
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <!--END CONFIRM DELETE LIST DIALOG-->
+
+        <!--START ADD ITEM DIALOG-->
+        <q-dialog v-model="openAddItem">
+          <q-card>
+            <AddListItem
+              :listID="listID"
+              :dueDate="listDueDate"
+              :assigned="listAssigned"
+              @itemAdded="itemAdded"
+              @itemUpdated="itemAdded"
+            ></AddListItem>
+          </q-card>
+        </q-dialog>
+        <!--END ADD ITEM DIALOG -->
+
+        <!--START THE LIST OF ITEMS HERE-->
+        <q-bar class="bg-accent text-white">
+          <q-btn flat round dense @click="closeListDialog">
+            <q-icon name="close" />
+          </q-btn>
+          <div>{{ origListName }}</div>
+          <div class="q-ml-lg">
+            <q-btn
+              v-if="listOwner === user.UserID || listCircleRights === 'W'"
+              flat
+              round
+              dense
+              class="q-mr-xs"
+              icon="mdi-plus"
+              @click="openAddItemDialog()"
+            ></q-btn>
+          </div>
+          <q-space />
+          <q-btn
+            flat
+            round
+            dense
+            icon="more_vert"
+            v-if="listOwner === user.UserID || listCircleRights === 'W'"
+          >
+            <q-menu>
+              <q-list style="min-width: 100px">
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="openEditListDialog()"
+                  v-if="listOwner === user.UserID"
+                  >Edit List
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="completedDeleteConfirmOpen = true"
+                  v-if="listOwner === user.UserID || listCircleRights === 'W'"
+                  >Delete Completed Items
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="listDeleteConfirmOpen = true"
+                  v-if="listOwner === user.UserID"
+                  >Delete Entire List
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-bar>
+
+        <q-card style="min-width: 350px">
+          <ItemList
+            :listID="listID"
+            @closeListDialog="closeListDialog"
+            @itemAdded="getListDetails"
+            :key="updateKey"
+          ></ItemList>
+        </q-card>
+
+        <!--END THE LIST OF ITEMS-->
+      </q-card>
+    </q-dialog>
+    <!--END OF DIALOG -->
+  </div>
 </template>
 <script>
 import { defineComponent, reactive } from "vue";
-import { ref, onMounted, computed } from "vue";
-import { useQuasar, openURL } from "quasar";
+import { ref, onMounted } from "vue";
+import { useQuasar } from "quasar";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 import listActions from "../actions/lists";
 import EditList from "src/components/editList.vue";
+import ItemList from "src/components/listItemCard.vue";
+import AddListItem from "src/components/addListItem.vue";
 
 export default defineComponent({
   name: "ListCard",
   components: {
     EditList,
+    ItemList,
+    AddListItem,
   },
   props: {
     listID: {
@@ -113,11 +195,20 @@ export default defineComponent({
     const listClass = ref(null);
     const listContent = ref(false);
     const listDeleteConfirmOpen = ref(false);
-    const listDetails = reactive([]);
+    const lists = reactive([]);
+    const listName = ref(null);
+    const listID = ref(null);
+    const listOwner = ref(null);
+    const listCircleRights = ref(null);
+    const listDueDate = ref(null);
     const listDialog = ref(false);
-    const circleList = reactive([]);
     const editListDialog = ref(false);
     const origListName = ref(null);
+    const listAssigned = ref(null);
+    const completedDeleteConfirmOpen = ref(false);
+    const openAddItem = ref(false);
+    const updateKey = ref(0);
+    const itemChanged = ref(0);
 
     onMounted(() => {
       getListDetails();
@@ -125,7 +216,6 @@ export default defineComponent({
 
     const closeListDialog = async () => {
       listDialog.value = false;
-      emit("updateFeed");
     };
 
     const deleteList = async (listID) => {
@@ -134,108 +224,105 @@ export default defineComponent({
         .then(() => {
           listDeleteConfirmOpen.value = false;
           listDialog.value = false;
+          emit("updateFeed");
         })
         .then(() => {
           closeListDialog();
         });
     };
 
-    const getListDetails = async () => {
-      console.log("running getListDetails");
-      await listActions
-        .getListDetails(props.listID)
-        .then((list) => {
-          console.log("incoming list is: ", list);
-          Object.assign(listDetails, list[0]);
-        })
-        .then(() => {
-          origListName.value = listDetails.ListName;
-          if (listDetails.ListColor === null) {
-            listClass.value = "listLook color2";
-          } else {
-            listClass.value = "listLook " + " " + listDetails.ListColor;
-          }
-        });
+    const deleteCompletedItems = async (listID) => {
+      updateKey.value = 0;
+      await listActions.deleteCompletedItems(listID).then(() => {
+        completedDeleteConfirmOpen.value = false;
+        updateKey.value = 99;
+      });
     };
 
-    const openListDispDialog = async (bookID) => {
+    const getListDetails = async () => {
+      await listActions.getListDetails(props.listID).then((incomingList) => {
+        listName.value = incomingList.ListName;
+        listID.value = incomingList.ListID;
+        listOwner.value = incomingList.ListOwner;
+        listCircleRights.value = incomingList.ListCircleRights;
+        listDueDate.value = incomingList.ListDate;
+        listAssigned.value = incomingList.ListAssigned;
+        origListName.value = incomingList.ListName;
+        console.log(incomingList.ListColor);
+        if (incomingList.ListColor === null) {
+          listClass.value = "q-mb-md list-color2";
+        } else {
+          listClass.value = "q-mb-md list-" + incomingList.ListColor;
+        }
+      });
+    };
+
+    const openListDispDialog = async () => {
       listDialog.value = true;
-      // getListContent(props.listID);
     };
 
     const openEditListDialog = async () => {
+      updateKey.value = 0;
       editListDialog.value = true;
     };
 
     const updateList = async (event) => {
-      listDetails.ListName = event;
+      lists.ListName = event;
+      updateKey.value = 99;
       editListDialog.value = false;
       getListDetails();
+    };
+
+    const itemAdded = async () => {
+      updateKey.value = 99;
+      openAddItem.value = false;
+      getListDetails();
+    };
+
+    const openAddItemDialog = async () => {
+      openAddItem.value = true;
+      updateKey.value = 0;
     };
 
     return {
       user,
       token,
       isLoggedIn,
+      itemAdded,
       listDeleteConfirmOpen,
       listClass,
-      listDetails,
+      lists,
+      listName,
+      listCircleRights,
+      listOwner,
       listDialog,
+      listDueDate,
+      listAssigned,
       closeListDialog,
       deleteList,
       editListDialog,
+      getListDetails,
       openListDispDialog,
+      openAddItemDialog,
       listContent,
       openEditListDialog,
+      openAddItem,
       updateList,
+      deleteCompletedItems,
+      completedDeleteConfirmOpen,
+      updateKey,
+      origListName,
+      itemChanged,
     };
   },
 });
 </script>
 <style scoped>
 .listCard {
-  cursor: pointer;
-  cursor: hand;
-  width: 100px;
-  margin: auto;
+  height: 10vh;
 }
 
-.listClass {
-  cursor: pointer;
-  cursor: hand;
-  margin: auto;
-  margin: auto;
-}
-
-.listLook {
-  width: 300px;
-  height: 150px;
-  margin: auto;
-}
-
-.feed-card {
-  width: 85%;
-  margin: auto;
-}
-.qc-card {
-  width: 85%;
-  margin: auto;
-}
-
-.cardColor {
-  background-color: #fefbee;
-}
-
-.scrollArea {
-  height: 75px;
-}
-
-.feed-card {
-  width: 100%;
-  margin: auto;
-}
-
-.titleInput {
-  width: 100%;
+.q-card {
+  padding: 0.25em 1em;
 }
 </style>

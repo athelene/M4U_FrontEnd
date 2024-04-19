@@ -16,7 +16,7 @@
     </q-card-section>
 
     <q-card-section class="text-subitle2">
-      <q-parallax src="../../public/m4u_background.jpg" :height="200" />
+      <q-parallax src="../../m4u_background.jpg" :height="200" />
       <q-card-section>
         <div class="text-h6">
           Save, organize and share memories across time and generations
@@ -225,7 +225,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

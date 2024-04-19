@@ -1,8 +1,9 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
+import { CapacitorHttp } from "@capacitor/core";
 const reauthToken = window.localStorage.getItem("rt");
 
 //SERVERSTATE will be either DEV or PRODUCTION
@@ -15,7 +16,7 @@ const { user, isLoggedIn, token } = storeToRefs(userState);
 //ESTABLISH SERVER NAME TO SET UP PROPER API CALL
 let servername = "https://" + window.location.hostname;
 
-//FUNCTION TO CALL IF ANY AXIOS CALLS RECEIVE A 401 (unauthorized) ERROR
+//FUNCTION TO CALL IF ANY CALLS RECEIVE A 401 (unauthorized) ERROR
 // function unAuthRedirect() {
 //   location.href = serverState + "/login";
 // }
@@ -36,13 +37,10 @@ function unAuthRedirect() {
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";
 } else {
-  // servername = "https://login.memoriesforus.com";
   servername = "https://memoriesforusbe.azurewebsites.net";
 }
 
 export default {
-  //GET SASKEY FROM AZURE
-
   // QuickConnect stuff
   async getTodaysQuickConnect(today) {
     let myroute = servername + "/todaysqc";
@@ -116,6 +114,8 @@ export default {
   },
 
   async getQuestions(startDate, retrieveBlock) {
+    //gets quick connect questions from the starting date forward (e.g. sorted desc)
+    //retrieves the number of questions determined from the calling page
     let myroute = servername + "/getquestions";
     const params = {
       startDate: startDate,
@@ -258,14 +258,46 @@ export default {
 
   //USED TO CALL EVERY API IN THIS FILE
   async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.get(myroute, { params });
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
         unAuthRedirect();
       }
       console.log("send the user to the login page", error);
+    }
+  },
+
+  async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      console.log("postapi2 returns: ", res);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
     }
   },
 };

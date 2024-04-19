@@ -1770,12 +1770,9 @@ export default defineComponent({
     };
 
     const openEditMemory = async (storyType, helpType) => {
-      console.log("storyType is: ", storyType);
       editMemoryOpen.value = !editMemoryOpen.value;
       storyTypeID.value = storyType;
       helpTypeID.value = helpType;
-      console.log("incoming type is: ", helpType);
-      console.log("set helpTypeID is: ", helpTypeID.value);
     };
 
     const cancelEditMemory = async () => {

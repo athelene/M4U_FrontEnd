@@ -22,12 +22,22 @@
               <q-checkbox
                 left-label
                 v-model="makeDate"
+                checked-icon="task_alt"
                 color="teal"
                 label="Do you want a due date for items in this list?"
                 @click="toggleDate()"
               />
             </q-item>
-            {{ makeDate }}
+            <q-item>
+              <q-checkbox
+                left-label
+                v-model="makeAssigned"
+                label="Do you want to assign these items to people?"
+                checked-icon="task_alt"
+                color="teal"
+                @click="toggleAssigned()"
+              />
+            </q-item>
             <q-item>
               <q-select
                 filled
@@ -84,7 +94,7 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
-import { useRoute } from "vue-router";
+//import { useRoute } from "vue-router";
 import { ref, onMounted, computed } from "vue";
 import memoryActions from "../actions/memories";
 import listActions from "../actions/lists";
@@ -153,23 +163,16 @@ export default defineComponent({
     const makeDate = ref(false);
     const listDate = ref(null);
     const makeAssigned = ref(false);
+    const listAssigned = ref(null);
     const newListName = ref(null);
     const newListErrMsg = ref(null);
     const origName = ref(null);
     const origRights = ref(null);
 
     onMounted(() => {
+      console.log("editList.vue gets props: ", props);
       getCircleList();
-      getListDetails().then(() => {
-        console.log(
-          "list, newListName, orgName, selectedCircle, listColor",
-          list.value,
-          newListName.value,
-          origName.value,
-          selectedCircle.value,
-          listColor.value
-        );
-      });
+      getListDetails();
     });
 
     const getCircleList = async () => {
@@ -183,24 +186,29 @@ export default defineComponent({
     const getListDetails = async () => {
       await listActions.getListDetails(props.listID).then((listDetails) => {
         list.value = listDetails;
-        newListName.value = listDetails[0].ListName;
-        origName.value = listDetails[0].ListName;
-        selectedCircle.value = listDetails[0].ListCircle;
-        listColor.value = listDetails[0].ListColor;
-        origRights.value = listDetails[0].ListCircleRights;
-        if (listDetails[0].ListDate === 1) {
+        newListName.value = listDetails.ListName;
+        origName.value = listDetails.ListName;
+        selectedCircle.value = listDetails.ListCircle;
+        listColor.value = listDetails.ListColor;
+        origRights.value = listDetails.ListCircleRights;
+        if (listDetails.ListDate === 1) {
           makeDate.value = true;
         } else {
           makeDate.value = false;
         }
-        listCircleRights.value = listDetails[0].ListCircleRights;
+        if (listDetails.ListAssigned === 1) {
+          makeAssigned.value = true;
+        } else {
+          makeAssigned.value = false;
+        }
+        listCircleRights.value = listDetails.ListCircleRights;
       });
     };
 
     const closeEditList = async () => {
       newListErrMsg.value = null;
       newListName.value = origName.value;
-
+      console.log("should be closing the edit dialog");
       emit("listEdited", origName.value);
     };
 
@@ -212,7 +220,16 @@ export default defineComponent({
       }
     };
 
+    const toggleAssigned = async () => {
+      if (makeAssigned.value === true) {
+        listAssigned.value = 1;
+      } else {
+        listAssigned.value = 0;
+      }
+    };
     const editList = async () => {
+      toggleDate();
+      toggleAssigned();
       if (newListName.value === null) {
         newListErrMsg.value = "You must give the list a name.";
         return;
@@ -225,15 +242,6 @@ export default defineComponent({
         newBookErrMsg.value = "You must select a Share Group.";
         return;
       }
-      console.log(
-        "user, listID, newListName, listDate, selectedCircle, listColor",
-        user.UserID,
-        props.listID,
-        newListName.value,
-        listDate.value,
-        selectedCircle.value,
-        listColor.value
-      );
 
       await listActions
         .editList(
@@ -242,7 +250,9 @@ export default defineComponent({
           newListName.value,
           listDate.value,
           selectedCircle.value,
-          listColor.value
+          listCircleRights.value,
+          listColor.value,
+          listAssigned.value
         )
         .then(() => {
           origName.value = null;
@@ -271,6 +281,8 @@ export default defineComponent({
       rightsList,
       origRights,
       toggleDate,
+      toggleAssigned,
+      listDate,
     };
   },
 });

@@ -1,9 +1,9 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
-import { apiName } from "./apiName";
+//import { apiName } from "./apiName";
 import { CapacitorHttp } from "@capacitor/core";
 
 const reauthToken = window.localStorage.getItem("rt");
@@ -247,29 +247,29 @@ export default {
     return result;
   },
 
-  async callApi_orig(myroute, params) {
-    try {
-      let res = await axios.get(myroute, { params });
-      return res.data;
-    } catch (error) {
-      if (error.response.status === 401) {
-        unAuthRedirect();
-      }
-      console.log("send the user to the login page", error);
-    }
-  },
+  // async callApi_orig(myroute, params) {
+  //   try {
+  //     let res = await axios.get(myroute, { params });
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       unAuthRedirect();
+  //     }
+  //     console.log("send the user to the login page", error);
+  //   }
+  // },
 
-  async postApi_orig(myroute, params) {
-    try {
-      let res = await axios.post(myroute, { params });
-      return res.data;
-    } catch (error) {
-      if (error.response.status === 401) {
-        unAuthRedirect();
-      }
-      console.log("send the user to the login page", error);
-    }
-  },
+  // async postApi_orig(myroute, params) {
+  //   try {
+  //     let res = await axios.post(myroute, { params });
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       unAuthRedirect();
+  //     }
+  //     console.log("send the user to the login page", error);
+  //   }
+  // },
 
   async callApi(myroute, params) {
     const config = {

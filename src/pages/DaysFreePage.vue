@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center qpage bg-image text-accent">
-    <!--STARTING SHARE GROUPS PAGE-->
+    <!--STARTING DAYS FREE PAGE used to tell users how to get free days/months by providing questions or invitations-->
     <div
       class="text-center text-h4 text-info flex-center cardTitle text-weight-bolder"
     >
@@ -57,7 +57,7 @@ import { defineComponent, reactive } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import { ref, onMounted, computed } from "vue";
-import inviteActions from "../actions/invite"; //
+//import inviteActions from "../actions/invite"; //
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 
@@ -135,7 +135,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

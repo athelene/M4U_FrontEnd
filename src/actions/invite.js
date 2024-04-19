@@ -1,8 +1,10 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
+import { CapacitorHttp } from "@capacitor/core";
+
 const reauthToken = window.localStorage.getItem("rt");
 
 //SERVERSTATE will be either DEV or PRODUCTION
@@ -15,10 +17,6 @@ const { user, isLoggedIn, token } = storeToRefs(userState);
 //ESTABLISH SERVER NAME TO SET UP PROPER API CALL
 let servername = "https://" + window.location.hostname;
 
-//FUNCTION TO CALL IF ANY AXIOS CALLS RECEIVE A 401 (unauthorized) ERROR
-// function unAuthRedirect() {
-//   location.href = serverState + "/login";
-// }
 function unAuthRedirect() {
   if (servername === "http://localhost") {
     location.href = "http://localhost:9000";
@@ -36,7 +34,6 @@ function unAuthRedirect() {
 if (servername === "https://localhost") {
   servername = "http://localhost:8700";
 } else {
-  // servername = "https://login.memoriesforus.com";
   servername = "https://memoriesforusbe.azurewebsites.net";
 }
 
@@ -109,14 +106,46 @@ export default {
   },
 
   async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.get(myroute, { params });
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
         unAuthRedirect();
       }
       console.log("send the user to the login page", error);
+    }
+  },
+
+  async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      console.log("postapi2 returns: ", res);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
     }
   },
 };

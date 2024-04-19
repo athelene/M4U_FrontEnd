@@ -169,7 +169,14 @@ export default defineComponent({
     const mobileMsg = ref(false);
 
     onMounted(async () => {
+      if ($q.platform.is.mobile) {
+        mobileMsg.value = true;
+      } else {
+        mobileMsg.value = false;
+      }
+
       await setUpDates().then(async () => {
+        console.log("about to check if export is complete");
         await exportActions
           .checkExportCompleted(user.UserID)
           .then((complete) => {
@@ -280,7 +287,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../public/m4u_background.jpg);
+  background-image: url(../../m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }

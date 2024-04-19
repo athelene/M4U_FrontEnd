@@ -1,6 +1,7 @@
 //STATUS
 
-import axios from "axios";
+//import axios from "axios";
+import { CapacitorHttp } from "@capacitor/core";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
 const reauthToken = window.localStorage.getItem("rt");
@@ -96,15 +97,59 @@ export default {
     return result;
   },
 
+  // async callApi(myroute, params) {
+  //   try {
+  //     let res = await axios.get(myroute, { params });
+  //     return res.data;
+  //   } catch (error) {
+  //     if (error.response.status === 401) {
+  //       unAuthRedirect();
+  //     }
+  //     console.log("send the user to the login page", error);
+  //   }
+  // },
+
   async callApi(myroute, params) {
+    const config = {
+      method: "GET",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
     try {
-      let res = await axios.get(myroute, { params });
+      let res = await CapacitorHttp.request(config);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
         unAuthRedirect();
       }
       console.log("send the user to the login page", error);
+    }
+  },
+
+  async postApi(myroute, params) {
+    const config = {
+      method: "POST",
+      url: myroute,
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json, text/plain, */*",
+      },
+      params: params,
+    };
+
+    try {
+      let res = await CapacitorHttp.request(config);
+      console.log("postapi2 returns: ", res);
+      return res.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        unAuthRedirect();
+      }
     }
   },
 };
