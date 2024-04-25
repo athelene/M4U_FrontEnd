@@ -16,7 +16,7 @@
     </q-card-section>
 
     <q-card-section class="text-subitle2">
-      <q-parallax src="../../m4u_background.jpg" :height="200" />
+      <q-parallax src="/m4u_background.jpg" :height="200" />
       <q-card-section>
         <div class="text-h6">
           Save, organize and share memories across time and generations
@@ -187,8 +187,8 @@
 </template>
 
 <script>
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
+//import { useRoute } from "vue-router";
+//import { useRouter } from "vue-router";
 import { defineComponent, ref, onMounted, computed } from "vue";
 
 export default defineComponent({
@@ -225,7 +225,7 @@ export default defineComponent({
 }
 
 .bg-image {
-  background-image: url(../../m4u_background.jpg);
+  background-image: url(/m4u_background.jpg);
   background-size: contain;
   background-repeat: repeat;
 }
