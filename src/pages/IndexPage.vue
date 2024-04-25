@@ -1149,9 +1149,8 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
-//import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
-import actions from "../actions/memories"; //
+import actions from "../actions/memories";
 import mediaActions from "../actions/blobs";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
@@ -1284,6 +1283,7 @@ export default defineComponent({
       getMemoryTemplates(1);
       getHelpTypes();
       getLists();
+      console.log("userState is: ", userState);
     });
 
     const refresh = (done) => {
