@@ -440,16 +440,6 @@ export default {
             confirm.value = false;
             return;
           }
-          //   if (regResult !== "Success") {
-          //     errorMsg.value =
-          //       "Registration failed. Please try again or contact support.";
-          //   }
-          //   newUserID.value = regResult.UserID;
-
-          //   var checkoutUrl =
-          //     "https://buy.stripe.com/4gweWx4SDdFi4Q8dQQ?client_reference_id=" +
-          //     regResult.UserID;
-          //   window.location.href = checkoutUrl;
         });
     }
 
@@ -517,6 +507,7 @@ export default {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
+            console.log("loginResult is: ", loginResult);
             router.push({ path: "/home" });
           } else {
             spinner.value = false;

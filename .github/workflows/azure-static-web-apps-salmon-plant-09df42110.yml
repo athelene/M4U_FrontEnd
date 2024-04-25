@@ -15,8 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      ###### Updated to checkout@v3 from v2 on 2024-04-21 ######
-      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - uses: actions/checkout@v2
         with:
           submodules: true
       - name: Build And Deploy

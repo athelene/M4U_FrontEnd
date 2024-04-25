@@ -1,9 +1,7 @@
 //STATUS
 
-//import axios from "axios";
 import { useUserStore } from "stores/user";
 import { storeToRefs } from "pinia";
-//import { apiName } from "./apiName";
 import { CapacitorHttp } from "@capacitor/core";
 
 const reauthToken = window.localStorage.getItem("rt");
@@ -20,7 +18,7 @@ const { user, isLoggedIn, token } = storeToRefs(userState);
 //ESTABLISH SERVER NAME TO SET UP PROPER API CALL
 let servername = "https://" + window.location.hostname;
 
-//FUNCTION TO CALL IF ANY AXIOS CALLS RECEIVE A 401 (unauthorized) ERROR
+//FUNCTION TO CALL IF ANY CALLS RECEIVE A 401 (unauthorized) ERROR
 // function unAuthRedirect() {
 //   location.href = serverState + "/";
 // }
@@ -247,30 +245,6 @@ export default {
     return result;
   },
 
-  // async callApi_orig(myroute, params) {
-  //   try {
-  //     let res = await axios.get(myroute, { params });
-  //     return res.data;
-  //   } catch (error) {
-  //     if (error.response.status === 401) {
-  //       unAuthRedirect();
-  //     }
-  //     console.log("send the user to the login page", error);
-  //   }
-  // },
-
-  // async postApi_orig(myroute, params) {
-  //   try {
-  //     let res = await axios.post(myroute, { params });
-  //     return res.data;
-  //   } catch (error) {
-  //     if (error.response.status === 401) {
-  //       unAuthRedirect();
-  //     }
-  //     console.log("send the user to the login page", error);
-  //   }
-  // },
-
   async callApi(myroute, params) {
     const config = {
       method: "GET",
@@ -313,18 +287,5 @@ export default {
         unAuthRedirect();
       }
     }
-  },
-
-  async sample(userEmail, userPassword) {
-    let myroute = servername + "/auth";
-    const params = {
-      userEmail: userEmail,
-      userPassword: userPassword,
-    };
-
-    var result = this.postApi(myroute, params).then((res) => {
-      return res;
-    });
-    return result;
   },
 };
