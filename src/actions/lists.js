@@ -244,7 +244,6 @@ export default {
     let myroute = servername + "/markItemDone";
 
     const params = {
-      userID: userID,
       itemID: itemID,
       token: token,
       reauthToken: reauthToken,
