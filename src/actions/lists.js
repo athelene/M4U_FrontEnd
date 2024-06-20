@@ -172,6 +172,21 @@ export default {
     return result;
   },
 
+  async moveItems(oldList, newList) {
+    console.log("lists.js old, new", oldList, newList);
+    let myroute = servername + "/moveItems";
+    const params = {
+      oldList: oldList,
+      newList: newList,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async getListDetails(listID) {
     let myroute = servername + "/getlistdetails";
     const params = {

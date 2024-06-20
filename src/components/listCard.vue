@@ -50,6 +50,67 @@
         <!--END CONFIRM DELETE LIST DIALOG-->
 
         <!--START CONFIRM COMPLETED ITEM DELETE  DIALOG-->
+        <q-dialog v-model="moveDialog" persistent>
+          <q-card>
+            <q-card-section class="row items-center">
+              <span class="q-ml-sm"
+                >Select the list you want to move these items to.</span
+              >
+            </q-card-section>
+
+            <q-card-section>
+              <q-list bordered separator>
+                <q-item
+                  clickable
+                  v-ripple
+                  v-for="selectList in allListsList"
+                  :key="selectList.ListID"
+                  @click="setupMove(listID, selectList.ListID)"
+                >
+                  <q-item-section>
+                    <q-btn color="primary" :label="selectList.ListName">
+                    </q-btn>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn flat label="Cancel" color="primary" v-close-popup />
+            </q-card-actions>
+          </q-card>
+          <!--MOVE CONFIRMATION DIALOG-->
+          <q-dialog v-model="confirmMoveDialog" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar
+                  color="negative"
+                  text-color="white"
+                  icon="mdi-alert-circle"
+                />
+                <span class="q-ml-sm"
+                  >Are you sure you want to move these items?</span
+                >
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn flat label="Cancel" color="primary" v-close-popup />
+                <q-btn
+                  flat
+                  label="Move Items"
+                  color="primary"
+                  @click="moveItems()"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+          <!--END MOVE CONFIRMATION DIALOG-->
+
+          <!--END MOVE DIALOG-->
+        </q-dialog>
+
+        <!--END CONFIRM DELETE LIST DIALOG-->
+
+        <!--START MOVE TO ANOTHER LIST DIALOG-->
         <q-dialog v-model="completedDeleteConfirmOpen" persistent>
           <q-card>
             <q-card-section class="row items-center">
@@ -77,7 +138,7 @@
           </q-card>
         </q-dialog>
 
-        <!--END CONFIRM DELETE LIST DIALOG-->
+        <!--END MOVE TO ANOTHER LIST DIALOG-->
 
         <!--START ADD ITEM DIALOG-->
         <q-dialog v-model="openAddItem">
@@ -132,7 +193,14 @@
                   v-close-popup
                   @click="completedDeleteConfirmOpen = true"
                   v-if="listOwner === user.UserID || listCircleRights === 'W'"
-                  >Delete Completed Items
+                  >Delete Selected Items
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="moveCompletedItems()"
+                  v-if="listOwner === user.UserID || listCircleRights === 'W'"
+                  >Move Selected Items To Another List
                 </q-item>
                 <q-item
                   clickable
@@ -198,10 +266,14 @@ export default defineComponent({
     const lists = reactive([]);
     const listName = ref(null);
     const listID = ref(null);
+    const newList = ref(null);
     const listOwner = ref(null);
     const listCircleRights = ref(null);
     const listDueDate = ref(null);
     const listDialog = ref(false);
+    const allListsList = ref(null);
+    const moveDialog = ref(false);
+    const confirmMoveDialog = ref(false);
     const editListDialog = ref(false);
     const origListName = ref(null);
     const listAssigned = ref(null);
@@ -284,11 +356,47 @@ export default defineComponent({
       updateKey.value = 0;
     };
 
+    const getLists = async () => {
+      await listActions.getLists(user.UserID).then((lists) => {
+        allListsList.value = lists;
+      });
+    };
+
+    const moveCompletedItems = async () => {
+      moveDialog.value = true;
+      getLists();
+    };
+
+    const setupMove = async (currentList, selectedList) => {
+      console.log("setup Move old: ", currentList, "new: ", selectedList);
+      listID.value = currentList;
+      newList.value = selectedList;
+      confirmMoveDialog.value = true;
+    };
+
+    const moveItems = async () => {
+      console.log("moveItems old: ", listID.value, "new: ", newList.value);
+      updateKey.value = 1;
+      await listActions
+        .moveItems(listID.value, newList.value)
+        .then((lists) => {
+          allListsList.value = lists;
+        })
+        .then(() => {
+          confirmMoveDialog.value = false;
+          moveDialog.value = false;
+          getListDetails();
+          updateKey.value = 99;
+        });
+    };
+
     return {
       user,
       token,
       isLoggedIn,
       itemAdded,
+      allListsList,
+      getLists,
       listDeleteConfirmOpen,
       listClass,
       lists,
@@ -298,6 +406,11 @@ export default defineComponent({
       listDialog,
       listDueDate,
       listAssigned,
+      moveDialog,
+      confirmMoveDialog,
+      setupMove,
+      moveItems,
+      moveCompletedItems,
       closeListDialog,
       deleteList,
       editListDialog,

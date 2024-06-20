@@ -14,6 +14,7 @@
                 label="Item Title"
                 class="titleInput"
                 v-model="newItemName"
+                autofocus
               ></q-input>
             </q-item>
             <q-item v-if="useAssigned === 1">
