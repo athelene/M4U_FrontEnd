@@ -370,7 +370,6 @@ export default defineComponent({
     };
 
     const getConnections = async () => {
-      console.log("running getConnections");
       await connectionActions
         .getCircleMembersAll([primaryCircle.value])
         .then((incomingConnections) => {

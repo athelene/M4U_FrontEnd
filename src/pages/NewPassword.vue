@@ -159,11 +159,9 @@ export default {
 
     //Verify the code
     async function verify() {
-      console.log("incoming email is: ", email.value);
       await loginAction
         .resetCheck(email.value, verificationCode.value)
         .then((result) => {
-          console.log("result from check is: ", result);
           if (result === "Valid") {
             success.value = true;
           }
@@ -178,7 +176,6 @@ export default {
       await loginAction
         .resetPassword(email.value, userPassword.value)
         .then((regResult) => {
-          console.log("result from resetPasswrd is: ", regResult);
           if (regResult !== "successful") {
             errorMsg.value =
               "Update failed. Please try again or contact support.";

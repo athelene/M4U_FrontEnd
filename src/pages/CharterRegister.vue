@@ -307,9 +307,7 @@ export default {
           verificationCode.value
         )
         .then((regResult) => {
-          console.log("regResult is: ", regResult);
           if (regResult === "Success") {
-            console.log("should go to newchartersuccess");
             spinner.value = false;
             router.replace({ path: "/newchartersuccess" });
           } else {

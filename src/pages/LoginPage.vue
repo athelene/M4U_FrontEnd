@@ -507,7 +507,7 @@ export default {
             userState.userLogin(loginResult.user);
             userState.userToken(loginResult.token);
             window.localStorage.setItem("rt", loginResult.reauthToken);
-            console.log("loginResult is: ", loginResult);
+
             router.push({ path: "/home" });
           } else {
             spinner.value = false;

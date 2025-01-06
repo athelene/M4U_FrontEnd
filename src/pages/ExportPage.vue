@@ -176,11 +176,9 @@ export default defineComponent({
       }
 
       await setUpDates().then(async () => {
-        console.log("about to check if export is complete");
         await exportActions
           .checkExportCompleted(user.UserID)
           .then((complete) => {
-            console.log("complete is: ", complete);
             if (exportStarted.value === true && complete === "files ready") {
               router.push("/exportProcessing");
             }

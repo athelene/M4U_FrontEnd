@@ -338,7 +338,7 @@ export default {
       };
     }
 
-    if (storyData.StoryTypeID === 5 && servername === "http://localhost:9000") {
+    if (storyData.StoryTypeID === 5) {
       //This is a Help Memory for localhost and makes owner an admin
       params = {
         userID: 310,
@@ -379,11 +379,12 @@ export default {
   },
 
   async updateMemory(storyData, newCircle, setType) {
+    console.log("updateMemory is getting newCircle as: ", newCircle);
     let myroute = servername + "/updatememory";
     if (storyData.Hidden === true) {
-      var hidden = 1;
+      var hidden = Number(1);
     } else {
-      var hidden = 0;
+      var hidden = Number(0);
     }
     var params = {};
     if (storyData.StoryTypeID === 1) {
@@ -392,9 +393,9 @@ export default {
         StoryTitle: storyData.StoryTitle,
         StoryText: storyData.StoryText,
         StoryTypeID: Number(setType),
-        HelpTypeID: null,
-        Hidden: hidden,
-        CircleID: newCircle,
+        HelpTypeID: Number(0),
+        //       Hidden: Number(hidden),
+        CircleID: Number(newCircle),
         token: token,
         reauthToken: reauthToken,
       };
@@ -407,8 +408,8 @@ export default {
         StoryText: storyData.StoryText,
         StoryTypeID: Number(storyData.StoryTypeID),
         Interviewee: storyData.Interviewee,
-        Hidden: hidden,
-        CircleID: newCircle,
+        //       Hidden: Number(hidden),
+        CircleID: Number(newCircle),
         token: token,
         reauthToken: reauthToken,
       };
@@ -421,8 +422,8 @@ export default {
         StoryText: storyData.StoryText,
         StoryTypeID: Number(storyData.StoryTypeID),
         StoryIngredients: storyData.StoryIngredients,
-        Hidden: hidden,
-        CircleID: newCircle,
+        //      Hidden: Number(hidden),
+        CircleID: Number(newCircle),
         token: token,
         reauthToken: reauthToken,
       };
@@ -436,8 +437,8 @@ export default {
         StoryTypeID: Number(storyData.StoryTypeID),
         StoryIngredients: storyData.StoryIngredients,
         Interviewee: storyData.Interviewee,
-        Hidden: hidden,
-        CircleID: newCircle,
+        //      Hidden: Number(hidden),
+        CircleID: Number(newCircle),
         token: token,
         reauthToken: reauthToken,
       };
@@ -449,13 +450,15 @@ export default {
         StoryTitle: storyData.StoryTitle,
         StoryText: storyData.StoryText,
         StoryTypeID: Number(setType),
-        Hidden: hidden,
-        CircleID: newCircle,
-        HelpTypeID: storyData.HelpTypeID,
+        //      Hidden: Number(hidden),
+        CircleID: Number(newCircle),
+        HelpTypeID: Number(storyData.HelpTypeID),
         token: token,
         reauthToken: reauthToken,
       };
     }
+
+    console.log("params are: ", params);
 
     var result = this.postApi(myroute, params).then((res) => {
       return res;

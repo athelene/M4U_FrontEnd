@@ -60,12 +60,7 @@ export default defineComponent({
         var recordedDate = new Date(retDate.LastExport);
         var compareDate = new Date(retDate.LastExport);
         compareDate.setDate(recordedDate.getDate() + 1);
-        console.log(
-          "today, compareDate, retDate.ExportStarted",
-          today,
-          compareDate,
-          retDate.ExportStarted
-        );
+
         if (today > compareDate && retDate.ExportStarted === 1) {
           router.push("/exportComplete");
         }

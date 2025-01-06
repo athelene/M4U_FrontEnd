@@ -161,10 +161,8 @@ export default defineComponent({
     });
 
     const setEditFields = async (uEmail, uDate, uType) => {
-      console.log("starting setEditFields", uEmail, uDate, uType);
       editUserSubExpiration.value = uDate;
       memUser.value = uEmail;
-      console.log("editUserDialog.value: ", editUserDialog.value);
       editUserSubType.value = uType;
       editUserDialog.value = true;
     };

@@ -267,7 +267,6 @@
                 <!--FILTER BUTTONS FOR BOOKS END-->
                 <!--FILTER BUTTONS FOR LISTS-->
                 <q-btn
-                  v-if="user.AdminLevel === 100"
                   color="accent"
                   icon="mdi-check"
                   rounded
@@ -1283,7 +1282,6 @@ export default defineComponent({
       getMemoryTemplates(1);
       getHelpTypes();
       getLists();
-      console.log("userState is: ", userState);
     });
 
     const refresh = (done) => {
@@ -1864,14 +1862,15 @@ export default defineComponent({
     };
 
     const saveAsDraft = async () => {
-      circleID.value = null;
+      circleID.value = 0;
       draftCheck("userSelected");
     };
 
     const draftCheck = async (draftType) => {
+      console.log("draftType is ", draftType);
       if (draftType === "userSelected") {
         saveDraft.value = false;
-        circleID.value = null;
+        circleID.value = 0;
         validationCheck();
         return;
       }
@@ -2083,6 +2082,7 @@ export default defineComponent({
 
     const updateNewMemory = async () => {
       saveDraft.value = false;
+      console.log("line 2085, circleID.value is: ", circleID.value);
       if (circleID.value === "" || circleID.value === null) {
         circleID.value = null;
       } else {
@@ -2096,11 +2096,16 @@ export default defineComponent({
           StoryText: storyText.value,
           Interviewee: interviewee.value,
           StoryIngredients: storyIngredients.value,
-          Hidden: hidden.value,
+          //       Hidden: hidden.value,
           HelpTypeID: helpTypeID.value,
         };
       }
-
+      console.log(
+        "about to save using udateMemory(storyData.value, circleID.value, storyTypeID.value)",
+        storyData.value,
+        circleID.value,
+        storyTypeID.value
+      );
       await actions
         .updateMemory(storyData.value, circleID.value, storyTypeID.value)
         .then(() => {
@@ -2114,7 +2119,7 @@ export default defineComponent({
           interviewee.value = "";
           storyIngredients.value = "";
           circleID.value = null;
-          hidden.value = false;
+          //  hidden.value = false;
           newMemoryOpen.value = false;
           newSlideCount.value = 0;
 
