@@ -112,7 +112,6 @@ export default defineComponent({
       // if (Screen.xl === true) {
       //   videoHeight.value = "500";
       // }
-      console.log(videoHeight.value);
     });
 
     const getSasKey = async () => {

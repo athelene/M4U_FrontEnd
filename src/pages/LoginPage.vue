@@ -103,8 +103,8 @@
         <q-card width="85%" class="q-pa-lg">
           <q-card-section>
             {{ playstoreMsg }}
-            <a href="https://memoriesforus.com/register" target="blank"
-              >https://memoriesforus.com/register</a
+            <a href="https://www.memoriesforus.com" target="blank"
+              >https://www.memoriesforus.com</a
             >
           </q-card-section>
           <q-card-section>
@@ -373,7 +373,6 @@ export default {
     if (route.query.code) {
       invitationCode.value = route.query.code;
     } else {
-      console.log("no invitation found");
     }
 
     if (route.query.code) {

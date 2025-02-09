@@ -1867,7 +1867,6 @@ export default defineComponent({
     };
 
     const draftCheck = async (draftType) => {
-      console.log("draftType is ", draftType);
       if (draftType === "userSelected") {
         saveDraft.value = false;
         circleID.value = 0;
@@ -2082,7 +2081,7 @@ export default defineComponent({
 
     const updateNewMemory = async () => {
       saveDraft.value = false;
-      console.log("line 2085, circleID.value is: ", circleID.value);
+
       if (circleID.value === "" || circleID.value === null) {
         circleID.value = null;
       } else {
@@ -2096,16 +2095,10 @@ export default defineComponent({
           StoryText: storyText.value,
           Interviewee: interviewee.value,
           StoryIngredients: storyIngredients.value,
-          //       Hidden: hidden.value,
           HelpTypeID: helpTypeID.value,
         };
       }
-      console.log(
-        "about to save using udateMemory(storyData.value, circleID.value, storyTypeID.value)",
-        storyData.value,
-        circleID.value,
-        storyTypeID.value
-      );
+
       await actions
         .updateMemory(storyData.value, circleID.value, storyTypeID.value)
         .then(() => {
