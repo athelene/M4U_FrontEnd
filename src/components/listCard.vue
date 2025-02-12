@@ -4,9 +4,9 @@
   <div>
     <q-card :class="listClass" clickable @click="openListDispDialog()">
       <q-icon name="checklist" size="md"></q-icon>
-      <h5>
+      <div class="text-h6">
         {{ listName }}
-      </h5>
+      </div>
     </q-card>
 
     <!--  START OF LIST DIALOG -->
