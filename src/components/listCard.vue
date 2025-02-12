@@ -3,6 +3,7 @@
   <!--START OF LIST CARDS-->
   <div>
     <q-card :class="listClass" clickable @click="openListDispDialog()">
+      <q-icon name="checklist" size="md"></q-icon>
       <h5>
         {{ listName }}
       </h5>

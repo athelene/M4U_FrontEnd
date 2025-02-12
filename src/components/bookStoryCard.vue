@@ -1,6 +1,6 @@
 <template>
   <div class="q-mb-md">
-    <q-card vertical class="cardColor flat q-ma-md feed-card">
+    <q-card vertical class="cardColor flat q-ma-md feed-card q-mr-sm">
       <!--NEW MEDIA SECTION-->
       <q-card-section v-if="slideList && slideList.length > 0">
         <q-carousel

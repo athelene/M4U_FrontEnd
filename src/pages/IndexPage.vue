@@ -378,7 +378,7 @@
         <!--END OF MEMORY CARDS-->
 
         <!--START OF BOOK CARDS-->
-        <div v-if="filterType === 'book'">
+        <div v-if="filterType === 'book'" class="row justify-center">
           <div
             v-for="book in allBookList"
             :key="book.BookID"
@@ -393,11 +393,11 @@
         <!--END OF BOOK CARDS-->
 
         <!--START OF LIST CARDS-->
-        <div v-if="filterType === 'lists'">
+        <div v-if="filterType === 'lists'" class="row justify-center">
           <div
             v-for="list in allListsList"
             :key="list.ListID"
-            class="relative-center q-mt-md feed-card listClass"
+            class="relative-center q-mt-md list-card listClass"
           >
             <q-card class="text-center">
               <ListCard
@@ -2388,7 +2388,10 @@ export default defineComponent({
   width: 75%;
   margin: auto;
 }
-
+.list-card {
+  width: 25%;
+  margin: auto;
+}
 .newBookDialog {
   width: 85%;
   margin: auto;
@@ -2404,6 +2407,7 @@ export default defineComponent({
   cursor: pointer;
   cursor: hand;
   min-height: 4vh;
+  margin-right: 10px;
 }
 
 .qpage {
@@ -2421,6 +2425,7 @@ export default defineComponent({
 .bookWrap {
   display: flex;
   flex-wrap: wrap;
+  margin-right: 10px;
 }
 
 .filterTitle {

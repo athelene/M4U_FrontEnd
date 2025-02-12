@@ -1,6 +1,7 @@
 <template>
   <!--THIS PAGE IS A COMPONENT TO DISPLAY A SINGLE BOOK - BOOK ID SENT FROM INDEXPAGE-->
   <!--START OF BOOK CARDS-->
+
   <q-card
     clickable
     @click="openBookDispDialog(bookDetails.BookID)"
@@ -164,7 +165,7 @@
               v-for="bookMemory in bookMemoryList"
               :key="bookMemory.StoryID"
             >
-              <div class="q-mt-md feedCard">
+              <div class="q-mt-md q-mr-lg feedCard">
                 <BookStoryCard
                   :story="bookMemory"
                   @getToc="bookSlide = 'toc'"
