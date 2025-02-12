@@ -292,7 +292,7 @@ export default {
 
     try {
       let res = await CapacitorHttp.request(config);
-      console.log("postapi2 returns: ", res);
+
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {

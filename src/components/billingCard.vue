@@ -82,7 +82,7 @@ export default defineComponent({
   setup(props, { emit }) {
     onMounted(() => {
       if (props.userID) {
-        console.log("UserID is: ", props.userID);
+        console.log("UserID exists: ");
       }
     });
 
@@ -97,7 +97,6 @@ export default defineComponent({
     const address_postal_code = ref(null);
     const address_country = ref(null);
     const submitPayment = async () => {
-      console.log("props is: ", props);
       await loginAction.createCustomer(
         props.email,
         cardName.value,

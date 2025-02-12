@@ -114,7 +114,7 @@ export default defineComponent({
         })
         .then(() => {
           nextTick(() => {
-            console.log("ran nextTick");
+            console.log("nextTick");
           });
         });
     };

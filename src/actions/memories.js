@@ -379,7 +379,6 @@ export default {
   },
 
   async updateMemory(storyData, newCircle, setType) {
-    console.log("updateMemory is getting newCircle as: ", newCircle);
     let myroute = servername + "/updatememory";
     if (storyData.Hidden === true) {
       var hidden = Number(1);
@@ -457,8 +456,6 @@ export default {
         reauthToken: reauthToken,
       };
     }
-
-    console.log("params are: ", params);
 
     var result = this.postApi(myroute, params).then((res) => {
       return res;
@@ -557,7 +554,7 @@ export default {
   ) {
     var circleID = "";
     let myroute = servername + "/saveTemplate";
-    console.log("circleID for template is: ", templateCircle);
+
     if (templateCircle) {
       circleID = templateCircle;
     }

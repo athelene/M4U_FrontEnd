@@ -92,8 +92,9 @@
           <q-card-section class="q-pt-none">
             <q-uploader
               :url="servername"
-              label="Individual upload"
+              label="Upload Media"
               multiple
+              batch
               style="max-width: 300px"
               accept=".jpg, image/*"
               @uploaded="doneUpload()"

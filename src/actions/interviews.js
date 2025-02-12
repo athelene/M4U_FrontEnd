@@ -99,7 +99,7 @@ export default {
 
   async deleteQuestion(interviewID) {
     let myroute = servername + "/deleteinterviewquestion";
-    console.log("running deleteinterviewquestion, interviewID: ", interviewID);
+
     const params = {
       interviewID: interviewID,
       token: token,
@@ -173,7 +173,7 @@ export default {
 
     try {
       let res = await CapacitorHttp.request(config);
-      console.log("postapi2 returns: ", res);
+
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {

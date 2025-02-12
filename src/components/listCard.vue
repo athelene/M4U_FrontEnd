@@ -320,7 +320,6 @@ export default defineComponent({
         listDueDate.value = incomingList.ListDate;
         listAssigned.value = incomingList.ListAssigned;
         origListName.value = incomingList.ListName;
-        console.log(incomingList.ListColor);
         if (incomingList.ListColor === null) {
           listClass.value = "q-mb-md list-color2";
         } else {
@@ -368,14 +367,12 @@ export default defineComponent({
     };
 
     const setupMove = async (currentList, selectedList) => {
-      console.log("setup Move old: ", currentList, "new: ", selectedList);
       listID.value = currentList;
       newList.value = selectedList;
       confirmMoveDialog.value = true;
     };
 
     const moveItems = async () => {
-      console.log("moveItems old: ", listID.value, "new: ", newList.value);
       updateKey.value = 1;
       await listActions
         .moveItems(listID.value, newList.value)

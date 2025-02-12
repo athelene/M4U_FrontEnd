@@ -162,7 +162,6 @@ export default {
 
   async newBook(userID, bookTitle, tcDate, circleID, coverColor, coverFont) {
     let myroute = servername + "/newbook";
-    console.log("tcDate type is: ", typeof tcDate, tcDate);
     if (tcDate) {
       var sendTcDate = tcDate;
     } else {
@@ -274,7 +273,6 @@ export default {
 
     try {
       let res = await CapacitorHttp.request(config);
-      console.log("postapi2 returns: ", res);
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {

@@ -53,14 +53,12 @@ export default {
   },
 
   async sendInvitation(userID, invitee, email, tcDate, invitedBy, userSubType) {
-    console.log("userSubType is: ", userSubType);
     let myroute = servername + "/sendInvitation";
     // if (userSubType === 1) {
     //   myroute = servername + "/sendInvitation";
     // } else {
     //   myroute = servername + "/sendAdminInvitation";
     // }
-    console.log("myroute is: ", myroute);
 
     const params = {
       userID: userID,
@@ -140,7 +138,7 @@ export default {
 
     try {
       let res = await CapacitorHttp.request(config);
-      console.log("postapi2 returns: ", res);
+
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {

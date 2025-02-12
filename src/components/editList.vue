@@ -170,7 +170,6 @@ export default defineComponent({
     const origRights = ref(null);
 
     onMounted(() => {
-      console.log("editList.vue gets props: ", props);
       getCircleList();
       getListDetails();
     });
@@ -208,7 +207,7 @@ export default defineComponent({
     const closeEditList = async () => {
       newListErrMsg.value = null;
       newListName.value = origName.value;
-      console.log("should be closing the edit dialog");
+
       emit("listEdited", origName.value);
     };
 

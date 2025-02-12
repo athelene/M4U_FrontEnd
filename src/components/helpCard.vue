@@ -90,8 +90,6 @@ export default defineComponent({
 
       //   getMedia();
 
-      console.log("props are: ", props);
-
       if (Screen.xs === true) {
         imageHeight.value = "100px";
       }

@@ -115,15 +115,6 @@ export default {
   },
 
   async editItem(itemName, dueDate, assignedTo, notes, listID, itemID) {
-    console.log(
-      "sending: ",
-      itemName,
-      dueDate,
-      assignedTo,
-      notes,
-      listID,
-      itemID
-    );
     let myroute = servername + "/edititem";
     const params = {
       itemName: itemName,
@@ -173,7 +164,6 @@ export default {
   },
 
   async moveItems(oldList, newList) {
-    console.log("lists.js old, new", oldList, newList);
     let myroute = servername + "/moveItems";
     const params = {
       oldList: oldList,
@@ -317,7 +307,7 @@ export default {
 
     try {
       let res = await CapacitorHttp.request(config);
-      console.log("postapi2 returns: ", res);
+
       return res.data;
     } catch (error) {
       if (error.response.status === 401) {
