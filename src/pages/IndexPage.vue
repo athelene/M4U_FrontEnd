@@ -20,7 +20,7 @@
               class="text-h5 text-center text-accent text-weight-bolder filterTitle bg-secondary"
             >
               {{ filterText }}
-              <span v-if="user.AdminLevel === 100 && filterType === 'lists'">
+              <span v-if="filterType === 'lists'">
                 <q-icon
                   name="mdi-information-outline"
                   size="xs"
@@ -39,7 +39,7 @@
                   >New Book</q-btn
                 >
               </div>
-              <div v-if="user.AdminLevel === 100 && filterType === 'lists'">
+              <div v-if="filterType === 'lists'">
                 <q-btn color="accent" size="sm" @click="newListDialog = true"
                   >New List</q-btn
                 >
@@ -399,7 +399,7 @@
             :key="list.ListID"
             class="relative-center q-mt-md list-card listClass"
           >
-            <q-card class="text-center">
+            <q-card class="text-center relative-center q-mb-md">
               <ListCard
                 :listID="list.ListID"
                 @updateFeed="setFilter(filter)"
@@ -2389,8 +2389,9 @@ export default defineComponent({
   margin: auto;
 }
 .list-card {
-  width: 25%;
-  margin: auto;
+  width: 30%;
+  height: 175px;
+  margin-right: 10px;
 }
 .newBookDialog {
   width: 85%;
@@ -2407,7 +2408,6 @@ export default defineComponent({
   cursor: pointer;
   cursor: hand;
   min-height: 4vh;
-  margin-right: 10px;
 }
 
 .qpage {

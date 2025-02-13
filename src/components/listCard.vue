@@ -1,10 +1,10 @@
 <template>
   <!--THIS PAGE IS A COMPONENT TO DISPLAY A SINGLE LIST - LIST ID SENT FROM INDEXPAGE-->
   <!--START OF LIST CARDS-->
-  <div>
+  <div class="listCardHeight">
     <q-card :class="listClass" clickable @click="openListDispDialog()">
       <q-icon name="checklist" size="md"></q-icon>
-      <div class="text-h6">
+      <div class="text-subtitle1 ellipsis-3-lines">
         {{ listName }}
       </div>
     </q-card>
@@ -322,9 +322,9 @@ export default defineComponent({
         listAssigned.value = incomingList.ListAssigned;
         origListName.value = incomingList.ListName;
         if (incomingList.ListColor === null) {
-          listClass.value = "q-mb-md list-color2";
+          listClass.value = "q-mb-md list-color2 listClass";
         } else {
-          listClass.value = "q-mb-md list-" + incomingList.ListColor;
+          listClass.value = "q-mb-md listClass list-" + incomingList.ListColor;
         }
       });
     };
@@ -430,9 +430,17 @@ export default defineComponent({
 </script>
 <style scoped>
 .listCard {
-  height: 10vh;
+  height: 100%;
 }
 
+.listClass {
+  height: 100%;
+  margin-bottom: 10px;
+}
+
+.listCardHeight {
+  height: 175px;
+}
 .q-card {
   padding: 0.25em 1em;
 }
