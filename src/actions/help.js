@@ -189,6 +189,7 @@ export default {
   },
 
   async updateHelp(storyData, newCircle, setType) {
+    console.log("storyData in help.js FE is: ", storyData);
     let myroute = servername + "/updatememory";
     if (storyData.Hidden === true) {
       var hidden = 1;
@@ -269,39 +270,6 @@ export default {
     });
     return result;
   },
-
-  // async callApi(myroute, params) {
-  //   try {
-  //     let res = await axios.get(myroute, { params });
-  //     return res.data;
-  //   } catch (error) {
-  //     if (error.response.status === 401) {
-  //       unAuthRedirect();
-  //     }
-  //     console.log("send the user to the login page", error);
-  //   }
-  // },
-
-  // async postApi(myroute, params) {
-  //   try {
-  //     let res = await axios.post(
-  //       myroute,
-  //       { params },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     return res.data;
-  //   } catch (error) {
-  //     if (error.response.status === 401) {
-  //       //  unAuthRedirect();
-  //       console.log("error is: ", error.response);
-  //     }
-  //     console.log("send the user to the login page", error);
-  //   }
-  // },
 
   async callApi(myroute, params) {
     const config = {

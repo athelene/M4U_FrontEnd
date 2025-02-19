@@ -2,8 +2,8 @@
   <q-page class="flex-center qpage bg-image">
     <q-pull-to-refresh @refresh="refresh">
       <!--STARTING QUICK CONNECT-->
-      <div>
-        <qcCard class="qcCard"></qcCard>
+      <div :class="screenSize">
+        <qcCard></qcCard>
       </div>
 
       <div class="q-pa-md items-start flex-center">
@@ -15,39 +15,6 @@
             class="q-mt-md feed-card transparent flex-cemter"
             flat
           >
-            <!--HEADER DETERMINED BY FILTER-->
-            <div
-              class="text-h5 text-center text-accent text-weight-bolder filterTitle bg-secondary"
-            >
-              {{ filterText }}
-              <span v-if="filterType === 'lists'">
-                <q-icon
-                  name="mdi-information-outline"
-                  size="xs"
-                  @click="listInfo = true"
-                ></q-icon
-              ></span>
-              <span v-if="filterType === 'book'">
-                <q-icon
-                  name="mdi-information-outline"
-                  size="xs"
-                  @click="bookInfo = true"
-                ></q-icon
-              ></span>
-              <div v-if="filterType === 'book'">
-                <q-btn color="accent" size="sm" @click="newBookDialog = true"
-                  >New Book</q-btn
-                >
-              </div>
-              <div v-if="filterType === 'lists'">
-                <q-btn color="accent" size="sm" @click="newListDialog = true"
-                  >New List</q-btn
-                >
-              </div>
-            </div>
-
-            <!--END OF HEADER-->
-
             <!--Dialog for book info-->
 
             <q-dialog v-model="bookInfo">
@@ -133,170 +100,6 @@
             <!--end of new book dialog-->
           </q-card-section>
 
-          <!--START OF BUTTONS FOR MEMORY TYPES, BOOKS TYPES, LISTS, HELP-->
-          <q-card-section>
-            <q-item>
-              <q-btn-group rounded class="absolute-center">
-                <!--FILTER BUTTONS FOR MEMORIES START-->
-                <q-btn-dropdown
-                  color="accent"
-                  icon="mdi-thought-bubble-outline"
-                  rounded
-                  glossy
-                >
-                  <q-list>
-                    <q-item clickable v-close-popup @click="setFilter('all')">
-                      <q-item-section>
-                        <q-item-label>All Memories</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item clickable v-close-popup @click="setFilter('mine')">
-                      <q-item-section>
-                        <q-item-label>Memories Created by me</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="setFilter('journal')"
-                    >
-                      <q-item-section>
-                        <q-item-label>My Journal</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item
-                      v-if="draftLabel > 0"
-                      clickable
-                      v-close-popup
-                      @click="setFilter('drafts')"
-                    >
-                      <q-item-section>
-                        <span v-if="draftLabel > 0"
-                          >Drafts ({{ draftLabel }})</span
-                        >
-                      </q-item-section>
-                    </q-item>
-                    <q-item clickable v-close-popup @click="setSearch()">
-                      <q-item-section>
-                        <q-btn flat icon="mdi-magnify">Search Memories</q-btn>
-                      </q-item-section>
-                    </q-item>
-                    <q-item clickable v-close-popup @click="startFilter()">
-                      <q-item-section>
-                        <q-btn
-                          flat
-                          icon="mdi-filter-outline"
-                          color="accent"
-                          v-if="selectedMemoryType !== 0"
-                          >Filter Memories</q-btn
-                        >
-                        <q-btn
-                          flat
-                          icon="mdi-filter-outline"
-                          v-if="selectedMemoryType === 0"
-                          >Filter Memories</q-btn
-                        >
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
-                <!--FILTER BUTTONS FOR MEMORIES END-->
-
-                <!--FILTER BUTTONS FOR Share Group START-->
-                <q-btn-dropdown
-                  color="accent"
-                  icon="mdi-account-multiple-outline"
-                  rounded
-                  glossy
-                >
-                  <q-list>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="setGroup(circle.CircleID, circle.CircleName)"
-                      v-for="circle in buttonList"
-                      :key="circle.CircleID"
-                    >
-                      <q-item-section>
-                        {{ circle.CircleName }} Memories</q-item-section
-                      >
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
-
-                <!--FILTER BUTTONS FOR Share Group END-->
-
-                <!--FILTER BUTTONS FOR BOOKS START-->
-                <q-btn-dropdown
-                  color="accent"
-                  icon="mdi-book-open-page-variant-outline"
-                  rounded
-                  glossy
-                >
-                  <q-list>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="setFilter('allbooks')"
-                    >
-                      <q-item-section>
-                        <q-item-label>All Books</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="setFilter('mybooks')"
-                    >
-                      <q-item-section>
-                        <q-item-label>My Books</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="setFilter('timecapsule')"
-                    >
-                      <q-item-section>
-                        <q-item-label>Time Capsules</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
-
-                <!--FILTER BUTTONS FOR BOOKS END-->
-                <!--FILTER BUTTONS FOR LISTS-->
-                <q-btn
-                  color="accent"
-                  icon="mdi-check"
-                  rounded
-                  glossy
-                  @click="setFilter('lists')"
-                >
-                </q-btn>
-                <!--FILTER BUTTONS FOR HELP-->
-                <q-btn
-                  color="accent"
-                  icon="mdi-help"
-                  rounded
-                  glossy
-                  @click="setFilter('help')"
-                >
-                </q-btn>
-              </q-btn-group>
-            </q-item>
-            <!--START SEARCH-->
-            <q-item>
-              <div class="absolute-center">
-                <span
-                  class="text-center text-h6"
-                  v-if="selectedMemoryType !== 0"
-                  >(Filter On)</span
-                >
-              </div>
-            </q-item>
-            <!--END SEARCH-->
-          </q-card-section>
           <!--SEARCH DIALOG-->
           <q-dialog v-model="searchOn" persistent>
             <q-card style="min-width: 350px">
@@ -378,6 +181,7 @@
         <!--END OF MEMORY CARDS-->
 
         <!--START OF BOOK CARDS-->
+
         <div v-if="filterType === 'book'" class="row justify-center">
           <div
             v-for="book in allBookList"
@@ -1089,50 +893,195 @@
         </q-card>
       </q-dialog>
     </q-pull-to-refresh>
-    <q-page-sticky position="top-left" :offset="[8, 8]">
-      <q-btn-dropdown
-        fab
-        icon="add"
-        color="accent"
-        size="lg"
-        style="z-index: 3"
-      >
-        <q-list>
-          <q-item clickable v-close-popup @click="addMemoryDialog(1)">
-            <q-item-section>
-              <q-item-label>Memory</q-item-label>
-            </q-item-section>
-          </q-item>
 
-          <q-item clickable v-close-popup @click="addMemoryDialog(3)">
-            <q-item-section>
-              <q-item-label>Recipe</q-item-label>
-            </q-item-section>
-          </q-item>
+    <q-page-sticky expand position="top">
+      <div class="bg-primary toolbarSize">
+        <div class="q-pa-md q-gutter-y-sm">
+          <div class="row justify-between">
+            <div>
+              <span class="justify-center text-h4"> {{ filterText }} </span>
+              <span v-if="filterType === 'lists'">
+                <q-icon
+                  name="mdi-information-outline"
+                  size="xs"
+                  @click="listInfo = true"
+                ></q-icon
+              ></span>
+              <span v-if="filterType === 'book'">
+                <q-icon
+                  name="mdi-information-outline"
+                  size="xs"
+                  @click="bookInfo = true"
+                ></q-icon
+              ></span>
+            </div>
+            <div>
+              <q-btn-dropdown
+                icon="add"
+                color="dark"
+                size="xs"
+                class="q-mr-sm"
+                fab-mini
+              ></q-btn-dropdown>
+            </div>
+          </div>
 
-          <q-item clickable v-close-popup @click="addMemoryDialog(2)">
-            <q-item-section>
-              <q-item-label>Interview</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="addMemoryDialog(4)">
-            <q-item-section>
-              <q-item-label>Tradition</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item
-            clickable
-            v-close-popup
-            @click="addMemoryDialog(5)"
-            v-if="user.AdminLevel >= 100"
-          >
-            <q-item-section>
-              <q-item-label>Help</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+          <div>
+            <q-toolbar inset>
+              <q-btn-group rounded class="absolute-center">
+                <!--FILTER BUTTONS FOR MEMORIES START-->
+                <q-btn-dropdown
+                  color="accent"
+                  icon="mdi-thought-bubble-outline"
+                  rounded
+                  glossy
+                >
+                  <q-list>
+                    <q-item clickable v-close-popup @click="setFilter('all')">
+                      <q-item-section>
+                        <q-item-label>All Memories</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="setFilter('mine')">
+                      <q-item-section>
+                        <q-item-label>Memories Created by me</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="setFilter('journal')"
+                    >
+                      <q-item-section>
+                        <q-item-label>My Journal</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      v-if="draftLabel > 0"
+                      clickable
+                      v-close-popup
+                      @click="setFilter('drafts')"
+                    >
+                      <q-item-section>
+                        <span v-if="draftLabel > 0"
+                          >Drafts ({{ draftLabel }})</span
+                        >
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="setSearch()">
+                      <q-item-section>
+                        <q-btn flat icon="mdi-magnify">Search Memories</q-btn>
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="startFilter()">
+                      <q-item-section>
+                        <q-btn
+                          flat
+                          icon="mdi-filter-outline"
+                          color="accent"
+                          v-if="selectedMemoryType !== 0"
+                          >Filter Memories</q-btn
+                        >
+                        <q-btn
+                          flat
+                          icon="mdi-filter-outline"
+                          v-if="selectedMemoryType === 0"
+                          >Filter Memories</q-btn
+                        >
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+                <!--FILTER BUTTONS FOR MEMORIES END-->
+
+                <!--FILTER BUTTONS FOR Share Group START-->
+                <q-btn-dropdown
+                  color="accent"
+                  icon="mdi-account-multiple-outline"
+                  rounded
+                  glossy
+                >
+                  <q-list>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="setGroup(circle.CircleID, circle.CircleName)"
+                      v-for="circle in buttonList"
+                      :key="circle.CircleID"
+                    >
+                      <q-item-section>
+                        {{ circle.CircleName }} Memories</q-item-section
+                      >
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+
+                <!--FILTER BUTTONS FOR Share Group END-->
+
+                <!--FILTER BUTTONS FOR BOOKS START-->
+                <q-btn-dropdown
+                  color="accent"
+                  icon="mdi-book-open-page-variant-outline"
+                  rounded
+                  glossy
+                >
+                  <q-list>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="setFilter('allbooks')"
+                    >
+                      <q-item-section>
+                        <q-item-label>All Books</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="setFilter('mybooks')"
+                    >
+                      <q-item-section>
+                        <q-item-label>My Books</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="setFilter('timecapsule')"
+                    >
+                      <q-item-section>
+                        <q-item-label>Time Capsules</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+
+                <!--FILTER BUTTONS FOR BOOKS END-->
+                <!--FILTER BUTTONS FOR LISTS-->
+                <q-btn
+                  color="accent"
+                  icon="mdi-check"
+                  rounded
+                  glossy
+                  @click="setFilter('lists')"
+                >
+                </q-btn>
+                <!--FILTER BUTTONS FOR HELP-->
+                <q-btn
+                  color="accent"
+                  icon="mdi-help"
+                  rounded
+                  glossy
+                  @click="setFilter('help')"
+                >
+                </q-btn>
+              </q-btn-group>
+            </q-toolbar>
+          </div>
+        </div>
+      </div>
     </q-page-sticky>
+
     <q-page-sticky position="bottom-right" :offset="[8, 8]">
       <q-btn
         fab
@@ -1163,6 +1112,7 @@ import MediaCardEdit from "components/mediaCardEdit.vue";
 import bookActions from "../actions/books";
 import listActions from "../actions/lists";
 import helpActions from "../actions/help";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "IndexPage",
@@ -1253,6 +1203,7 @@ export default defineComponent({
     const selectedMemoryType = ref(0);
     const stories = ref(null);
     const newStoryID = ref(null);
+    const screenSize = ref(null);
     const storyID = ref(0);
     const storyData = ref(null);
     const storyIngredients = ref("");
@@ -1269,7 +1220,7 @@ export default defineComponent({
     const memoryTitle = ref("Memory");
     const helpList = ref([]);
     const helpTypeID = ref(null);
-
+    const $q = useQuasar();
     const booksDialogFlag = ref(false);
 
     onMounted(() => {
@@ -1282,7 +1233,27 @@ export default defineComponent({
       getMemoryTemplates(1);
       getHelpTypes();
       getLists();
+      setScreenSize();
+      $q.screen.setSizes({ sm: 400, md: 500, lg: 1000, xl: 2000 });
     });
+
+    const setScreenSize = () => {
+      if ($q.screen.width <= 450) {
+        screenSize.value = "smallScreen";
+        console.log("screenSize is: ", screenSize.value);
+        return;
+      }
+      if ($q.screen.width > 451 && $q.screen.width <= 775) {
+        screenSize.value = "mediumScreen";
+        console.log("screenSize is: ", screenSize.value);
+        return;
+      }
+      if ($q.screen.width > 776) {
+        screenSize.value = "largeScreen";
+      }
+      console.log("screenSize is: ", screenSize.value);
+      return;
+    };
 
     const refresh = (done) => {
       getAllStories(user.UserID.value);
@@ -2347,6 +2318,7 @@ export default defineComponent({
       saveDraft,
       saveTemplate,
       saveTemplateDialog,
+      screenSize,
       searchOn,
       searchMemories,
       searchTerm,
@@ -2398,6 +2370,20 @@ export default defineComponent({
   margin: auto;
 }
 
+.addButton {
+  margin-top: 1%;
+}
+.smallScreen {
+  margin-top: 30%;
+}
+
+.mediumScreen {
+  margin-top: 15%;
+}
+.largeScreen {
+  margin-top: 8%;
+}
+
 .bookCard {
   cursor: pointer;
   cursor: hand;
@@ -2410,9 +2396,17 @@ export default defineComponent({
   min-height: 4vh;
 }
 
+.infoClass {
+  margin-top: 8%;
+}
+
 .qpage {
   width: 100%;
   padding-top: 10%;
+}
+
+.toolbarSize {
+  width: 90%;
 }
 
 .bg-image {

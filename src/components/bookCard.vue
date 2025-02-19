@@ -13,7 +13,9 @@
           <q-avatar size="2.5rem" v-if="bookDetails.TimeCapsuleDate !== null">
             <q-icon size="2.5rem" color="" name="mdi-timer-sand"></q-icon>
           </q-avatar>
-          <span class="bookText">{{ bookDetails.BookTitle }}</span>
+          <span class="bookText ellipsis-3-lines">{{
+            bookDetails.BookTitle
+          }}</span>
         </p>
       </div>
 

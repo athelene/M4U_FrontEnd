@@ -130,9 +130,9 @@ export default defineComponent({
       const quickconnects = await qcActions
         .getTodaysQuickConnect(todayIs.value)
         .then((todaysQc) => {
-          if (todaysQc.ViewPointID === 0) {
+          if (todaysQc.ViewPointID === 0 || !todaysQc) {
             todaysQuestion.value =
-              "There isn't a Quick Connect Question today. Submit a suggestion and get a free month!";
+              "There isn't a Quick Connect Question today. Click on the menu and find Submit a Suggestion to get a free month!";
           } else {
             todaysQuestion.value = todaysQc.ViewPointQ;
             todaysQuestionID.value = todaysQc.ViewPointID;
