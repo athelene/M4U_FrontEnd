@@ -922,7 +922,52 @@
                 size="xs"
                 class="q-mr-sm"
                 fab-mini
-              ></q-btn-dropdown>
+              >
+                <q-list>
+                  <q-item clickable v-close-popup @click="addMemoryDialog(1)">
+                    <q-item-section>
+                      <q-item-label>Memory</q-item-label>
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-close-popup @click="addMemoryDialog(3)">
+                    <q-item-section>
+                      <q-item-label>Recipe</q-item-label>
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-close-popup @click="addMemoryDialog(2)">
+                    <q-item-section>
+                      <q-item-label>Interview</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup @click="addMemoryDialog(4)">
+                    <q-item-section>
+                      <q-item-label>Tradition</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup @click="newBookDialog = true">
+                    <q-item-section>
+                      <q-item-label>Book</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable v-close-popup @click="newListDialog = true">
+                    <q-item-section>
+                      <q-item-label>List</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="addMemoryDialog(5)"
+                    v-if="user.AdminLevel >= 100"
+                  >
+                    <q-item-section>
+                      <q-item-label>Help</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
             </div>
           </div>
 
