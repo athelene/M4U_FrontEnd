@@ -222,7 +222,6 @@
         persistent
       >
         <q-card style="min-width: 75%">
-          Memory Title: {{ memoryTitle }}
           <q-card-section>
             <q-btn
               icon="mdi-camera-plus"
