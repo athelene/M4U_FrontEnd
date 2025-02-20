@@ -1345,14 +1345,17 @@
             <q-card-actions align="right" class="q-mb-xl">
               <q-btn
                 icon="mdi-bookshelf"
-                label="Add to Books"
+                label="Books"
                 flat
+                stack
                 color="accent"
                 class="q-mb-xl"
                 @click="openBookDialog()"
               ></q-btn>
               <q-btn
                 flat
+                icon="mdi-close"
+                stack
                 label="Cancel"
                 color="dark"
                 class="q-mb-xl"
@@ -1360,6 +1363,8 @@
               />
               <q-btn
                 flat
+                icon="mdi-check-bold"
+                stack
                 label="Save"
                 color="dark"
                 class="q-mb-xl"

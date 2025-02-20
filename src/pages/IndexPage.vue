@@ -717,45 +717,56 @@
             </q-item>
           </q-card-section>
 
-          <q-card-actions align="right">
-            <q-btn
-              icon="mdi-bookshelf"
-              label="Add to Books"
-              flat
-              color="accent"
-              class="q-mb-xl"
-              @click="openBookDialog()"
-            ></q-btn>
-            <q-btn
-              icon="mdi-content-save"
-              label="Save Draft"
-              flat
-              color="accent"
-              class="q-mb-xl"
-              @click="draftCheck('userSelected')"
-            ></q-btn>
-            <q-btn
-              icon="mdi-content-duplicate"
-              label="Save as Template"
-              flat
-              color="accent"
-              class="q-mb-xl"
-              @click="saveTemplateDialog = true"
-            ></q-btn>
-            <q-btn
-              flat
-              label="Cancel"
-              color="dark"
-              class="q-mb-xl"
-              @click="cancelNewMemory()"
-            />
-            <q-btn
-              flat
-              label="Save"
-              color="dark"
-              class="q-mb-xl"
-              @click="draftCheck('unknown')"
-            />
+          <q-card-actions align="around">
+            <div>
+              <q-btn
+                icon="mdi-bookshelf"
+                flat
+                stack
+                label="Books"
+                color="accent"
+                class="q-mb-sm"
+                @click="openBookDialog()"
+              ></q-btn>
+              <q-btn
+                icon="mdi-content-save"
+                flat
+                stack
+                label="Draft"
+                color="accent"
+                class="q-mb-sm"
+                @click="draftCheck('userSelected')"
+              ></q-btn>
+              <q-btn
+                icon="mdi-content-duplicate"
+                flat
+                stack
+                label="Template"
+                color="accent"
+                class="q-mb-sm"
+                @click="saveTemplateDialog = true"
+              ></q-btn>
+            </div>
+            <div>
+              <q-btn
+                icon="mdi-close"
+                flat
+                stack
+                label="Cancel"
+                color="dark"
+                class="q-mb-sm"
+                @click="cancelNewMemory()"
+              />
+              <q-btn
+                flat
+                stack
+                label="Save"
+                icon="mdi-check-bold"
+                color="dark"
+                class="q-mb-sm"
+                @click="draftCheck('unknown')"
+              />
+            </div>
           </q-card-actions>
         </q-card>
 
@@ -1295,7 +1306,7 @@ export default defineComponent({
       if ($q.screen.width > 776 && $q.screen.width <= 899) {
         screenSize.value = "largeScreen";
       }
-      if ($q.screen.width >= 900) {
+      if ($q.screen.width >= 900 && $q.screen.width <= 1199) {
         screenSize.value = "xlScreen";
       }
       if ($q.screen.width >= 1200) {
