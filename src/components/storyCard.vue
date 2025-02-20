@@ -847,7 +847,7 @@
           transition-show="rotate"
           transition-hide="rotate"
         >
-          <q-card width="100%">
+          <q-card>
             <q-card-section>
               <q-btn
                 icon="mdi-camera-plus"
@@ -2121,6 +2121,11 @@ export default defineComponent({
 
 .commentHeader {
   font-weight: bold;
+}
+
+.stayAtTop {
+  position: fixed;
+  align-items: right;
 }
 
 .preview-text {

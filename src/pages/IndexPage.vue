@@ -890,20 +890,24 @@
     </q-pull-to-refresh>
 
     <q-page-sticky expand position="top">
-      <div class="bg-primary toolbarSize">
+      <div class="toolbarSize">
         <div class="q-pa-md q-gutter-y-sm">
           <div class="row justify-between">
             <div>
-              <span class="justify-center text-h4"> {{ filterText }} </span>
+              <span class="justify-center text-h4 text-weight-bolder">
+                {{ filterText }}
+              </span>
               <span v-if="filterType === 'lists'">
                 <q-icon
+                  class="setSuperscript"
                   name="mdi-information-outline"
-                  size="xs"
+                  size="sm"
                   @click="listInfo = true"
                 ></q-icon
               ></span>
               <span v-if="filterType === 'book'">
                 <q-icon
+                  class="setSuperscript"
                   name="mdi-information-outline"
                   size="xs"
                   @click="bookInfo = true"
@@ -2457,9 +2461,12 @@ export default defineComponent({
   width: 100%;
   padding-top: 10%;
 }
+.setSuperscript {
+  vertical-align: super;
+}
 
 .toolbarSize {
-  width: 90%;
+  width: 100%;
 }
 
 .bg-image {
