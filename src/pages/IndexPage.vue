@@ -1293,8 +1293,14 @@ export default defineComponent({
         console.log("screenSize is: ", screenSize.value);
         return;
       }
-      if ($q.screen.width > 776) {
+      if ($q.screen.width > 776 && $q.screen.width <= 899) {
         screenSize.value = "largeScreen";
+      }
+      if ($q.screen.width >= 900) {
+        screenSize.value = "xlScreen";
+      }
+      if ($q.screen.width >= 1200) {
+        screenSize.value = "xxlScreen";
       }
       console.log("screenSize is: ", screenSize.value);
       return;
@@ -2429,6 +2435,13 @@ export default defineComponent({
   margin-top: 8%;
 }
 
+.xlScreen {
+  margin-top: 5%;
+}
+
+.xxlScreen {
+  margin-top: 2%;
+}
 .bookCard {
   cursor: pointer;
   cursor: hand;
