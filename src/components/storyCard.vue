@@ -628,36 +628,6 @@
             </q-card-section>
             <!--END NEW MEDIA SECTION-->
 
-            <!--START FULLSCREEN IMAGE DIALOG-->
-            <!-- <q-dialog v-model="imageFullScreen">
-              <q-card class="fullScreenImage">
-                <q-card-section class="row items-center q-pb-none">
-                  <div class="text-h6"></div>
-                  <q-space />
-                  <q-btn icon="close" flat round dense v-close-popup />
-                </q-card-section>
-
-                <q-card-section>
-                  <q-img
-                    oncontextmenu="return false;"
-                    :src="storyURL"
-                    height="100%"
-                    fit="contain"
-                    responsive
-                    fullscreen
-                  >
-                    <template v-slot:loading>
-                      <div class="accent">
-                        <q-spinner-ios />
-                        <div class="q-mt-md">Loading...</div>
-                      </div>
-                    </template>
-                  </q-img>
-                </q-card-section>
-              </q-card>
-            </q-dialog> -->
-            <!--END OF MEDIA SECTION FOR FULLSCREEN DIALOG-->
-
             <q-card-section>
               <div class="text-h6">{{ story.StoryTitle }} TEST HERE</div>
             </q-card-section>
@@ -1326,15 +1296,6 @@
                   color="teal"
                 />
               </q-item>
-              <q-item>
-                <q-btn
-                  icon="mdi-bookshelf"
-                  label="Add to Books"
-                  flat
-                  class="text-accent"
-                  @click="openBookDialog()"
-                ></q-btn
-              ></q-item>
             </q-card-section>
 
             <!--START TRADITIONS DIALOG-->
@@ -1383,12 +1344,27 @@
 
             <q-card-actions align="right" class="q-mb-xl">
               <q-btn
+                icon="mdi-bookshelf"
+                label="Add to Books"
+                flat
+                color="accent"
+                class="q-mb-xl"
+                @click="openBookDialog()"
+              ></q-btn>
+              <q-btn
                 flat
                 label="Cancel"
-                color="primary"
+                color="dark"
+                class="q-mb-xl"
                 @click="cancelEditMemory()"
               />
-              <q-btn flat label="Save" color="primary" @click="draftCheck()" />
+              <q-btn
+                flat
+                label="Save"
+                color="dark"
+                class="q-mb-xl"
+                @click="draftCheck()"
+              />
             </q-card-actions>
           </q-card>
 

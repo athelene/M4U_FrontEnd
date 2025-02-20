@@ -462,7 +462,7 @@
                       options: ['left', 'center', 'right', 'justify'],
                     },
                   ],
-                  ['unordered', 'ordered', 'outdent', 'indent'],
+                  ['unordered', 'ordered', 'outdent', 'indent', 'fullscreen'],
                 ]"
               />
               <!--full editor for ingredients-->
@@ -648,7 +648,7 @@
                       ],
                     },
                   ],
-                  ['unordered', 'ordered', 'outdent', 'indent'],
+                  ['unordered', 'ordered', 'outdent', 'indent', 'fullscreen'],
                 ]"
                 :fonts="{
                   arial: 'Arial',
@@ -716,48 +716,44 @@
                 tabindex="8"
               />
             </q-item>
-
-            <q-item>
-              <q-btn
-                icon="mdi-bookshelf"
-                label="Add to Books"
-                flat
-                class="text-accent"
-                @click="openBookDialog()"
-              ></q-btn
-            ></q-item>
-            <q-item>
-              <q-btn
-                icon="mdi-content-save"
-                label="Save Draft"
-                flat
-                class="text-accent"
-                @click="draftCheck('userSelected')"
-              ></q-btn
-            ></q-item>
-            <q-item>
-              <q-btn
-                icon="mdi-content-duplicate"
-                label="Save as Template"
-                flat
-                class="text-accent"
-                @click="saveTemplateDialog = true"
-              ></q-btn
-            ></q-item>
           </q-card-section>
 
           <q-card-actions align="right">
             <q-btn
+              icon="mdi-bookshelf"
+              label="Add to Books"
+              flat
+              color="accent"
+              class="q-mb-xl"
+              @click="openBookDialog()"
+            ></q-btn>
+            <q-btn
+              icon="mdi-content-save"
+              label="Save Draft"
+              flat
+              color="accent"
+              class="q-mb-xl"
+              @click="draftCheck('userSelected')"
+            ></q-btn>
+            <q-btn
+              icon="mdi-content-duplicate"
+              label="Save as Template"
+              flat
+              color="accent"
+              class="q-mb-xl"
+              @click="saveTemplateDialog = true"
+            ></q-btn>
+            <q-btn
               flat
               label="Cancel"
-              color="accent"
+              color="dark"
               class="q-mb-xl"
               @click="cancelNewMemory()"
             />
             <q-btn
               flat
               label="Save"
-              color="accent"
+              color="dark"
               class="q-mb-xl"
               @click="draftCheck('unknown')"
             />
