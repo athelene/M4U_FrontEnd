@@ -79,30 +79,29 @@
           {{ story.UserDisplayName }},
           {{ story.date }}
         </span>
-        <span v-if="user.AdminLevel >= 5">
-          <q-btn
-            class="text-accent"
-            flat
-            round
-            icon="mdi-pencil-outline"
-            @click="openEditMemory(story.StoryTypeID, story.HelpType)"
-            v-if="
-              story.Userid === user.UserID ||
-              (story.StoryTypeID === 5 && user.AdminLevel >= 5)
-            "
-          ></q-btn>
-          <q-btn
-            class="text-accent"
-            flat
-            round
-            icon="mdi-delete-forever-outline"
-            v-if="
-              story.Userid === user.UserID ||
-              (story.StoryTypeID === 5 && user.AdminLevel >= 5)
-            "
-            @click="verifyDelete()"
-          ></q-btn
-        ></span>
+
+        <q-btn
+          class="text-accent"
+          flat
+          round
+          icon="mdi-pencil-outline"
+          @click="openEditMemory(story.StoryTypeID, story.HelpType)"
+          v-if="
+            story.Userid === user.UserID ||
+            (story.StoryTypeID === 5 && user.AdminLevel === 100)
+          "
+        ></q-btn>
+        <q-btn
+          class="text-accent"
+          flat
+          round
+          icon="mdi-delete-forever-outline"
+          v-if="
+            story.Userid === user.UserID ||
+            (story.StoryTypeID === 5 && user.AdminLevel === 100)
+          "
+          @click="verifyDelete()"
+        ></q-btn>
         <!--DIALOG TO VERIFY DELETING A MEMORY-->
         <q-dialog v-model="verifyDeleteDialog" persistent>
           <q-card>
@@ -353,19 +352,26 @@
 
             <q-card-section class="text-overline"
               >{{ story.UserDisplayName }}, {{ story.date }}
+
               <q-btn
                 class="text-accent"
                 flat
                 round
                 icon="mdi-pencil-outline"
-                v-if="story.Userid === user.UserID"
+                v-if="
+                  story.UserID === user.UserID ||
+                  (story.StoryTypeID === 5 && user.AdminLevel === 100)
+                "
               ></q-btn>
               <q-btn
                 class="text-accent"
                 flat
                 round
                 icon="mdi-delete-forever-outline"
-                v-if="story.Userid === user.UserID"
+                v-if="
+                  story.UserID === user.UserID ||
+                  (story.StoryTypeID === 5 && user.AdminLevel === 100)
+                "
               ></q-btn>
             </q-card-section>
             <q-card-section class="col-4 text-h3">
@@ -1590,6 +1596,7 @@ export default defineComponent({
       } else {
         newHidden.value = true;
       }
+      console.log("AdminLevel", user.AdminLevel);
 
       getStorySasKey();
 
