@@ -256,7 +256,10 @@
         <!--START CONFIRM DELETE MEMORY FROM BOOK DIALOG-->
         <q-dialog v-model="memoryDeleteConfirmOpen" persistent>
           <q-card>
-            <q-card-section class="row items-center">
+            <q-card-section
+              class="row items-center"
+              v-if="user.AdminLevel === 100"
+            >
               <q-avatar
                 color="negative"
                 text-color="white"
