@@ -13,9 +13,12 @@
           <q-list>
             <q-item>
               <q-input
+                ref="inputRef"
                 label="New book name"
                 class="titleInput"
                 v-model="newBookTitle"
+                counter
+                maxlength="50"
               ></q-input>
             </q-item>
             <q-item>

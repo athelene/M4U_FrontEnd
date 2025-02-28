@@ -242,6 +242,7 @@
                     outlined
                     bottom-slots
                     v-model="qUploadFle"
+                    max-files="30"
                     label="Click to add a photo or video"
                   >
                     <template v-slot:prepend>
@@ -1295,12 +1296,10 @@ export default defineComponent({
     const setScreenSize = () => {
       if ($q.screen.width <= 450) {
         screenSize.value = "smallScreen";
-        console.log("screenSize is: ", screenSize.value);
         return;
       }
       if ($q.screen.width > 451 && $q.screen.width <= 775) {
         screenSize.value = "mediumScreen";
-        console.log("screenSize is: ", screenSize.value);
         return;
       }
       if ($q.screen.width > 776 && $q.screen.width <= 899) {
@@ -1312,7 +1311,6 @@ export default defineComponent({
       if ($q.screen.width >= 1200) {
         screenSize.value = "xxlScreen";
       }
-      console.log("screenSize is: ", screenSize.value);
       return;
     };
 

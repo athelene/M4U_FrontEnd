@@ -13,10 +13,10 @@
         <p class="text-h5 text-info">Import Memories</p>
         <p>
           You can import multiple photos at once. Each photo will create a
-          separate memory. All of those memories will be saved into a new book.
-          Select a book for your memories then select and upload the photos.
-          This can be useful if you have a large number of photos you want to
-          save to browse through like a photo album.
+          separate memory. All of those memories will be saved into a book.
+          Select a book where your memories will be saved. Then select and
+          upload the photos. This can be useful if you have a large number of
+          photos you want to save to browse through like a photo album.
         </p>
         <q-btn
           icon="mdi-bookshelf"
@@ -25,10 +25,6 @@
           class="text-accent"
           @click="openBookDialog()"
         ></q-btn>
-
-        <p v-if="importBookTitle !== null">
-          Importing to {{ importBookTitle }}
-        </p>
       </div>
 
       <!--ADD BOOKS DIALOG INSIDE OF EDIT DIALOG-->
@@ -95,6 +91,9 @@
               label="Upload Media"
               multiple
               batch
+              max-total-size="300000000"
+              max-files="50"
+              @rejected="onRejectedUpload"
               style="max-width: 300px"
               accept=".jpg, image/*"
               @uploaded="doneUpload()"
@@ -126,6 +125,24 @@
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Cancel" v-close-popup />
           </q-card-actions>
+
+          <q-dialog v-model="rejectedDialogSwitch">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">File Limits Exceeded</div>
+              </q-card-section>
+
+              <q-card-section class="q-pt-none">
+                You can upload a maximum of 50 files and up to 300 MB of data.
+                Your selection exceeded the limit. Please select a smaller
+                number or size of files.
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn flat label="Close" color="primary" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
         </q-card>
       </q-dialog>
       <!-- End Dialog to select files-->
@@ -134,11 +151,16 @@
       <q-dialog v-model="doneUploadDialog">
         <q-card>
           <q-card-section>
-            <div class="text-h6">Uploading Complete</div>
+            <div class="text-h5 text-center">Uploading Complete</div>
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            Your files are saved into your book.
+            <p class="text-center text-h6">
+              Your files are saved into your book.
+            </p>
+            <p class="text-center text-h6 text-bold">
+              It may take a few minutes for all of the pictures to appear.
+            </p>
           </q-card-section>
 
           <q-card-actions align="right">
@@ -193,6 +215,7 @@ export default defineComponent({
     const selectFilesDialog = ref(false);
     const doneUploadDialog = ref(false);
     const servername = ref("");
+    const rejectedDialogSwitch = ref(false);
 
     onMounted(async () => {
       if ($q.platform.is.mobile) {
@@ -241,6 +264,9 @@ export default defineComponent({
       doneUploadDialog.value = true;
     };
 
+    const onRejectedUpload = async () => {
+      rejectedDialogSwitch.value = true;
+    };
     return {
       openBookDialog,
       bookList,
@@ -256,6 +282,8 @@ export default defineComponent({
       token,
       newBookDialog,
       newBookAdded,
+      rejectedDialogSwitch,
+      onRejectedUpload,
       setBook,
       selectFilesDialog,
       doneUpload,

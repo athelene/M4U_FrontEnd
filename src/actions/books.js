@@ -238,6 +238,34 @@ export default {
     return result;
   },
 
+  async removeMemoryCompletely(storyID, bookID) {
+    let myroute = servername + "/removeMemoryCompletely";
+    const params = {
+      storyID: storyID,
+      bookID: bookID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
+  async removeMemoryFromBook(storyID, bookID) {
+    let myroute = servername + "/removeMemoryFromBook";
+    const params = {
+      storyID: storyID,
+      bookID: bookID,
+      token: token,
+      reauthToken: reauthToken,
+    };
+    var result = this.callApi(myroute, params).then((res) => {
+      return res;
+    });
+    return result;
+  },
+
   async callApi(myroute, params) {
     const config = {
       method: "GET",
@@ -280,15 +308,4 @@ export default {
       }
     }
   },
-  // async callApi(myroute, params) {
-  //   try {
-  //     let res = await axios.get(myroute, { params });
-  //     return res.data;
-  //   } catch (error) {
-  //     if (error.response.status === 401) {
-  //       unAuthRedirect();
-  //     }
-  //     console.log("send the user to the login page", error);
-  //   }
-  // },
 };

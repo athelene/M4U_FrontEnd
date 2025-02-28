@@ -13,9 +13,7 @@
           <q-avatar size="2.5rem" v-if="bookDetails.TimeCapsuleDate !== null">
             <q-icon size="2.5rem" color="" name="mdi-timer-sand"></q-icon>
           </q-avatar>
-          <span class="bookText ellipsis-3-lines">{{
-            bookDetails.BookTitle
-          }}</span>
+          <span class="bookText">{{ bookDetails.BookTitle }}</span>
         </p>
       </div>
 
@@ -124,6 +122,7 @@
             ref="carousel"
             infinite
           >
+            <!--  BEGINNING OF TOC -->
             <q-carousel-slide name="toc" class="column no-wrap flex-center">
               <div v-if="bookContent === false">
                 <q-icon
@@ -144,23 +143,36 @@
                 <p class="text-h5" text-info>Table of Memories</p>
                 <q-list bordered separator>
                   <q-item
-                    clickable
                     v-ripple
                     v-for="story in bookMemoryList"
                     :key="story.StoryID"
-                    @click="bookSlide = story.StoryID"
                   >
-                    <q-item-section>
-                      <p class="text-subtitle1">
-                        {{ story.StoryTitle }}
+                    <q-item-section
+                      clickable
+                      @click="bookSlide = story.StoryID"
+                    >
+                      <q-btn flat>
+                        <span text-subtitle ellipsis-3-lines>{{
+                          story.StoryTitle
+                        }}</span>
                         <span v-if="story.StoryTypeID === 4"> - Tradition</span>
-                      </p>
+                      </q-btn>
+                    </q-item-section>
+
+                    <q-item-section side top>
+                      <q-btn
+                        flat
+                        @click="openMemoryDeleteDispDialog(story.StoryID)"
+                      >
+                        <q-icon color="primary" name="close" />
+                      </q-btn>
                     </q-item-section>
                   </q-item>
                 </q-list>
               </div>
             </q-carousel-slide>
-
+            <!-- END OF TOC-->
+            <!-- START OF MEMORY SLIDES-->
             <q-carousel-slide
               :name="bookMemory.StoryID"
               class="no-wrap flex-center"
@@ -172,10 +184,12 @@
                   :story="bookMemory"
                   @getToc="bookSlide = 'toc'"
                   @updateFeed="getBookContent"
+                  @updateMemoryList="getBookContent"
                   class="feedCard"
                 ></BookStoryCard>
               </div>
             </q-carousel-slide>
+            <!-- END OF MEMORY SLIDES-->
             <template v-slot:control>
               <!--controls for book carousel-->
               <q-carousel-control
@@ -238,7 +252,40 @@
             </q-card-actions>
           </q-card>
         </q-dialog>
+        <!--END CONFIRM DELETE BOOK DIALOG-->
+        <!--START CONFIRM DELETE MEMORY FROM BOOK DIALOG-->
+        <q-dialog v-model="memoryDeleteConfirmOpen" persistent>
+          <q-card>
+            <q-card-section class="row items-center">
+              <q-avatar
+                color="negative"
+                text-color="white"
+                icon="mdi-alert-circle"
+              />
+              <span class="q-ml-sm text-center">
+                <q-btn text-color="dark" @click="removeMemoryFromBook()"
+                  >Remove Memory From This Book</q-btn
+                >
+                <p class="text-h6">OR</p>
+                <q-btn text-color="negative" @click="removeMemoryCompletely()"
+                  >Delete Memory Everywhere & Permanently
+                  <p>CAUTION: THIS CANNOT BE RESTORED</p>
+                </q-btn>
+              </span>
+            </q-card-section>
 
+            <q-card-actions align="right">
+              <q-btn flat label="Cancel" color="primary" v-close-popup />
+              <q-btn
+                @click="deleteBook(bookDetails.BookID)"
+                flat
+                label="Delete"
+                color="primary"
+                v-close-popup
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
         <!--END CONFIRM DELETE BOOK DIALOG-->
         <q-card-actions>
           <q-btn
@@ -288,6 +335,7 @@ export default defineComponent({
     const tcClass = ref("bookLook shadow-box  shadow-4 timeCapsule");
     const bookContent = ref(false);
     const bookDeleteConfirmOpen = ref(false);
+    const memoryDeleteConfirmOpen = ref(false);
     const bookSasKey = ref(null);
     const bookSlide = ref("toc");
     const bookDetails = reactive([]);
@@ -296,6 +344,9 @@ export default defineComponent({
     const circleList = reactive([]);
     const editBookTitleDialog = ref(false);
     const origBookTitle = ref(null);
+    const deleteMemoryTitle = ref(null);
+    const deleteMemoryID = ref(null);
+    const memoryDeleteStoryID = ref(null);
 
     onMounted(() => {
       getBookDetails();
@@ -422,6 +473,35 @@ export default defineComponent({
       getBookContent(props.bookID);
     };
 
+    const openMemoryDeleteDispDialog = async (storyID) => {
+      memoryDeleteConfirmOpen.value = true;
+      memoryDeleteStoryID.value = storyID;
+    };
+
+    const removeMemoryFromBook = async () => {
+      await bookActions
+        .removeMemoryFromBook(memoryDeleteStoryID.value, props.bookID)
+        .then(() => {
+          getBookContent();
+        })
+        .then(() => {
+          memoryDeleteStoryID.value = null;
+          memoryDeleteConfirmOpen.value = false;
+        });
+    };
+
+    const removeMemoryCompletely = async () => {
+      await bookActions
+        .removeMemoryCompletely(memoryDeleteStoryID.value, props.bookID)
+        .then(() => {
+          getBookContent();
+        })
+        .then(() => {
+          memoryDeleteStoryID.value = null;
+          memoryDeleteConfirmOpen.value = false;
+        });
+    };
+
     const openEditBookTitleDialog = async () => {
       editBookTitleDialog.value = true;
     };
@@ -438,6 +518,10 @@ export default defineComponent({
       isLoggedIn,
       bookClass,
       bookDeleteConfirmOpen,
+      memoryDeleteConfirmOpen,
+      openMemoryDeleteDispDialog,
+      deleteMemoryTitle,
+      deleteMemoryID,
       bookDetails,
       bookDialog,
       bookMemoryList,
@@ -452,6 +536,9 @@ export default defineComponent({
       openEditBookTitleDialog,
       updateBookTitle,
       getBookContent,
+      memoryDeleteStoryID,
+      removeMemoryFromBook,
+      removeMemoryCompletely,
       sortContentAscDate,
       sortContentRevDate,
       sortContentTitle,

@@ -867,6 +867,7 @@
                       rounded
                       outlined
                       bottom-slots
+                      max-files="30"
                       v-model="qUploadFle"
                       label="Click to add a photo or video"
                     >
