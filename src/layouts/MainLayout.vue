@@ -204,7 +204,7 @@
     <!--BEGINNING OF FOOTER-->
     <q-footer elevated>
       <q-toolbar>
-        Memories For Us, Copyright 2023
+        Memories For Us, Copyright 2025
         <q-space></q-space>
         <q-btn
           label="Get 30 days Free!"

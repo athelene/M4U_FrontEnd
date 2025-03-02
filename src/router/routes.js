@@ -62,6 +62,14 @@ const routes = [
         },
       },
       {
+        path: "/playstore",
+        name: "playstore",
+        component: () => import("pages/PlaystoreRegister.vue"),
+        meta: {
+          needsAuth: true,
+        },
+      },
+      {
         path: "/newpassword",
         name: "newpassword",
         component: () => import("pages/NewPassword.vue"),

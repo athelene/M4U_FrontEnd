@@ -51,7 +51,7 @@
               label="Enter question"
               v-model="newViewPointQ"
               autofocus
-              value="What did you do to take care of yourself this week?"
+              value="What words can you find in these letters?"
             />
           </q-card-section>
           <!--MONDAY QUESTION-->
@@ -60,7 +60,7 @@
               dense
               v-model="newViewPointQ"
               label="Enter Question"
-              hint="What was your best meal last week?"
+              hint="What are you motivated to do this week?"
             />
           </q-card-section>
           <!--TUESDAY QUESTION-->
@@ -68,14 +68,18 @@
             class="q-pt-none"
             v-if="newViewPointDay === 'Tuesday'"
           >
-            <q-input dense v-model="newViewPointQ" label="Tuesday Trivia" />
+            <q-input
+              dense
+              v-model="newViewPointQ"
+              label="Tuesday Trivia/Misc"
+            />
           </q-card-section>
           <!--WEDNESDAY QUESTION-->
           <q-card-section
             class="q-pt-none"
             v-if="newViewPointDay === 'Wednesday'"
           >
-            <q-input dense v-model="newViewPointQ" label="Word Wednesday" />
+            <q-input dense v-model="newViewPointQ" label="Add a word" />
           </q-card-section>
           <!--THURSDAY QUESTION-->
           <q-card-section
@@ -90,7 +94,11 @@
           </q-card-section>
           <!--FRIDAY QUESTION-->
           <q-card-section class="q-pt-none" v-if="newViewPointDay === 'Friday'">
-            <q-input dense v-model="newViewPointQ" label="Favorite Friday" />
+            <q-input
+              dense
+              v-model="newViewPointQ"
+              label="What was the best food you had all week?"
+            />
           </q-card-section>
           <!--SATURDAY QUESTION-->
           <q-card-section
@@ -101,7 +109,7 @@
               dense
               v-model="newViewPointQ"
               label="Sports Saturday"
-              hint="Sports Saturday"
+              hint="What sports or exercise will you do or watch today?"
             />
           </q-card-section>
 
@@ -259,23 +267,27 @@ export default defineComponent({
 
     const setQuestionValues = async () => {
       if (newViewPointDay.value === "Monday") {
-        newViewPointQ.value = "What was your best meal last week?";
+        newViewPointQ.value = "What are you motivated to do this week?";
       }
-      if (
-        newViewPointDay.value === "Tuesday" ||
-        newViewPointDay.value === "Wednesday" ||
-        newViewPointDay.value === "Friday" ||
-        newViewPointDay.value === "Saturday"
-      ) {
+      if (newViewPointDay.value === "Tuesday") {
         newViewPointQ.value = null;
+      }
+      if (newViewPointDay.value === "Wednesday") {
+        newViewPointQ.value =
+          "It's writer's Wednesday. Make up a short paragraph that includes the word: ";
       }
       if (newViewPointDay.value === "Thursday") {
         newViewPointQ.value = "What are you grateful for today?";
       }
-
-      if (newViewPointDay.value === "Sunday") {
+      if (newViewPointDay.value === "Friday") {
+        newViewPointQ.value = "What was the best food you had all week?";
+      }
+      if (newViewPointDay.value === "Saturday") {
         newViewPointQ.value =
-          "What will you do to take care of yourself this week?";
+          "What sports or exercise will you do or watch today?";
+      }
+      if (newViewPointDay.value === "Sunday") {
+        newViewPointQ.value = "What words can you find in these letters?";
       }
     };
 
