@@ -1596,7 +1596,6 @@ export default defineComponent({
       } else {
         newHidden.value = true;
       }
-      console.log("AdminLevel", user.AdminLevel);
 
       getStorySasKey();
 

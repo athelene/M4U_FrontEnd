@@ -64,7 +64,7 @@
                   dense
                   label="Enter question"
                   v-model="editViewPointQ"
-                  hint="What did you do to take care of yourself this week?"
+                  hint="What words can you find in these letters?"
                 />
               </q-card-section>
               <!--MONDAY QUESTION-->
@@ -76,7 +76,7 @@
                   dense
                   v-model="editViewPointQ"
                   label="Enter Question"
-                  hint="What was your best meal last week?"
+                  hint="What are you motivated to do this week?"
                 />
               </q-card-section>
               <!--TUESDAY QUESTION-->
@@ -87,8 +87,8 @@
                 <q-input
                   dense
                   v-model="editViewPointQ"
-                  label="Tuesday Trivia"
-                  hint="Tuesday Trivia"
+                  label="Tuesday Trivia/Misc"
+                  hint="Tuesday Trivia/Misc"
                 />
               </q-card-section>
               <!--WEDNESDAY QUESTION-->
@@ -100,7 +100,7 @@
                   dense
                   v-model="editViewPointQ"
                   label="Word Wednesday"
-                  hint="Word Wednesday"
+                  hint="It's writer's Wednesday. Make up a short paragraph that includes the word: "
                 />
               </q-card-section>
               <!--THURSDAY QUESTION-->
@@ -122,8 +122,8 @@
                 <q-input
                   dense
                   v-model="editViewPointQ"
-                  label="Favorite Friday"
-                  hint="Favorite Friday"
+                  label="Food Friday"
+                  hint="What was the best food you had all week?"
                 />
               </q-card-section>
               <!--SATURDAY QUESTION-->
@@ -135,7 +135,7 @@
                   dense
                   v-model="editViewPointQ"
                   label="Sports Saturday"
-                  hint="Sports Saturday"
+                  hint="What sports or exercise will you do or watch today?"
                 />
               </q-card-section>
 

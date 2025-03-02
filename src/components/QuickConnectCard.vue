@@ -125,7 +125,6 @@ export default defineComponent({
       var yyyy = today.getFullYear();
       todayIs.value = yyyy + "-" + mm + "-" + dd;
     };
-
     const getTodaysQC = async () => {
       const quickconnects = await qcActions
         .getTodaysQuickConnect(todayIs.value)

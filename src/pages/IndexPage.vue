@@ -445,7 +445,6 @@
               <q-editor
                 v-if="ingEditorType === 'small'"
                 ref="ingredientsRef"
-                @paste="onPasteIng"
                 v-model="storyIngredients"
                 tabindex="5"
                 content-class="bg-primary"
@@ -469,7 +468,6 @@
               <q-editor
                 v-model="storyIngredients"
                 ref="ingredientsRef"
-                @paste="onPasteIng"
                 v-if="ingEditorType === 'full'"
                 content-class="bg-primary"
                 tabindex="6"
@@ -540,6 +538,7 @@
               <q-space />
               <q-btn-toggle
                 v-model="memEditorType"
+                ref="textRef"
                 size="xs"
                 push
                 glossy
@@ -598,7 +597,6 @@
               <q-editor
                 v-if="memEditorType === 'full'"
                 ref="textRef"
-                @paste="onPasteText"
                 v-model="storyText"
                 content-class="bg-primary"
                 toolbar-text-color="white"
@@ -666,7 +664,6 @@
                 <q-editor
                   v-if="memEditorType === 'small'"
                   ref="textRef"
-                  @paste="onPasteText"
                   v-model="storyText"
                   tabindex="6"
                   content-class="bg-primary"
