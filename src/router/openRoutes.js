@@ -6,7 +6,6 @@ const publicPages = [
   "/newsubscribercancel",
   "/register",
   "/charter",
-  "/playstore",
   "/newpassword",
   "/info",
   "/login",

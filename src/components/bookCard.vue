@@ -161,6 +161,7 @@
 
                     <q-item-section side top>
                       <q-btn
+                        v-if="bookDetails.BookOwner === user.UserID"
                         flat
                         @click="openMemoryDeleteDispDialog(story.StoryID)"
                       >
