@@ -218,7 +218,6 @@ export default {
   },
 
   async getListItems(list, sort) {
-    console.log("starting getListItems in lists.js fe");
     let myroute = servername + "/getlistitems";
     let sortID = "Item";
     if (sort) {
@@ -233,7 +232,6 @@ export default {
     var result = this.callApi(myroute, params).then((res) => {
       return res;
     });
-    console.log("ending getListItems in lists.js fe");
     return result;
   },
 
