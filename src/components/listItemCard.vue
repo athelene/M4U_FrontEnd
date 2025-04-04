@@ -3,7 +3,7 @@
     <q-list>
       <q-item clickable v-close-popup @click="setSort('Item')">
         <q-item-section>
-          <q-item-label>Alphabetical</q-item-label>
+          <q-item-label>Alphanumeric</q-item-label>
         </q-item-section>
       </q-item>
 
