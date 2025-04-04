@@ -218,6 +218,7 @@
         <q-card style="min-width: 350px">
           <ItemList
             :listID="listID"
+            :sortID="sortID"
             @closeListDialog="closeListDialog"
             @itemAdded="getListDetails"
             :key="updateKey"
@@ -282,6 +283,7 @@ export default defineComponent({
     const openAddItem = ref(false);
     const updateKey = ref(0);
     const itemChanged = ref(0);
+    const sortID = ref("Item");
 
     onMounted(() => {
       getListDetails();
@@ -424,6 +426,7 @@ export default defineComponent({
       updateKey,
       origListName,
       itemChanged,
+      sortID,
     };
   },
 });

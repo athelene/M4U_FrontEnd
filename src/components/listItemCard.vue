@@ -1,5 +1,31 @@
 <template>
-  <!--END ADD ITEM DIALOG -->
+  <q-btn-dropdown flat dense class="q-mr-xs" color="alert" icon="sort">
+    <q-list>
+      <q-item clickable v-close-popup @click="setSort('Item')">
+        <q-item-section>
+          <q-item-label>Alphanumeric</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item clickable v-close-popup @click="setSort('DueDate')">
+        <q-item-section>
+          <q-item-label>Due Date</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item clickable v-close-popup @click="setSort('ListItemID')">
+        <q-item-section>
+          <q-item-label>Create Date</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item clickable v-close-popup @click="setSort('ItemStatus')">
+        <q-item-section>
+          <q-item-label>Unchecked/Checked</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </q-btn-dropdown>
   <q-list bordered separator>
     <q-item v-for="item in listItems" :key="item.ListItemID">
       <ListItemComponent
@@ -29,6 +55,9 @@ export default defineComponent({
     listID: {
       type: Number,
     },
+    sortID: {
+      type: String,
+    },
   },
 
   setup(props, { emit }) {
@@ -43,11 +72,19 @@ export default defineComponent({
     const listCircleRights = ref(null);
     const listAssigned = ref(null);
     const listDueDate = ref(null);
+    const sort = ref(props.sortID);
+    const sortID = ref("Item");
 
     onMounted(() => {
-      getListItems();
+      getListItems(sort);
       getListDetails();
     });
+
+    const setSort = async (sort) => {
+      sortID.value = sort;
+      getListItems();
+      emit("updateSort");
+    };
 
     const getListDetails = async () => {
       await listActions.getListDetails(props.listID).then((incomingList) => {
@@ -61,11 +98,14 @@ export default defineComponent({
 
     const getListItems = async () => {
       listItems.value = [];
-      await listActions.getListItems(props.listID).then((items) => {
-        items.forEach((item) => {
-          listItems.value.push(item);
+      await listActions
+        .getListItems(props.listID, sortID.value)
+        .then((items) => {
+          items.forEach((item) => {
+            listItems.value.push(item);
+          });
         });
-      });
+      emit("updateItems");
     };
 
     const closeListDialog = async () => {
@@ -84,6 +124,7 @@ export default defineComponent({
       listDueDate,
       user,
       closeListDialog,
+      setSort,
     };
   },
 });

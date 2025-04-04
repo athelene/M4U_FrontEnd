@@ -217,10 +217,15 @@ export default {
     return result;
   },
 
-  async getListItems(listID) {
+  async getListItems(list, sort) {
     let myroute = servername + "/getlistitems";
+    let sortID = "Item";
+    if (sort) {
+      sortID = sort;
+    }
     const params = {
-      listID: listID,
+      listID: list,
+      sortID: sortID,
       token: token,
       reauthToken: reauthToken,
     };
