@@ -1379,57 +1379,6 @@
               />
             </q-card-actions>
           </q-card>
-
-          <!--ADD BOOKS DIALOG INSIDE OF EDIT DIALOG-->
-          <q-dialog v-model="booksDialogFlag">
-            <q-card style="width: 300px" class="q-px-sm q-pb-md">
-              <q-card-section>
-                <div class="text-h6">Book List</div>
-                <q-btn color="accent" size="sm" @click="newBookDialog = true"
-                  >New Book</q-btn
-                >
-              </q-card-section>
-              <q-item v-for="book in bookList" :key="book.BookID">
-                <div>
-                  <q-checkbox
-                    dense
-                    color="accent"
-                    v-model="book.BookStatus"
-                    @click="updateBooks(book.BookID, book.BookStatus)"
-                  ></q-checkbox>
-                </div>
-                <div>
-                  <q-item-label>{{ book.BookTitle }}</q-item-label>
-                </div>
-              </q-item>
-              <q-card-actions align="right">
-                <q-btn flat label="DONE" color="primary" v-close-popup />
-              </q-card-actions>
-
-              <!--start of new book dialog-->
-              <q-dialog v-model="newBookDialog" class="newBookDialog">
-                <q-card class="newBookDialog">
-                  <q-toolbar>
-                    <q-avatar>
-                      <q-icon
-                        name="mdi-book-open-page-variant-outline"
-                      ></q-icon>
-                    </q-avatar>
-
-                    <q-toolbar-title>New Book or Time Capsule</q-toolbar-title>
-
-                    <q-btn flat round dense icon="close" v-close-popup />
-                  </q-toolbar>
-
-                  <q-card-section>
-                    <AddBook @bookAdded="newBookAdded()"></AddBook>
-                  </q-card-section>
-                </q-card>
-              </q-dialog>
-              <!--end of new book dialog-->
-            </q-card>
-          </q-dialog>
-          <!--END ADD BOOKS INSIDE OF EDIT DIALOG-->
         </q-dialog>
         <!--END EDIT DIALOG-->
 
@@ -1492,6 +1441,14 @@
         </q-btn>
         <q-btn
           class="glossy"
+          round
+          color="accent"
+          icon="mdi-bookshelf"
+          @click="openBookDialog()"
+        >
+        </q-btn>
+        <q-btn
+          class="glossy"
           v-if="!commentsOpen"
           round
           color="accent"
@@ -1506,6 +1463,12 @@
             v-if="commentTotal > 0"
           ></q-badge>
         </q-btn>
+
+        <!--ADD BOOKS DIALOG INSIDE OF EDIT DIALOG-->
+        <q-dialog v-model="booksDialogFlag">
+          <AddToBook :storyID="story.StoryID"></AddToBook>
+        </q-dialog>
+        <!--END ADD BOOKS INSIDE OF EDIT DIALOG-->
       </q-card-actions>
     </q-card>
     <q-separator horizontal />
@@ -1526,11 +1489,12 @@ import { storeToRefs } from "pinia";
 import { Screen } from "quasar";
 import MediaCardEdit from "components/mediaCardEdit.vue";
 import MediaCard from "components/mediaCard.vue";
-import AddBook from "components/addBook.vue";
+//import AddBook from "components/addBook.vue";
+import AddToBook from "components/addToBook.vue";
 
 export default defineComponent({
   name: "StoryCard",
-  components: { MediaCardEdit, MediaCard, AddBook },
+  components: { MediaCardEdit, MediaCard, AddToBook },
   props: {
     story: {
       type: Object,
@@ -1576,13 +1540,13 @@ export default defineComponent({
     const openCameraDialog = ref(false);
     const reauthToken = window.localStorage.getItem("rt");
     const booksDialogFlag = ref(false);
-    const bookList = reactive([]);
-    const noBookMsg = ref("");
+    // const bookList = reactive([]);
+    //const noBookMsg = ref("");
     const traditionsFlag = ref(false);
     const interviewsFlag = ref(false);
     const traditionList = reactive([]);
     const interviewList = reactive([]);
-    const newBookDialog = ref(false);
+    //const newBookDialog = ref(false);
     const storySasKey = ref(null);
     const ingEditorType = ref("small");
     const memEditorType = ref("small");
@@ -1892,11 +1856,7 @@ export default defineComponent({
     };
 
     const deleteMemory = async () => {
-      // if (props.story.HelpType === 5) {
-      //   await helpActions.deleteMemory(props.story.StoryID).then(() => {});
-      // } else {
       await memoryActions.deleteMemory(props.story.StoryID).then(() => {});
-      //      }
       emit("updateFeed");
     };
 
@@ -1924,7 +1884,6 @@ export default defineComponent({
     };
 
     const openBookDialog = async () => {
-      getMyBooks();
       booksDialogFlag.value = true;
     };
 
@@ -1938,38 +1897,38 @@ export default defineComponent({
       getInterviews();
     };
 
-    const updateBooks = async (bookID, bookStatus) => {
-      if (bookStatus === true) {
-        await bookActions
-          .addToBooks(bookID, props.story.StoryID)
-          .then(async () => {
-            await getMyBooks();
-          });
-      }
-      if (bookStatus === null || bookStatus === false) {
-        await bookActions
-          .removeFromBooks(bookID, props.story.StoryID)
-          .then(async () => {
-            await getMyBooks();
-          });
-      }
-    };
+    // const updateBooks = async (bookID, bookStatus) => {
+    //   if (bookStatus === true) {
+    //     await bookActions
+    //       .addToBooks(bookID, props.story.StoryID)
+    //       .then(async () => {
+    //         await getMyBooks();
+    //       });
+    //   }
+    //   if (bookStatus === null || bookStatus === false) {
+    //     await bookActions
+    //       .removeFromBooks(bookID, props.story.StoryID)
+    //       .then(async () => {
+    //         await getMyBooks();
+    //       });
+    //   }
+    // };
 
-    const getMyBooks = async () => {
-      await bookActions
-        .getBooksToAddStory(user.UserID, props.story.StoryID)
-        .then((books) => {
-          Object.assign(bookList, books);
-          if (books.length === 0) {
-            noBookMsg.value = true;
-          }
-        });
-    };
+    // const getMyBooks = async () => {
+    //   await bookActions
+    //     .getBooksToAddStory(user.UserID, props.story.StoryID)
+    //     .then((books) => {
+    //       Object.assign(bookList, books);
+    //       if (books.length === 0) {
+    //         noBookMsg.value = true;
+    //       }
+    //     });
+    // };
 
-    const newBookAdded = async () => {
-      newBookDialog.value = false;
-      getMyBooks();
-    };
+    // const newBookAdded = async () => {
+    //   newBookDialog.value = false;
+    //   getMyBooks();
+    // };
 
     const getTraditions = async () => {
       await memoryActions.getTraditions().then((traditions) => {
@@ -2011,6 +1970,8 @@ export default defineComponent({
       scrollVisible,
       heartTotal,
       heartStatus,
+      booksDialogFlag,
+      openBookDialog,
       changeHeartStatus,
       commentTotal,
       newComment,
@@ -2051,12 +2012,7 @@ export default defineComponent({
       qUploadFle,
       startCameraDialog,
       getMedia,
-      booksDialogFlag,
-      openBookDialog,
-      bookList,
-      noBookMsg,
-      updateBooks,
-      newBookDialog,
+
       openTraditions,
       openInterviews,
       traditionsFlag,
@@ -2070,7 +2026,7 @@ export default defineComponent({
       getHelpTypes,
       helpList,
       helpTypeID,
-      newBookAdded,
+
       storySasKey,
       toggleEditorType,
       ingEditorType,

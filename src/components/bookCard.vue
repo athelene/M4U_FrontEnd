@@ -239,6 +239,10 @@
                 >Are you sure you want to delete
                 {{ bookDetails.BookTitle }} permanently?</span
               >
+              <span class="q-ml-sm"
+                >This will not delete the memories. It will only delete the
+                book.</span
+              >
             </q-card-section>
 
             <q-card-actions align="right">
